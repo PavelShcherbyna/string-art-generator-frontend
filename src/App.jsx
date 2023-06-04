@@ -1,19 +1,13 @@
-import React from "react";
-import {OpenCvProvider} from "opencv-react";
+import React from 'react';
 
-import FileInput from "./components/FileInput";
+import FileInput from './components/FileInput';
 
 const onLoaded = (cv) => {
-    console.log('opencv loaded', cv)
-  }
+  console.log('opencv loaded', cv);
+};
 
 function App() {
-  return (
-      <OpenCvProvider onLoad={onLoaded} openCvPath='/opencv/opencv.js'>
-        <FileInput/>
-      </OpenCvProvider>
-
-  );
+  return <FileInput />;
 }
 
 export default App;

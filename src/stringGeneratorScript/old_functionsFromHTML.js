@@ -98,7 +98,7 @@ export function setSettings(pins, lines, canvasId) {
   console.log('Settings changed!')
 }
 
-export async function NonBlockingCalculatePins() {
+export function NonBlockingCalculatePins() {
   // set up necessary variables
   console.log('Calculating pins...');
   // status.textContent = "Calculating pins...";
@@ -108,7 +108,7 @@ export async function NonBlockingCalculatePins() {
   let i = 0;
 
   let angle;
-  await (async function codeBlock() {
+  (function codeBlock() {
     if (i < N_PINS) {
       angle = (2 * Math.PI * i) / N_PINS;
       pin_coords.push([Math.floor(center + radius * Math.cos(angle)), Math.floor(center + radius * Math.sin(angle))]);
@@ -118,14 +118,14 @@ export async function NonBlockingCalculatePins() {
       console.log('Done Calculating pins');
       // status.textContent = 'Done Calculating pins';
       // showStep(2);
-      await NonBlockingPrecalculateLines();
+      NonBlockingPrecalculateLines();
     }
   })();
 
   console.log('Function NonBlockingCalculatePins finished.');
 }
 
-export async function NonBlockingPrecalculateLines(){
+export function NonBlockingPrecalculateLines(){
   // set up necessary variables
   console.log("Precalculating all lines...");
   // status.textContent = "Precalculating all lines...";
@@ -135,7 +135,7 @@ export async function NonBlockingPrecalculateLines(){
   line_cache_weight = Array.apply(null, {length: (N_PINS * N_PINS)}).map(Function.call, function(){return 1;});
   let a = 0;
 
-  await (async function codeBlock(){
+  (function codeBlock(){
     if(a < N_PINS){
       for (let b = a + MIN_DISTANCE; b < N_PINS; b++) {
         let x0 = pin_coords[a][0];
@@ -160,15 +160,13 @@ export async function NonBlockingPrecalculateLines(){
     } else {
       console.log('Done Precalculating Lines');
       // status.textContent = "Done Precalculating Lines";
-      await NonBlockingLineCalculator();
+      NonBlockingLineCalculator();
       // showStep(3);
     }
   })();
-
-  console.log('Function NonBlockingPrecalculateLines finished.');
 }
 
-async function NonBlockingLineCalculator(){
+function NonBlockingLineCalculator(){
   // set up necessary variables
   console.log("Drawing Lines...");
   // status.textContent = "Drawing Lines...";
@@ -185,7 +183,7 @@ async function NonBlockingLineCalculator(){
   const last_pins = [];
   let l = 0;
 
- await (async function codeBlock(){
+  (function codeBlock(){
     if(l < MAX_LINES){
       // if(l%10 == 0){
       //   draw();
@@ -253,7 +251,7 @@ async function NonBlockingLineCalculator(){
       setTimeout(codeBlock, 0);
     } else {
       console.log('Done Drawing Lines');
-      await Finalize();
+      Finalize();
     }
   })();
 }

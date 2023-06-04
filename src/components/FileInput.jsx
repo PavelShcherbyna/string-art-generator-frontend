@@ -1,17 +1,13 @@
-import {useEffect, useState} from 'react';
+import { useState } from 'react';
 import cn from 'classnames';
-import {
-  canvasInit,
-  NonBlockingCalculatePins,
-  NonBlockingPrecalculateLines, setSettings,
-  testFunc
-} from "../stringGeneratorScript/functionsFromHTML";
-
-
-
+import { createStringArt } from '../stringGeneratorScript/stringArtMainScript';
 
 const FileInput = () => {
   const [btnActive, setBtnActive] = useState(false);
+  const [showOutput, setShowOutput] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+  const [resultsObj, setResultsObj] = useState({});
+  const [selectedRes, setSelectedRes] = useState([]);
 
   const imgUploaded = (e, setBtnActive) => {
     let imgElement = document.getElementById('imageSrc');
@@ -20,22 +16,29 @@ const FileInput = () => {
   };
 
   const startHandle = async () => {
-    // const strGenerator = new StringArtGenerator();
-    // strGenerator.imgInit();
-    // strGenerator.NonBlockingLineCalculator();
-    // strGenerator.imgInitTest();
+    setShowOutput(false);
+    setShowLoading(true);
+    setSelectedRes([]);
 
+    const [linesArr1, linesArr2, linesArr3] = await Promise.all([
+      createStringArt(),
+      createStringArt(1500, 'canvasOutput2'),
+      createStringArt(3000, 'canvasOutput3', 300)
+    ]);
 
-    // testFunc()
-    canvasInit();
-    await NonBlockingCalculatePins();
-    setSettings(288, 1000, 'canvasOutput2');
-    // NonBlockingCalculatePins();
-    // setSettings(288, 2000, 'canvasOutput3');
-    // NonBlockingCalculatePins();
-    // NonBlockingPrecalculateLines();
-  }
+    setResultsObj({
+      canvasOutput1: linesArr1,
+      canvasOutput2: linesArr2,
+      canvasOutput3: linesArr3
+    });
 
+    setShowOutput(true);
+    setShowLoading(false);
+  };
+
+  const onOutCanvasClick = (e) => {
+    setSelectedRes(resultsObj[e.target.id]);
+  };
 
   return (
     <>
@@ -43,24 +46,45 @@ const FileInput = () => {
         Click Here and select an Image to Start{' '}
         <input onChange={(e) => imgUploaded(e, setBtnActive)} type="file" id="fileInput" style={{ display: 'none' }} />
       </label>
-      <img className="rounded mx-auto d-block" id="imageSrc" alt="No Image" />
-      <button className={cn('btn btn-lg btn-block', { 'btn-primary': btnActive })}
-              disabled={!btnActive}
-              onClick={() => startHandle()}
+      <img
+        className="rounded mx-auto d-block"
+        id="imageSrc"
+        alt="Source"
+        style={{ maxWidth: '350px', maxHeight: '350px' }}
+      />
+      <button
+        className={cn('btn btn-lg btn-block', { 'btn-primary': btnActive })}
+        disabled={!btnActive}
+        onClick={() => startHandle()}
       >
         START
       </button>
 
       <div id="step2" className="inputoutput center ">
-        <div className="caption">Cropped and Grayscaled:</div>
-        <canvas className="centerCanvasMedium" id="canvasGray"/>
-        <div style={{display: 'flex'}}>
-          <canvas className="centerCanvasMedium" id="canvasOutput1"/>
-          <canvas className="centerCanvasMedium" id="canvasOutput2"/>
-          <canvas className="centerCanvasMedium" id="canvasOutput3"/>
+        {/*<div className="caption">Cropped and Grayscaled:</div>*/}
+        <canvas className="centerCanvasMedium" id="canvasGray" style={{ display: 'none' }} />
+
+        <div style={{ display: 'flex' }}>
+          <canvas
+            className={cn('centerCanvasMedium', { canvasBlock: showOutput, canvasHidden: !showOutput })}
+            id="canvasOutput1"
+            onClick={(e) => onOutCanvasClick(e)}
+          />
+          <canvas
+            className={cn('centerCanvasMedium', { canvasBlock: showOutput, canvasHidden: !showOutput })}
+            id="canvasOutput2"
+            onClick={(e) => onOutCanvasClick(e)}
+          />
+          <canvas
+            className={cn('centerCanvasMedium', { canvasBlock: showOutput, canvasHidden: !showOutput })}
+            id="canvasOutput3"
+            onClick={(e) => onOutCanvasClick(e)}
+          />
         </div>
 
+        {showLoading && <div className={'caption center'}>In progress...</div>}
       </div>
+      {selectedRes.length > 0 && <textarea style={{ width: '70%', height: '200px' }} value={selectedRes.join(', ')} />}
     </>
   );
 };
