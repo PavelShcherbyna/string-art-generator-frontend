@@ -238,9 +238,9 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
       return new Promise((resolve) => {
         if (l < MAX_LINES) {
           // Uncomment for sequential drawing
-          // if (l % 10 == 0) {
-          //   draw();
-          // }
+          if (l % 100 == 0) {
+            draw();
+          }
 
           let max_err = -1;
           let best_pin = -1;

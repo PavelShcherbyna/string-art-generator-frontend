@@ -20,11 +20,14 @@ const FileInput = () => {
     setShowLoading(true);
     setSelectedRes([]);
 
-    const [linesArr1, linesArr2, linesArr3] = await Promise.all([
-      createStringArt(),
-      createStringArt(1500, 'canvasOutput2'),
-      createStringArt(3000, 'canvasOutput3', 300)
-    ]);
+    // const [linesArr1, linesArr2, linesArr3] = await Promise.all([
+    //   createStringArt(),
+    //   createStringArt(1500, 'canvasOutput2'),
+    //   createStringArt(3000, 'canvasOutput3', 300)
+    // ]);
+    const linesArr1 = await createStringArt();
+    const linesArr2 = await createStringArt(1500, 'canvasOutput2');
+    const linesArr3 = await createStringArt(3000, 'canvasOutput3');
 
     setResultsObj({
       canvasOutput1: linesArr1,
@@ -37,7 +40,9 @@ const FileInput = () => {
   };
 
   const onOutCanvasClick = (e) => {
-    setSelectedRes(resultsObj[e.target.id]);
+    if (showOutput) {
+      setSelectedRes(resultsObj[e.target.id]);
+    }
   };
 
   return (
@@ -66,17 +71,17 @@ const FileInput = () => {
 
         <div style={{ display: 'flex' }}>
           <canvas
-            className={cn('centerCanvasMedium', { canvasBlock: showOutput, canvasHidden: !showOutput })}
+            className={cn('centerCanvasMedium canvasBlock', { clickableCanvas: showOutput })}
             id="canvasOutput1"
             onClick={(e) => onOutCanvasClick(e)}
           />
           <canvas
-            className={cn('centerCanvasMedium', { canvasBlock: showOutput, canvasHidden: !showOutput })}
+            className={cn('centerCanvasMedium canvasBlock', { clickableCanvas: showOutput })}
             id="canvasOutput2"
             onClick={(e) => onOutCanvasClick(e)}
           />
           <canvas
-            className={cn('centerCanvasMedium', { canvasBlock: showOutput, canvasHidden: !showOutput })}
+            className={cn('centerCanvasMedium canvasBlock', { clickableCanvas: showOutput })}
             id="canvasOutput3"
             onClick={(e) => onOutCanvasClick(e)}
           />
@@ -84,7 +89,9 @@ const FileInput = () => {
 
         {showLoading && <div className={'caption center'}>In progress...</div>}
       </div>
-      {selectedRes.length > 0 && <textarea style={{ width: '70%', height: '200px' }} value={selectedRes.join(', ')} />}
+      {selectedRes && selectedRes.length > 0 && (
+        <textarea readOnly style={{ width: '70%', height: '200px' }} value={selectedRes.join(', ')} />
+      )}
     </>
   );
 };
