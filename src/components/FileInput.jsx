@@ -5,7 +5,7 @@ import { createStringArt } from '../stringGeneratorScript/stringArtMainScript';
 const FileInput = () => {
   const [btnActive, setBtnActive] = useState(false);
   const [showOutput, setShowOutput] = useState(false);
-  const [showLoading, setShowLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [resultsObj, setResultsObj] = useState({});
   const [selectedRes, setSelectedRes] = useState([]);
 
@@ -17,7 +17,7 @@ const FileInput = () => {
 
   const startHandle = async () => {
     setShowOutput(false);
-    setShowLoading(true);
+    setProcessing(true);
     setSelectedRes([]);
 
     // const [linesArr1, linesArr2, linesArr3] = await Promise.all([
@@ -36,7 +36,7 @@ const FileInput = () => {
     });
 
     setShowOutput(true);
-    setShowLoading(false);
+    setProcessing(false);
   };
 
   const onOutCanvasClick = (e) => {
@@ -58,8 +58,8 @@ const FileInput = () => {
         style={{ maxWidth: '350px', maxHeight: '350px' }}
       />
       <button
-        className={cn('btn btn-lg btn-block', { 'btn-primary': btnActive })}
-        disabled={!btnActive}
+        className={cn('btn btn-lg btn-block', { 'btn-primary': btnActive && !processing })}
+        disabled={!btnActive || processing}
         onClick={() => startHandle()}
       >
         START
@@ -87,7 +87,7 @@ const FileInput = () => {
           />
         </div>
 
-        {showLoading && <div className={'caption center'}>In progress...</div>}
+        {processing && <div className={'caption center'}>In progress...</div>}
       </div>
       {selectedRes && selectedRes.length > 0 && (
         <textarea readOnly style={{ width: '70%', height: '200px' }} value={selectedRes.join(', ')} />
