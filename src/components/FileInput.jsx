@@ -186,7 +186,7 @@ const FileInput = () => {
           <p>{currentStepText}</p>
           <div>
             <button className={cn('btn btn-lg btn-success')} disabled={isPlaying} onClick={() => onPlayClick()}>
-              START
+              PLAY
             </button>
             {/*<button className={cn('btn btn-lg btn-danger')} disabled={!isPlaying} onClick={() => onStopClick()}>*/}
             {/*  STOP*/}
