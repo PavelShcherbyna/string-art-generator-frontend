@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import cn from 'classnames';
+import Voice from 'artyom.js';
 import { createStringArt } from '../stringGeneratorScript/stringArtMainScript';
 
 const FileInput = () => {
@@ -7,7 +8,14 @@ const FileInput = () => {
   const [showOutput, setShowOutput] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [resultsObj, setResultsObj] = useState({});
-  const [selectedRes, setSelectedRes] = useState([]);
+  const [selectedRes, setSelectedRes] = useState({ stepsArr: [], currIndex: 0 });
+  const [currentStepText, setCurrentStepText] = useState('');
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  let stepInstructionTimeoutId;
+
+  const voice = new Voice();
+  voice.initialize({ lang: 'en-GB' });
 
   const imgUploaded = (e, setBtnActive) => {
     let imgElement = document.getElementById('imageSrc');
@@ -16,9 +24,10 @@ const FileInput = () => {
   };
 
   const startHandle = async () => {
+    voice.say('Start');
     setShowOutput(false);
     setProcessing(true);
-    setSelectedRes([]);
+    setSelectedRes({ stepsArr: [], currIndex: 0 });
 
     // const [linesArr1, linesArr2, linesArr3] = await Promise.all([
     //   createStringArt(),
@@ -41,8 +50,90 @@ const FileInput = () => {
 
   const onOutCanvasClick = (e) => {
     if (showOutput) {
-      setSelectedRes(resultsObj[e.target.id]);
+      const stepsArr = resultsObj[e.target.id] || [];
+
+      if (stepsArr.length > 0) {
+        setSelectedRes({ stepsArr: stepsArr, currIndex: 0 });
+      }
     }
+  };
+
+  const onPlayClick = async () => {
+    console.log('PLAY');
+    setIsPlaying(true);
+
+    let i = 0;
+    async function tellSteps() {
+      return new Promise((resolve) => {
+        if (i < selectedRes.stepsArr.length - 1) {
+          const textToSpeak = `Line from ${selectedRes.stepsArr[i]} to ${selectedRes.stepsArr[i + 1]}`;
+          setCurrentStepText(textToSpeak);
+
+          voice.say(textToSpeak);
+
+          console.log(`Speak index ${i}`);
+          i++;
+          stepInstructionTimeoutId = setTimeout(() => resolve(tellSteps()), 4500);
+        } else {
+          voice.say('Finish!');
+          setCurrentStepText('Finish');
+
+          resolve();
+        }
+      });
+    }
+
+    // function stepsTimeout() {
+    //   let i = selectedRes.currIndex;
+    //   console.log('selectedRes:', selectedRes)
+    //
+    //   if (i < selectedRes.stepsArr.length - 1) {
+    //     const textToSpeak = `Line from ${selectedRes.stepsArr[i]} to ${selectedRes.stepsArr[i + 1]}`;
+    //     setCurrentStepText(textToSpeak);
+    //
+    //     voice.say(textToSpeak);
+    //
+    //     setSelectedRes({ ...selectedRes, currIndex: selectedRes.currIndex + 1 });
+    //     stepInstructionTimeoutId = setTimeout(stepsTimeout, 4500);
+    //     console.log('new id:', stepInstructionTimeoutId)
+    //   } else {
+    //     voice.say('Finish!');
+    //     setCurrentStepText('Finish');
+    //     setIsPlaying(false);
+    //   }
+    // }
+
+    // stepInstructionTimeoutId = setInterval(function() {
+    //   let i = selectedRes.currIndex;
+    //   console.log('selectedRes:', selectedRes)
+    //
+    //   if (i < selectedRes.stepsArr.length - 1) {
+    //     const textToSpeak = `Line from ${selectedRes.stepsArr[i]} to ${selectedRes.stepsArr[i + 1]}`;
+    //     setCurrentStepText(textToSpeak);
+    //
+    //     voice.say(textToSpeak);
+    //
+    //     setSelectedRes({ ...selectedRes, currIndex: 2 });
+    //   } else {
+    //     clearInterval(stepInstructionTimeoutId);
+    //
+    //     voice.say('Finish!');
+    //     setCurrentStepText('Finish');
+    //     setIsPlaying(false);
+    //   }
+    //
+    // }, 4500)
+
+    await tellSteps();
+    setIsPlaying(false);
+
+    // stepsTimeout();
+  };
+
+  const onStopClick = () => {
+    console.log('STOP');
+    // clearTimeout(id);
+    clearInterval(stepInstructionTimeoutId)
   };
 
   return (
@@ -71,17 +162,17 @@ const FileInput = () => {
 
         <div style={{ display: 'flex' }}>
           <canvas
-            className={cn('centerCanvasMedium canvasBlock', { clickableCanvas: showOutput })}
+            className={cn('centerCanvasMedium canvasBlock', { clickableCanvas: showOutput && !isPlaying })}
             id="canvasOutput1"
             onClick={(e) => onOutCanvasClick(e)}
           />
           <canvas
-            className={cn('centerCanvasMedium canvasBlock', { clickableCanvas: showOutput })}
+            className={cn('centerCanvasMedium canvasBlock', { clickableCanvas: showOutput && !isPlaying })}
             id="canvasOutput2"
             onClick={(e) => onOutCanvasClick(e)}
           />
           <canvas
-            className={cn('centerCanvasMedium canvasBlock', { clickableCanvas: showOutput })}
+            className={cn('centerCanvasMedium canvasBlock', { clickableCanvas: showOutput && !isPlaying })}
             id="canvasOutput3"
             onClick={(e) => onOutCanvasClick(e)}
           />
@@ -89,8 +180,19 @@ const FileInput = () => {
 
         {processing && <div className={'caption center'}>In progress...</div>}
       </div>
-      {selectedRes && selectedRes.length > 0 && (
-        <textarea readOnly style={{ width: '70%', height: '200px' }} value={selectedRes.join(', ')} />
+      {selectedRes.stepsArr && selectedRes.stepsArr.length > 0 && (
+        // <textarea readOnly style={{ width: '70%', height: '200px' }} value={selectedRes.stepsArr.join(', ')} />
+        <div className={'flexCentered'}>
+          <p>{currentStepText}</p>
+          <div>
+            <button className={cn('btn btn-lg btn-success')} disabled={isPlaying} onClick={() => onPlayClick()}>
+              START
+            </button>
+            {/*<button className={cn('btn btn-lg btn-danger')} disabled={!isPlaying} onClick={() => onStopClick()}>*/}
+            {/*  STOP*/}
+            {/*</button>*/}
+          </div>
+        </div>
       )}
     </>
   );

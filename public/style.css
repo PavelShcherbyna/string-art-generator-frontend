@@ -9,6 +9,12 @@
     padding: 10px;
 }
 
+.flexCentered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .centerBorderless {
     margin: auto;
     width: 75%;
