@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useInterval } from 'usehooks-ts';
 import cn from 'classnames';
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
 import Voice from 'artyom.js';
 import { createStringArt } from '../stringGeneratorScript/stringArtMainScript';
+import { Typography } from '@mui/material';
 
 const FileInput = () => {
   const [btnActive, setBtnActive] = useState(false);
@@ -11,8 +15,7 @@ const FileInput = () => {
   const [selectedRes, setSelectedRes] = useState({ stepsArr: [], currIndex: 0 });
   const [currentStepText, setCurrentStepText] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
-
-  let stepInstructionTimeoutId;
+  const [delay, setDelay] = useState(5000);
 
   const voice = new Voice();
   voice.initialize({ lang: 'en-GB' });
@@ -24,7 +27,6 @@ const FileInput = () => {
   };
 
   const startHandle = async () => {
-    voice.say('Start');
     setShowOutput(false);
     setProcessing(true);
     setSelectedRes({ stepsArr: [], currIndex: 0 });
@@ -58,83 +60,44 @@ const FileInput = () => {
     }
   };
 
-  const onPlayClick = async () => {
-    console.log('PLAY');
+  const onPlayClick = () => {
     setIsPlaying(true);
-
-    let i = 0;
-    async function tellSteps() {
-      return new Promise((resolve) => {
-        if (i < selectedRes.stepsArr.length - 1) {
-          const textToSpeak = `Line from ${selectedRes.stepsArr[i]} to ${selectedRes.stepsArr[i + 1]}`;
-          setCurrentStepText(textToSpeak);
-
-          voice.say(textToSpeak);
-
-          console.log(`Speak index ${i}`);
-          i++;
-          stepInstructionTimeoutId = setTimeout(() => resolve(tellSteps()), 4500);
-        } else {
-          voice.say('Finish!');
-          setCurrentStepText('Finish');
-
-          resolve();
-        }
-      });
-    }
-
-    // function stepsTimeout() {
-    //   let i = selectedRes.currIndex;
-    //   console.log('selectedRes:', selectedRes)
-    //
-    //   if (i < selectedRes.stepsArr.length - 1) {
-    //     const textToSpeak = `Line from ${selectedRes.stepsArr[i]} to ${selectedRes.stepsArr[i + 1]}`;
-    //     setCurrentStepText(textToSpeak);
-    //
-    //     voice.say(textToSpeak);
-    //
-    //     setSelectedRes({ ...selectedRes, currIndex: selectedRes.currIndex + 1 });
-    //     stepInstructionTimeoutId = setTimeout(stepsTimeout, 4500);
-    //     console.log('new id:', stepInstructionTimeoutId)
-    //   } else {
-    //     voice.say('Finish!');
-    //     setCurrentStepText('Finish');
-    //     setIsPlaying(false);
-    //   }
-    // }
-
-    // stepInstructionTimeoutId = setInterval(function() {
-    //   let i = selectedRes.currIndex;
-    //   console.log('selectedRes:', selectedRes)
-    //
-    //   if (i < selectedRes.stepsArr.length - 1) {
-    //     const textToSpeak = `Line from ${selectedRes.stepsArr[i]} to ${selectedRes.stepsArr[i + 1]}`;
-    //     setCurrentStepText(textToSpeak);
-    //
-    //     voice.say(textToSpeak);
-    //
-    //     setSelectedRes({ ...selectedRes, currIndex: 2 });
-    //   } else {
-    //     clearInterval(stepInstructionTimeoutId);
-    //
-    //     voice.say('Finish!');
-    //     setCurrentStepText('Finish');
-    //     setIsPlaying(false);
-    //   }
-    //
-    // }, 4500)
-
-    await tellSteps();
-    setIsPlaying(false);
-
-    // stepsTimeout();
+    showNextStep();
   };
 
   const onStopClick = () => {
-    console.log('STOP');
-    // clearTimeout(id);
-    clearInterval(stepInstructionTimeoutId)
+    setIsPlaying(false);
+    // voice.shutUp()
   };
+
+  function showNextStep() {
+    let i = selectedRes.currIndex;
+
+    if (i < selectedRes.stepsArr.length - 1) {
+      const textToSpeak = `Line from ${selectedRes.stepsArr[i]} to ${selectedRes.stepsArr[i + 1]}`;
+      setCurrentStepText(textToSpeak);
+
+      voice.say(textToSpeak);
+
+      setSelectedRes({ ...selectedRes, currIndex: i + 1 });
+    } else {
+      voice.say('Finish!');
+      setCurrentStepText('Finish');
+
+      setIsPlaying(false);
+    }
+  }
+
+  useInterval(
+    () => {
+      showNextStep();
+    },
+    isPlaying ? delay : null
+  );
+
+  function onSliderChange(event, newValue) {
+    setDelay(Number(newValue) * 1000);
+  }
 
   return (
     <>
@@ -155,7 +118,6 @@ const FileInput = () => {
       >
         START
       </button>
-
       <div id="step2" className="inputoutput center ">
         {/*<div className="caption">Cropped and Grayscaled:</div>*/}
         <canvas className="centerCanvasMedium" id="canvasGray" style={{ display: 'none' }} />
@@ -181,16 +143,33 @@ const FileInput = () => {
         {processing && <div className={'caption center'}>In progress...</div>}
       </div>
       {selectedRes.stepsArr && selectedRes.stepsArr.length > 0 && (
-        // <textarea readOnly style={{ width: '70%', height: '200px' }} value={selectedRes.stepsArr.join(', ')} />
         <div className={'flexCentered'}>
           <p>{currentStepText}</p>
+          <Box sx={{ width: 300 }}>
+            <Typography id="input-slider" gutterBottom>
+              Intervals between steps: {delay / 1000} seconds
+            </Typography>
+            <Slider
+              defaultValue={5}
+              valueLabelDisplay="auto"
+              valueLabelFormat={(v) => `${v} sec`}
+              onChange={onSliderChange}
+              step={0.5}
+              marks
+              min={4}
+              max={10}
+            />
+          </Box>
           <div>
-            <button className={cn('btn btn-lg btn-success')} disabled={isPlaying} onClick={() => onPlayClick()}>
-              PLAY
-            </button>
-            {/*<button className={cn('btn btn-lg btn-danger')} disabled={!isPlaying} onClick={() => onStopClick()}>*/}
-            {/*  STOP*/}
-            {/*</button>*/}
+            {isPlaying ? (
+              <button className={cn('btn btn-lg btn-danger')} onClick={onStopClick}>
+                STOP
+              </button>
+            ) : (
+              <button className={cn('btn btn-lg btn-success')} onClick={onPlayClick}>
+                PLAY
+              </button>
+            )}
           </div>
         </div>
       )}

@@ -121,23 +121,23 @@
   let img;
 
   // set up element variables
-  let imgElement = document.getElementById("imageSrc")
-  let inputElement = document.getElementById("fileInput");
-  inputElement.addEventListener("change", (e) => {
-    imgElement.src = URL.createObjectURL(e.target.files[0]);
-  }, false);
-  var ctx=document.getElementById("canvasOutput").getContext("2d");
-  var ctx2=document.getElementById("canvasOutput2").getContext("2d");
-  var ctx3=document.getElementById("canvasOutput3").getContext("2d");
-  let status = document.getElementById("status");
-  let drawStatus = document.getElementById("drawStatus");
-  let showPins = document.getElementById("showPins");
-  let pinsOutput = document.getElementById("pinsOutput");
-  let incrementalDrawing = document.getElementById("incrementalDrawing");
-  let incrementalCurrentStep = document.getElementById("incrementalCurrentStep");
-  let numberOfPins = document.getElementById("numberOfPins");
-  let numberOfLines = document.getElementById("numberOfLines");
-  let lineWeight = document.getElementById("lineWeight");
+  // let imgElement = document.getElementById("imageSrc")
+  // let inputElement = document.getElementById("fileInput");
+  // inputElement.addEventListener("change", (e) => {
+  //   imgElement.src = URL.createObjectURL(e.target.files[0]);
+  // }, false);
+  // var ctx=document.getElementById("canvasOutput").getContext("2d");
+  // var ctx2=document.getElementById("canvasOutput2").getContext("2d");
+  // var ctx3=document.getElementById("canvasOutput3").getContext("2d");
+  // let status = document.getElementById("status");
+  // let drawStatus = document.getElementById("drawStatus");
+  // let showPins = document.getElementById("showPins");
+  // let pinsOutput = document.getElementById("pinsOutput");
+  // let incrementalDrawing = document.getElementById("incrementalDrawing");
+  // let incrementalCurrentStep = document.getElementById("incrementalCurrentStep");
+  // let numberOfPins = document.getElementById("numberOfPins");
+  // let numberOfLines = document.getElementById("numberOfLines");
+  // let lineWeight = document.getElementById("lineWeight");
 
   let length;
   var R = {};
@@ -170,7 +170,7 @@
   //      Line Generation
   //*******************************
 
-  imgElement.onload = function() {
+  function startScript() {
     listenForKeys = false;
     showStep(1);
     showPins.classList.add('hidden');
