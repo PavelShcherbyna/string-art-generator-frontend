@@ -1,11 +1,13 @@
 import React from 'react';
 
-import FileInput from './components/FileInput';
+import Header from './components/Header/Header';
+import GeneratorMainBlock from "./components/GeneratorMainBlock/GeneratorMainBlock";
 
 function App() {
   return (
     <>
-      <FileInput />
+      <Header />
+      <GeneratorMainBlock />
     </>
   );
 }

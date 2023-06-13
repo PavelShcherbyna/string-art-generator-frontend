@@ -50,7 +50,11 @@ function getLineErr(arr, coords1, coords2) {
   return getSum(result);
 }
 
-export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', pins = 36 * 8) {
+export async function createStringArt(
+  lines = 1000,
+  canvasId = 'canvasOutput1',
+  pins = 36 * 8
+) {
   let lengthX; // instead of 'length' variable in old script
   let img_result;
   const pin_coords = [];
@@ -69,7 +73,8 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
   let ctx;
   let N_PINS = pins;
   let MAX_LINES = lines; // 4000;
-  const IMG_SIZE = 350;
+  const IMG_SIZE = 455;
+  const OUTPUT_CANVAS_SIZE = 131;
   let R;
 
   let outputCanvasId = canvasId;
@@ -108,7 +113,17 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
       xOffset = Math.floor((base_image.width - base_image.height) / 2);
     }
 
-    ctx.drawImage(base_image, xOffset, yOffset, selectedWidth, selectedHeight, 0, 0, IMG_SIZE, IMG_SIZE);
+    ctx.drawImage(
+      base_image,
+      xOffset,
+      yOffset,
+      selectedWidth,
+      selectedHeight,
+      0,
+      0,
+      IMG_SIZE,
+      IMG_SIZE
+    );
 
     lengthX = IMG_SIZE;
 
@@ -120,7 +135,9 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
     for (let y = 0; y < imgPixels.height; y++) {
       for (let x = 0; x < imgPixels.width; x++) {
         let i = y * 4 * imgPixels.width + x * 4;
-        let avg = (imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) / 3;
+        let avg =
+          (imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) /
+          3;
         imgPixels.data[i] = avg;
         imgPixels.data[i + 1] = avg;
         imgPixels.data[i + 2] = avg;
@@ -173,12 +190,18 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
 
     line_cache_y = Array.apply(null, { length: N_PINS * N_PINS });
     line_cache_x = Array.apply(null, { length: N_PINS * N_PINS });
-    line_cache_length = Array.apply(null, { length: N_PINS * N_PINS }).map(Function.call, function () {
-      return 0;
-    });
-    line_cache_weight = Array.apply(null, { length: N_PINS * N_PINS }).map(Function.call, function () {
-      return 1;
-    });
+    line_cache_length = Array.apply(null, { length: N_PINS * N_PINS }).map(
+      Function.call,
+      function () {
+        return 0;
+      }
+    );
+    line_cache_weight = Array.apply(null, { length: N_PINS * N_PINS }).map(
+      Function.call,
+      function () {
+        return 1;
+      }
+    );
     let a = 0;
 
     async function codeBlock() {
@@ -191,7 +214,9 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
             let x1 = pin_coords[b][0];
             let y1 = pin_coords[b][1];
 
-            let d = Math.floor(Number(Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0))));
+            let d = Math.floor(
+              Number(Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)))
+            );
             let xs = linspace(x0, x1, d);
             let ys = linspace(y0, y1, d);
 
@@ -224,7 +249,12 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
       .subtract(nj.uint8(R.selection.data).reshape(IMG_SIZE, IMG_SIZE));
     img_result = nj.ones([IMG_SIZE, IMG_SIZE]).multiply(0xff);
     result = nj.ones([IMG_SIZE * SCALE, IMG_SIZE * SCALE]).multiply(0xff);
-    result = new cv.matFromArray(IMG_SIZE * SCALE, IMG_SIZE * SCALE, cv.CV_8UC1, result.selection.data);
+    result = new cv.matFromArray(
+      IMG_SIZE * SCALE,
+      IMG_SIZE * SCALE,
+      cv.CV_8UC1,
+      result.selection.data
+    );
     line_mask = nj.zeros([IMG_SIZE, IMG_SIZE], 'float64');
 
     line_sequence = [];
@@ -238,7 +268,7 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
       return new Promise((resolve) => {
         if (l < MAX_LINES) {
           // Uncomment for sequential drawing
-          if (l % 100 == 0) {
+          if (l % 100 === 0) {
             draw();
           }
 
@@ -248,7 +278,11 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
           let xs;
           let ys;
 
-          for (let offset = MIN_DISTANCE; offset < N_PINS - MIN_DISTANCE; offset++) {
+          for (
+            let offset = MIN_DISTANCE;
+            offset < N_PINS - MIN_DISTANCE;
+            offset++
+          ) {
             let test_pin = (pin + offset) % N_PINS;
             if (last_pins.includes(test_pin)) {
               continue;
@@ -256,7 +290,9 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
               xs = line_cache_x[test_pin * N_PINS + pin];
               ys = line_cache_y[test_pin * N_PINS + pin];
 
-              let line_err = getLineErr(error, ys, xs) * line_cache_weight[test_pin * N_PINS + pin];
+              let line_err =
+                getLineErr(error, ys, xs) *
+                line_cache_weight[test_pin * N_PINS + pin];
 
               if (line_err > max_err) {
                 max_err = line_err;
@@ -275,8 +311,14 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
           line_mask = setLine(line_mask, ys, xs, weight);
           error = subtractArrays(error, line_mask);
 
-          let p = new cv.Point(pin_coords[pin][0] * SCALE, pin_coords[pin][1] * SCALE);
-          let p2 = new cv.Point(pin_coords[best_pin][0] * SCALE, pin_coords[best_pin][1] * SCALE);
+          let p = new cv.Point(
+            pin_coords[pin][0] * SCALE,
+            pin_coords[pin][1] * SCALE
+          );
+          let p2 = new cv.Point(
+            pin_coords[best_pin][0] * SCALE,
+            pin_coords[best_pin][1] * SCALE
+          );
           cv.line(result, p, p2, new cv.Scalar(0, 0, 0), 2, cv.LINE_AA, 0);
 
           let x0 = pin_coords[pin][0];
@@ -310,7 +352,7 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
 
   // Draw and final draw helpers:
   function draw() {
-    let dsize = new cv.Size(IMG_SIZE * 2, IMG_SIZE * 2);
+    let dsize = new cv.Size(OUTPUT_CANVAS_SIZE, OUTPUT_CANVAS_SIZE);
     let dst = new cv.Mat();
     cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
     cv.imshow(outputCanvasId, dst);
@@ -318,7 +360,7 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
   }
 
   function Finalize() {
-    let dsize = new cv.Size(IMG_SIZE * 2, IMG_SIZE * 2);
+    let dsize = new cv.Size(OUTPUT_CANVAS_SIZE, OUTPUT_CANVAS_SIZE);
     let dst = new cv.Mat();
 
     cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
@@ -329,7 +371,7 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
     console.log(line_sequence);
 
     dst.delete();
-    result.delete();
+    // result.delete();
   }
 
   // Execution:
@@ -338,5 +380,16 @@ export async function createStringArt(lines = 1000, canvasId = 'canvasOutput1', 
   await NonBlockingPrecalculateLines();
   await NonBlockingLineCalculator();
 
-  return line_sequence;
+  return { stepsArr: line_sequence, mathResult: result };
+}
+
+export function DrawResIntoCanvas(result, size, id) {
+  let dsize = new cv.Size(size, size);
+  let dst = new cv.Mat();
+
+  cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
+
+  cv.imshow(id, dst);
+
+  dst.delete();
 }
