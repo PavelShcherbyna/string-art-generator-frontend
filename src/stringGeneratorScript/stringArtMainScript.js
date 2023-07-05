@@ -77,6 +77,7 @@ export async function createStringArt(
   const IMG_SIZE = 455;
   const OUTPUT_CANVAS_SIZE = 131;
   let R;
+  const lineThickness = 1.4; // 2
 
   let outputCanvasId = canvasId;
 
@@ -333,7 +334,7 @@ export async function createStringArt(
             pin_coords[best_pin][0] * SCALE,
             pin_coords[best_pin][1] * SCALE
           );
-          cv.line(result, p, p2, new cv.Scalar(0, 0, 0), 2, cv.LINE_AA, 0);
+          cv.line(result, p, p2, new cv.Scalar(0, 0, 0), lineThickness, cv.LINE_AA, 0);
 
           let x0 = pin_coords[pin][0];
           let y0 = pin_coords[pin][1];
