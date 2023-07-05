@@ -22,7 +22,7 @@ const GeneratorMainBlock = () => {
   const [currentStepText, setCurrentStepText] = useState('');
 
   const voice = new Voice();
-  voice.initialize({ lang: 'ru-RU' });
+  voice.initialize({ lang: 'ru-RU', debug: false });
 
   const lineCountSettings = process.env.REACT_APP_LINES_SET || '';
   const lineSetArr = lineCountSettings.split(',');
@@ -104,10 +104,10 @@ const GeneratorMainBlock = () => {
     let i = selectedRes.currIndex;
 
     if (i < selectedRes.stepsArr?.length - 1) {
-      const textToSpeak = `Линия от точки ${selectedRes.stepsArr[i]} до точки ${
-        selectedRes.stepsArr[i + 1]
-      }`;
-      setCurrentStepText(textToSpeak);
+      const textToShow = `Следующая точка: ${selectedRes.stepsArr[i + 1]}`;
+      const textToSpeak = `${selectedRes.stepsArr[i + 1]}`;
+
+      setCurrentStepText(textToShow);
 
       voice.say(textToSpeak);
 
