@@ -53,7 +53,8 @@ function getLineErr(arr, coords1, coords2) {
 export async function createStringArt(
   lines = 1000,
   canvasId = 'canvasOutput1',
-  pins = 36 * 8
+  prevResult,
+  prevLineSequence = []
 ) {
   let lengthX; // instead of 'length' variable in old script
   let img_result;
@@ -65,13 +66,13 @@ export async function createStringArt(
   let line_cache_weight;
 
   let error;
-  let result;
+  let result = prevResult?.clone();
   let line_mask;
-  let line_sequence;
+  let line_sequence = [...prevLineSequence];
   let thread_length;
 
   let ctx;
-  let N_PINS = pins;
+  let N_PINS = 36 * 8;
   let MAX_LINES = lines; // 4000;
   const IMG_SIZE = 455;
   const OUTPUT_CANVAS_SIZE = 131;
@@ -248,21 +249,34 @@ export async function createStringArt(
       .multiply(0xff)
       .subtract(nj.uint8(R.selection.data).reshape(IMG_SIZE, IMG_SIZE));
     img_result = nj.ones([IMG_SIZE, IMG_SIZE]).multiply(0xff);
-    result = nj.ones([IMG_SIZE * SCALE, IMG_SIZE * SCALE]).multiply(0xff);
-    result = new cv.matFromArray(
-      IMG_SIZE * SCALE,
-      IMG_SIZE * SCALE,
-      cv.CV_8UC1,
-      result.selection.data
-    );
+
+    if (!result) {
+      result = nj.ones([IMG_SIZE * SCALE, IMG_SIZE * SCALE]).multiply(0xff);
+      result = new cv.matFromArray(
+        IMG_SIZE * SCALE,
+        IMG_SIZE * SCALE,
+        cv.CV_8UC1,
+        result.selection.data
+      );
+    }
+
     line_mask = nj.zeros([IMG_SIZE, IMG_SIZE], 'float64');
 
-    line_sequence = [];
-    let pin = 0;
-    line_sequence.push(pin);
+    let pin;
+    let l;
+    if (line_sequence?.length > 1) {
+      const lastIndex = line_sequence.length - 1;
+      pin = line_sequence[lastIndex];
+      l = lastIndex;
+    } else {
+      line_sequence = [];
+      pin = 0;
+      line_sequence.push(pin);
+      l = 0;
+    }
+
     thread_length = 0;
     const last_pins = [];
-    let l = 0;
 
     async function codeBlock() {
       return new Promise((resolve) => {

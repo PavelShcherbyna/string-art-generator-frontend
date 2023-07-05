@@ -24,20 +24,12 @@ const GeneratorMainBlock = () => {
   const voice = new Voice();
   voice.initialize({ lang: 'ru-RU' });
 
-  const generalSettingsArr = [
-    {
-      lines: 2800,
-      outputCanvasId: 'canvasOutput1'
-    },
-    {
-      lines: 3000,
-      outputCanvasId: 'canvasOutput2'
-    },
-    {
-      lines: 3200,
-      outputCanvasId: 'canvasOutput3'
-    }
-  ];
+  const lineCountSettings = process.env.REACT_APP_LINES_SET || '';
+  const lineSetArr = lineCountSettings.split(',');
+
+  const generalSettingsArr = lineSetArr.map((linesNum, index) => {
+    return { lines: Number(linesNum), outputCanvasId: `canvasOutput${index}` };
+  });
 
   const onPlayClick = () => {
     if (selectedRes.stepsArr) {
@@ -72,7 +64,9 @@ const GeneratorMainBlock = () => {
     for (const settingsObj of generalSettingsArr) {
       const result = await createStringArt(
         settingsObj.lines,
-        settingsObj.outputCanvasId
+        settingsObj.outputCanvasId,
+        resArr[resArr.length - 1]?.mathResult,
+        resArr[resArr.length - 1]?.stepsArr
       );
       resArr.push({ ...result, outputCanvasId: settingsObj.outputCanvasId });
     }
