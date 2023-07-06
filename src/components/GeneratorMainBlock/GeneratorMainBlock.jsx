@@ -104,8 +104,12 @@ const GeneratorMainBlock = () => {
     let i = selectedRes.currIndex;
 
     if (i < selectedRes.stepsArr?.length - 1) {
-      const textToShow = `Следующая точка: ${selectedRes.stepsArr[i + 1]}`;
-      const textToSpeak = `${selectedRes.stepsArr[i + 1]}`;
+      // We add 1 to the point number as workaround, because the numbering on the
+      // physical model does not start from 0, but from 1
+      const nextPointNumber = Number(selectedRes.stepsArr[i + 1]) + 1;
+
+      const textToShow = `Следующая точка: ${nextPointNumber}`;
+      const textToSpeak = `${nextPointNumber}`;
 
       setCurrentStepText(textToShow);
 
