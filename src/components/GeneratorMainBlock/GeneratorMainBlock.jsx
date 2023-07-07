@@ -48,9 +48,6 @@ const GeneratorMainBlock = () => {
     if (e.target.files[0]) {
       setBaseImageSrc(URL.createObjectURL(e.target.files[0]));
       setGeneratorStep(1);
-
-      let imgElement = document.getElementById('imageSrc');
-      imgElement.src = URL.createObjectURL(e.target.files[0]);
     }
   };
 
@@ -133,13 +130,14 @@ const GeneratorMainBlock = () => {
 
   return (
     <>
-      <img className="hidden" id="imageSrc" alt="Source" />
+      <img className="hidden" id="imageSrc" alt="Source" src={baseImageSrc} />
       {!baseImageSrc && generatorStep === 0 && (
         <PhotoInputCenter onFileUploaded={photoUploadedHandler} />
       )}
       {baseImageSrc && generatorStep === 1 && (
         <GeneratorSettingsContainer
           imageSrc={baseImageSrc}
+          setImageSrc={setBaseImageSrc}
           onFileUploaded={photoUploadedHandler}
           onGenerate={generateButtonHandler}
         />
