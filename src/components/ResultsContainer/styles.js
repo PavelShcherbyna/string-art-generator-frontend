@@ -90,7 +90,13 @@ export const ResultsContainerWrapper = styled.div`
 
     .bottom-btn-wrap {
       display: flex;
-      gap: 40px;
+      flex-direction: column;
+      gap: 23px;
+
+      .bottom-btn-group {
+        display: flex;
+        gap: 40px;
+      }
     }
 
     .start-btn-wrap {

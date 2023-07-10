@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Voice from 'artyom.js';
 import { useInterval } from 'usehooks-ts';
+import { saveAs } from 'file-saver';
 import PhotoInputCenter from '../PhotoInputCenter/PhotoInputCenter';
 import GeneratorSettingsContainer from '../GeneratorSettingsContainer/GeneratorSettingsContainer';
 import ResultsContainer from '../ResultsContainer/ResultsContainer';
@@ -42,6 +43,20 @@ const GeneratorMainBlock = () => {
   const onStopClick = () => {
     setIsPlaying(false);
     // voice.shutUp()
+  };
+
+  const onFileSave = () => {
+    if (selectedRes.stepsArr) {
+      const fileTextArr = selectedRes.stepsArr
+        .map((step) => Number(step) + 1)
+        .join(', ');
+
+      const blob = new Blob([...fileTextArr], {
+        type: 'text/plain;charset=utf-8'
+      });
+
+      saveAs(blob, 'String art steps.txt');
+    }
   };
 
   const photoUploadedHandler = (e) => {
@@ -152,6 +167,7 @@ const GeneratorMainBlock = () => {
           pickCanvasHandler={pickCanvasHandler}
           selectedRes={selectedRes}
           processing={processing}
+          onFileSave={onFileSave}
         />
       )}
       <StepsModal

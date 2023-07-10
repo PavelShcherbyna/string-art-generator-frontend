@@ -6,6 +6,7 @@ import { Box, Slider, Stack } from '@mui/material';
 import IconPlay from '../../assets/IconPlay';
 import IconSave from '../../assets/IconSave';
 import IconShare from '../../assets/IconShare';
+import IconFileDownload from '../../assets/IconFileDownload';
 import cn from 'classnames';
 import Progress from '../Progress/Progress';
 
@@ -18,7 +19,8 @@ const ResultsContainer = (props) => {
     generalSettings,
     pickCanvasHandler,
     selectedRes,
-    processing
+    processing,
+    onFileSave
   } = props;
 
   function onSliderChange(event, newValue) {
@@ -95,14 +97,22 @@ const ResultsContainer = (props) => {
             </div>
 
             <div className="bottom-btn-wrap">
-              <ButtonGray>
-                <IconSave />
-                <span>Сохранить</span>
-              </ButtonGray>
-              <ButtonGray>
-                <IconShare />
-                <span>Поделиться</span>
-              </ButtonGray>
+              <div className="bottom-btn-group">
+                <ButtonGray>
+                  <IconSave />
+                  <span>Сохранить</span>
+                </ButtonGray>
+                <ButtonGray>
+                  <IconShare />
+                  <span>Поделиться</span>
+                </ButtonGray>
+              </div>
+              <div className="bottom-btn-group">
+                <ButtonGray onClick={onFileSave}>
+                  <IconFileDownload />
+                  <span>Скачать инструкцию</span>
+                </ButtonGray>
+              </div>
             </div>
           </>
         )}
