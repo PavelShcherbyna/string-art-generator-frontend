@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResultsContainerWrapper } from './styles';
+import { ResultsContainerWrapper, StepsStartContainer } from './styles';
 import LoadAnotherInput from '../LoadAnotherInput/LoadAnotherInput';
 import { ButtonGray, ButtonWithBorder, SliderWrapper } from '../reusableStyles';
 import { Box, Slider, Stack } from '@mui/material';
@@ -16,6 +16,7 @@ const ResultsContainer = (props) => {
     delay,
     setDelay,
     onPlayClick,
+    onChangeStepClick,
     generalSettings,
     pickCanvasHandler,
     selectedRes,
@@ -91,7 +92,17 @@ const ResultsContainer = (props) => {
                 <span>Начать</span>
               </ButtonWithBorder>
 
-              {selectedRes.stepsArr ? null : (
+              {selectedRes.stepsArr ? (
+                <StepsStartContainer>
+                  <span>Начало с шага {selectedRes.currIndex + 1}</span>
+                  <button
+                    onClick={onChangeStepClick}
+                    className={'change-step-btn'}
+                  >
+                    <span>Изменить</span>
+                  </button>
+                </StepsStartContainer>
+              ) : (
                 <span className="warning-span">Выберите рисунок</span>
               )}
             </div>

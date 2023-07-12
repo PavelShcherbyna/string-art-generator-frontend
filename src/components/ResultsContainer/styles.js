@@ -110,3 +110,23 @@ export const ResultsContainerWrapper = styled.div`
     }
   }
 `;
+
+export const StepsStartContainer = styled.div`
+  margin: 20px 0 0;
+
+  .change-step-btn {
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 31px;
+    color: #000000;
+    background: transparent;
+    border: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+`;

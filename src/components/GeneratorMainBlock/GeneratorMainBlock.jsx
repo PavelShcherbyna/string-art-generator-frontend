@@ -10,6 +10,7 @@ import {
   DrawResIntoCanvas
 } from '../../stringGeneratorScript/stringArtMainScript';
 import StepsModal from '../StepsModal/StepsModal';
+import PickStepModal from '../StepsModal/PickStepModal';
 
 const GeneratorMainBlock = () => {
   const [baseImageSrc, setBaseImageSrc] = useState('');
@@ -21,6 +22,7 @@ const GeneratorMainBlock = () => {
   const [selectedRes, setSelectedRes] = useState({}); // { stepsArr, outputCanvasId, currIndex }
   const [stepsModalOpen, setStepsModalOpen] = useState(false);
   const [currentStepText, setCurrentStepText] = useState('');
+  const [pickStepModalOpen, setPickStepModalOpen] = useState(false);
 
   const voice = new Voice();
   voice.initialize({ lang: 'ru-RU', debug: false });
@@ -38,6 +40,20 @@ const GeneratorMainBlock = () => {
       setIsPlaying(true);
       showNextStep();
     }
+  };
+
+  const onChangeStepClick = () => {
+    if (selectedRes.stepsArr) {
+      setPickStepModalOpen(true);
+    }
+  };
+
+  const setStepIndex = (index) => {
+    setSelectedRes((prevRes) => {
+      return { ...prevRes, currIndex: index };
+    });
+
+    setPickStepModalOpen(false);
   };
 
   const onStopClick = () => {
@@ -104,7 +120,7 @@ const GeneratorMainBlock = () => {
   const onStepsModalClose = (e, reason) => {
     if (reason !== 'backdropClick') {
       setStepsModalOpen(false);
-      setSelectedRes({ ...selectedRes, currIndex: 0 });
+      // setSelectedRes({ ...selectedRes, currIndex: 0 });
       setCurrentStepText('');
       setIsPlaying(false);
 
@@ -120,7 +136,7 @@ const GeneratorMainBlock = () => {
       // physical model does not start from 0, but from 1
       const nextPointNumber = Number(selectedRes.stepsArr[i + 1]) + 1;
 
-      const textToShow = `Следующая точка: ${nextPointNumber}`;
+      const textToShow = `Шаг ${i + 1}. Следующая точка: ${nextPointNumber}`;
       const textToSpeak = `${nextPointNumber}`;
 
       setCurrentStepText(textToShow);
@@ -163,6 +179,7 @@ const GeneratorMainBlock = () => {
           delay={delay}
           setDelay={setDelay}
           onPlayClick={onPlayClick}
+          onChangeStepClick={onChangeStepClick}
           generalSettings={generalSettingsArr}
           pickCanvasHandler={pickCanvasHandler}
           selectedRes={selectedRes}
@@ -177,6 +194,15 @@ const GeneratorMainBlock = () => {
         onPlayClick={onPlayClick}
         onStopClick={onStopClick}
         currentStepText={currentStepText}
+      />
+      <PickStepModal
+        open={pickStepModalOpen}
+        onClose={() => {
+          setPickStepModalOpen(false);
+        }}
+        selectedRes={selectedRes}
+        setSelectedRes={setSelectedRes}
+        setStepIndex={setStepIndex}
       />
     </>
   );
