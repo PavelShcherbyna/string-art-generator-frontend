@@ -190,20 +190,18 @@ export async function createStringArt(
   async function NonBlockingPrecalculateLines() {
     console.log('Precalculating all lines...');
 
-    line_cache_y = Array.apply(null, { length: N_PINS * N_PINS });
-    line_cache_x = Array.apply(null, { length: N_PINS * N_PINS });
-    line_cache_length = Array.apply(null, { length: N_PINS * N_PINS }).map(
-      Function.call,
-      function () {
-        return 0;
-      }
-    );
-    line_cache_weight = Array.apply(null, { length: N_PINS * N_PINS }).map(
-      Function.call,
-      function () {
-        return 1;
-      }
-    );
+    line_cache_y = [];
+    line_cache_x = [];
+    line_cache_length = [];
+    line_cache_weight = [];
+
+    for (let i = 0; i < N_PINS * N_PINS; i++) {
+      line_cache_y.push(undefined);
+      line_cache_x.push(undefined);
+      line_cache_length.push(0);
+      line_cache_weight.push(1);
+    }
+
     let a = 0;
 
     async function codeBlock() {
@@ -334,7 +332,15 @@ export async function createStringArt(
             pin_coords[best_pin][0] * SCALE,
             pin_coords[best_pin][1] * SCALE
           );
-          cv.line(result, p, p2, new cv.Scalar(0, 0, 0), lineThickness, cv.LINE_AA, 0);
+          cv.line(
+            result,
+            p,
+            p2,
+            new cv.Scalar(0, 0, 0),
+            lineThickness,
+            cv.LINE_AA,
+            0
+          );
 
           let x0 = pin_coords[pin][0];
           let y0 = pin_coords[pin][1];
