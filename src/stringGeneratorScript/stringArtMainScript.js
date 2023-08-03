@@ -250,13 +250,20 @@ export async function createStringArt(
     img_result = nj.ones([IMG_SIZE, IMG_SIZE]).multiply(0xff);
 
     if (!result) {
-      result = nj.ones([IMG_SIZE * SCALE, IMG_SIZE * SCALE]).multiply(0xff);
+      // result = nj.ones([IMG_SIZE * SCALE, IMG_SIZE * SCALE]).multiply(0xff);
+
+      const starterArr = [];
+
+      for (let i = 0; i < IMG_SIZE * SCALE * (IMG_SIZE * SCALE); i++) {
+        starterArr.push(255);
+      }
+
       result = new cv.matFromArray(
         IMG_SIZE * SCALE,
         IMG_SIZE * SCALE,
         cv.CV_8UC1,
-        result.selection.data
-      );
+        starterArr
+      ); //result.selection.data
     }
 
     line_mask = nj.zeros([IMG_SIZE, IMG_SIZE], 'float64');
