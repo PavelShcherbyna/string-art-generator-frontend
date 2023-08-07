@@ -14,7 +14,8 @@ const GeneratorSettingsContainer = ({
   imageSrc,
   setImageSrc,
   onFileUploaded,
-  onGenerate
+  onGenerate,
+  baseImgRef
 }) => {
   const [imgForm, setImgForm] = useState('circle');
   const [imgScale, setImgScale] = useState(1.1);
@@ -33,12 +34,18 @@ const GeneratorSettingsContainer = ({
     editor = ed;
   };
 
-  const cropImage = async () => {
+  const cropImage = () => {
     if (setEditorRef) {
       const canvasScaled = editor.getImage();
-      const croppedImg = canvasScaled.toDataURL();
+      // const croppedImgURL = canvasScaled.toDataURL();
 
-      await setImageSrc(croppedImg);
+      const croppedImg = new Image();
+      croppedImg.src = canvasScaled.toDataURL();
+      croppedImg.width = canvasScaled.width;
+      croppedImg.height = canvasScaled.height;
+
+      baseImgRef.current = croppedImg;
+      // await setImageSrc(croppedImgURL);
     }
   };
 
@@ -145,8 +152,8 @@ const GeneratorSettingsContainer = ({
         {/*  </SliderWrapper>*/}
         {/*</div>*/}
         <ButtonWithBorder
-          onClick={async () => {
-            await cropImage();
+          onClick={() => {
+            cropImage();
             onGenerate();
           }}
         >

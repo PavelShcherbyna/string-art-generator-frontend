@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Voice from 'artyom.js';
 import { useInterval } from 'usehooks-ts';
 import { saveAs } from 'file-saver';
@@ -23,6 +23,7 @@ const GeneratorMainBlock = () => {
   const [stepsModalOpen, setStepsModalOpen] = useState(false);
   const [currentStepText, setCurrentStepText] = useState('');
   const [pickStepModalOpen, setPickStepModalOpen] = useState(false);
+  const baseImgRef = useRef(null);
 
   const voice = new Voice();
   voice.initialize({ lang: 'ru-RU', debug: false });
@@ -91,6 +92,7 @@ const GeneratorMainBlock = () => {
 
     for (const settingsObj of generalSettingsArr) {
       const result = await createStringArt(
+        baseImgRef.current,
         settingsObj.lines,
         settingsObj.outputCanvasId,
         resArr[resArr.length - 1]?.mathResult,
@@ -161,7 +163,7 @@ const GeneratorMainBlock = () => {
 
   return (
     <>
-      <img className="hidden" id="imageSrc" alt="Source" src={baseImageSrc} />
+      {/*<img className="hidden" id="imageSrc" alt="Source" src={baseImageSrc} />*/}
       {!baseImageSrc && generatorStep === 0 && (
         <PhotoInputCenter onFileUploaded={photoUploadedHandler} />
       )}
@@ -171,6 +173,7 @@ const GeneratorMainBlock = () => {
           setImageSrc={setBaseImageSrc}
           onFileUploaded={photoUploadedHandler}
           onGenerate={generateButtonHandler}
+          baseImgRef={baseImgRef}
         />
       )}
       {generatorStep === 2 && (

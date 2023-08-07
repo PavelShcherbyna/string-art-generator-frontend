@@ -51,6 +51,7 @@ function getLineErr(arr, coords1, coords2) {
 }
 
 export async function createStringArt(
+  baseImgElement,
   lines = 1000,
   canvasId = 'canvasOutput1',
   prevResult,
@@ -86,13 +87,13 @@ export async function createStringArt(
     // Take uploaded picture, square up and put on canvas
 
     // Source image
-    const imgElement = document.getElementById('imageSrc');
+    // const imgElement = document.getElementById('imageSrc');
 
     // Output canvas for round gray example
     ctx = document.getElementById('canvasGray').getContext('2d');
 
     let base_image = new Image();
-    base_image.src = imgElement.src;
+    base_image.src = baseImgElement.src;
     ctx.canvas.width = IMG_SIZE;
     ctx.canvas.height = IMG_SIZE;
     // ctx2.canvas.weight = IMG_SIZE * 2;
