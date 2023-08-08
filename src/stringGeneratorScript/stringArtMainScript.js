@@ -51,7 +51,7 @@ function getLineErr(arr, coords1, coords2) {
 }
 
 export async function createStringArt(
-  baseImgElement,
+  baseCanvasElement,
   lines = 1000,
   canvasId = 'canvasOutput1',
   prevResult,
@@ -92,32 +92,32 @@ export async function createStringArt(
     // Output canvas for round gray example
     ctx = document.getElementById('canvasGray').getContext('2d');
 
-    let base_image = new Image();
-    base_image.src = baseImgElement.src;
+    // let base_image = new Image();
+    // base_image.src = baseImgElement.src;
     ctx.canvas.width = IMG_SIZE;
     ctx.canvas.height = IMG_SIZE;
     // ctx2.canvas.weight = IMG_SIZE * 2;
     // ctx2.canvas.height = IMG_SIZE * 2;
     ctx.clearRect(0, 0, IMG_SIZE, IMG_SIZE);
 
-    let selectedWidth = base_image.width;
-    let selectedHeight = base_image.height;
+    let selectedWidth = baseCanvasElement.width;
+    let selectedHeight = baseCanvasElement.height;
     let xOffset = 0;
     let yOffset = 0;
 
-    // square crop  center of picture
-    if (base_image.height > base_image.width) {
-      selectedWidth = base_image.width;
-      selectedHeight = base_image.width;
-      yOffset = Math.floor((base_image.height - base_image.width) / 2);
-    } else if (base_image.width > base_image.height) {
-      selectedWidth = base_image.height;
-      selectedHeight = base_image.height;
-      xOffset = Math.floor((base_image.width - base_image.height) / 2);
+    // square crop  center of picture (Legacy code, with current image editor we already getting a canvas that ready to work with)
+    if (baseCanvasElement.height > baseCanvasElement.width) {
+      selectedWidth = baseCanvasElement.width;
+      selectedHeight = baseCanvasElement.width;
+      yOffset = Math.floor((baseCanvasElement.height - baseCanvasElement.width) / 2);
+    } else if (baseCanvasElement.width > baseCanvasElement.height) {
+      selectedWidth = baseCanvasElement.height;
+      selectedHeight = baseCanvasElement.height;
+      xOffset = Math.floor((baseCanvasElement.width - baseCanvasElement.height) / 2);
     }
 
     ctx.drawImage(
-      base_image,
+      baseCanvasElement,
       xOffset,
       yOffset,
       selectedWidth,

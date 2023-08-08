@@ -36,15 +36,15 @@ const GeneratorSettingsContainer = ({
 
   const cropImage = () => {
     if (setEditorRef) {
-      const canvasScaled = editor.getImage();
+      baseImgRef.current = editor.getImage();
       // const croppedImgURL = canvasScaled.toDataURL();
 
-      const croppedImg = new Image();
-      croppedImg.src = canvasScaled.toDataURL();
-      croppedImg.width = canvasScaled.width;
-      croppedImg.height = canvasScaled.height;
+      // const croppedImg = new Image();
+      // croppedImg.src = canvasScaled.toDataURL();
+      // croppedImg.width = canvasScaled.width;
+      // croppedImg.height = canvasScaled.height;
 
-      baseImgRef.current = croppedImg;
+
       // await setImageSrc(croppedImgURL);
     }
   };
