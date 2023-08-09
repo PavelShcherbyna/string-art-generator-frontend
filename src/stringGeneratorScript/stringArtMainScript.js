@@ -54,8 +54,9 @@ export async function createStringArt(
   baseCanvasElement,
   lines = 1000,
   canvasId = 'canvasOutput1',
-  prevResult,
-  prevLineSequence = []
+  setLineCalcProgress
+  // prevResult,
+  // prevLineSequence = [],
 ) {
   let lengthX; // instead of 'length' variable in old script
   let img_result;
@@ -67,9 +68,9 @@ export async function createStringArt(
   let line_cache_weight;
 
   let error;
-  let result = prevResult?.clone();
+  // let result = prevResult?.clone();
   let line_mask;
-  let line_sequence = [...prevLineSequence];
+  let line_sequence = [];
   let thread_length;
 
   let ctx;
@@ -109,11 +110,15 @@ export async function createStringArt(
     if (baseCanvasElement.height > baseCanvasElement.width) {
       selectedWidth = baseCanvasElement.width;
       selectedHeight = baseCanvasElement.width;
-      yOffset = Math.floor((baseCanvasElement.height - baseCanvasElement.width) / 2);
+      yOffset = Math.floor(
+        (baseCanvasElement.height - baseCanvasElement.width) / 2
+      );
     } else if (baseCanvasElement.width > baseCanvasElement.height) {
       selectedWidth = baseCanvasElement.height;
       selectedHeight = baseCanvasElement.height;
-      xOffset = Math.floor((baseCanvasElement.width - baseCanvasElement.height) / 2);
+      xOffset = Math.floor(
+        (baseCanvasElement.width - baseCanvasElement.height) / 2
+      );
     }
 
     ctx.drawImage(
@@ -250,22 +255,22 @@ export async function createStringArt(
       .subtract(nj.uint8(R.selection.data).reshape(IMG_SIZE, IMG_SIZE));
     img_result = nj.ones([IMG_SIZE, IMG_SIZE]).multiply(0xff);
 
-    if (!result) {
-      // result = nj.ones([IMG_SIZE * SCALE, IMG_SIZE * SCALE]).multiply(0xff);
-
-      const starterArr = [];
-
-      for (let i = 0; i < IMG_SIZE * SCALE * (IMG_SIZE * SCALE); i++) {
-        starterArr.push(255);
-      }
-
-      result = new cv.matFromArray(
-        IMG_SIZE * SCALE,
-        IMG_SIZE * SCALE,
-        cv.CV_8UC1,
-        starterArr
-      ); //result.selection.data
-    }
+    // if (!result) {
+    //   // result = nj.ones([IMG_SIZE * SCALE, IMG_SIZE * SCALE]).multiply(0xff);
+    //
+    //   const starterArr = [];
+    //
+    //   for (let i = 0; i < IMG_SIZE * SCALE * (IMG_SIZE * SCALE); i++) {
+    //     starterArr.push(255);
+    //   }
+    //
+    //   result = new cv.matFromArray(
+    //     IMG_SIZE * SCALE,
+    //     IMG_SIZE * SCALE,
+    //     cv.CV_8UC1,
+    //     starterArr
+    //   ); //result.selection.data
+    // }
 
     line_mask = nj.zeros([IMG_SIZE, IMG_SIZE], 'float64');
 
@@ -289,8 +294,13 @@ export async function createStringArt(
       return new Promise((resolve) => {
         if (l < MAX_LINES) {
           // Uncomment for sequential drawing
-          if (l % 100 === 0) {
-            draw();
+          // if (l % 100 === 0) {
+          //   // draw();
+          // }
+          const progressPercentage = (l / MAX_LINES) * 100;
+
+          if (Number.isInteger(progressPercentage)) {
+            setLineCalcProgress(Math.round(progressPercentage));
           }
 
           let max_err = -1;
@@ -332,23 +342,23 @@ export async function createStringArt(
           line_mask = setLine(line_mask, ys, xs, weight);
           error = subtractArrays(error, line_mask);
 
-          let p = new cv.Point(
-            pin_coords[pin][0] * SCALE,
-            pin_coords[pin][1] * SCALE
-          );
-          let p2 = new cv.Point(
-            pin_coords[best_pin][0] * SCALE,
-            pin_coords[best_pin][1] * SCALE
-          );
-          cv.line(
-            result,
-            p,
-            p2,
-            new cv.Scalar(0, 0, 0),
-            lineThickness,
-            cv.LINE_AA,
-            0
-          );
+          // let p = new cv.Point(
+          //   pin_coords[pin][0] * SCALE,
+          //   pin_coords[pin][1] * SCALE
+          // );
+          // let p2 = new cv.Point(
+          //   pin_coords[best_pin][0] * SCALE,
+          //   pin_coords[best_pin][1] * SCALE
+          // );
+          // cv.line(
+          //   result,
+          //   p,
+          //   p2,
+          //   new cv.Scalar(0, 0, 0),
+          //   lineThickness,
+          //   cv.LINE_AA,
+          //   0
+          // );
 
           let x0 = pin_coords[pin][0];
           let y0 = pin_coords[pin][1];
@@ -376,32 +386,32 @@ export async function createStringArt(
 
     await codeBlock();
 
-    Finalize();
+    // Finalize();
   }
 
   // Draw and final draw helpers:
-  function draw() {
-    let dsize = new cv.Size(OUTPUT_CANVAS_SIZE, OUTPUT_CANVAS_SIZE);
-    let dst = new cv.Mat();
-    cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
-    cv.imshow(outputCanvasId, dst);
-    dst.delete();
-  }
+  // function draw() {
+  //   let dsize = new cv.Size(OUTPUT_CANVAS_SIZE, OUTPUT_CANVAS_SIZE);
+  //   let dst = new cv.Mat();
+  //   cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
+  //   cv.imshow(outputCanvasId, dst);
+  //   dst.delete();
+  // }
 
-  function Finalize() {
-    let dsize = new cv.Size(OUTPUT_CANVAS_SIZE, OUTPUT_CANVAS_SIZE);
-    let dst = new cv.Mat();
-
-    cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
-
-    console.log('complete');
-
-    cv.imshow(outputCanvasId, dst);
-    console.log(line_sequence);
-
-    dst.delete();
-    // result.delete();
-  }
+  // function Finalize() {
+  //   let dsize = new cv.Size(OUTPUT_CANVAS_SIZE, OUTPUT_CANVAS_SIZE);
+  //   let dst = new cv.Mat();
+  //
+  //   cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
+  //
+  //   console.log('complete');
+  //
+  //   cv.imshow(outputCanvasId, dst);
+  //   console.log(line_sequence);
+  //
+  //   dst.delete();
+  //   // result.delete();
+  // }
 
   // Execution:
   canvasInit();
@@ -409,16 +419,16 @@ export async function createStringArt(
   await NonBlockingPrecalculateLines();
   await NonBlockingLineCalculator();
 
-  return { stepsArr: line_sequence, mathResult: result };
+  return line_sequence;
 }
 
-export function DrawResIntoCanvas(result, size, id) {
-  let dsize = new cv.Size(size, size);
-  let dst = new cv.Mat();
-
-  cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
-
-  cv.imshow(id, dst);
-
-  dst.delete();
-}
+// export function DrawResIntoCanvas(result, size, id) {
+//   let dsize = new cv.Size(size, size);
+//   let dst = new cv.Mat();
+//
+//   cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
+//
+//   cv.imshow(id, dst);
+//
+//   dst.delete();
+// }

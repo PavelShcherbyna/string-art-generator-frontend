@@ -8,7 +8,7 @@ import IconSave from '../../assets/IconSave';
 import IconShare from '../../assets/IconShare';
 import IconFileDownload from '../../assets/IconFileDownload';
 import cn from 'classnames';
-import Progress from '../Progress/Progress';
+import { LinearProgressWithLabel, Progress } from '../Progress/Progress';
 
 const ResultsContainer = (props) => {
   const {
@@ -21,7 +21,8 @@ const ResultsContainer = (props) => {
     pickCanvasHandler,
     selectedRes,
     processing,
-    onFileSave
+    onFileSave,
+    lineCalcProgress
   } = props;
 
   function onSliderChange(event, newValue) {
@@ -38,24 +39,27 @@ const ResultsContainer = (props) => {
             width="455"
             height="455"
           />
+          {processing && <LinearProgressWithLabel value={lineCalcProgress} />}
         </div>
-        <div className="result-images-wrapper">
-          {generalSettings.map(({ outputCanvasId, lines }, index) => {
-            return (
-              <div className="canvas-output-wrap" key={index}>
-                <canvas
-                  className={cn('canvas-output', {
-                    clickable: !processing,
-                    selected: selectedRes.outputCanvasId === outputCanvasId
-                  })}
-                  id={outputCanvasId}
-                  onClick={(e) => pickCanvasHandler(e)}
-                />
-                <span>{lines}</span>
-              </div>
-            );
-          })}
-        </div>
+        {!processing && (
+          <div className="result-images-wrapper">
+            {generalSettings.map(({ outputCanvasId, lines }, index) => {
+              return (
+                <div className="canvas-output-wrap" key={index}>
+                  <canvas
+                    className={cn('canvas-output', {
+                      clickable: !processing,
+                      selected: selectedRes.outputCanvasId === outputCanvasId
+                    })}
+                    id={outputCanvasId}
+                    onClick={(e) => pickCanvasHandler(e)}
+                  />
+                  <span>{lines}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
         {!processing && <LoadAnotherInput onFileUploaded={onFileUploaded} />}
       </div>
       <div className="controls-block">

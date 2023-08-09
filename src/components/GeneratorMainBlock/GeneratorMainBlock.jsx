@@ -5,10 +5,7 @@ import { saveAs } from 'file-saver';
 import PhotoInputCenter from '../PhotoInputCenter/PhotoInputCenter';
 import GeneratorSettingsContainer from '../GeneratorSettingsContainer/GeneratorSettingsContainer';
 import ResultsContainer from '../ResultsContainer/ResultsContainer';
-import {
-  createStringArt,
-  DrawResIntoCanvas
-} from '../../stringGeneratorScript/stringArtMainScript';
+import { createStringArt } from '../../stringGeneratorScript/stringArtMainScript';
 import StepsModal from '../StepsModal/StepsModal';
 import PickStepModal from '../StepsModal/PickStepModal';
 
@@ -24,6 +21,7 @@ const GeneratorMainBlock = () => {
   const [currentStepText, setCurrentStepText] = useState('');
   const [pickStepModalOpen, setPickStepModalOpen] = useState(false);
   const baseImgRef = useRef(null);
+  const [lineCalcProgress, setLineCalcProgress] = useState(0);
 
   const voice = new Voice();
   voice.initialize({ lang: 'ru-RU', debug: false });
@@ -88,20 +86,28 @@ const GeneratorMainBlock = () => {
     setProcessing(true);
     setSelectedRes({});
 
-    const resArr = [];
+    // const resArr = [];
+    // setLineCalcProgress
+    //     for (const settingsObj of generalSettingsArr) {
+    //       const result = await createStringArt(
+    //         baseImgRef.current,
+    //         settingsObj.lines,
+    //         settingsObj.outputCanvasId,
+    //         resArr[resArr.length - 1]?.stepsArr
+    //       );
+    //       resArr.push({ ...result, outputCanvasId: settingsObj.outputCanvasId });
+    //     }
 
-    for (const settingsObj of generalSettingsArr) {
-      const result = await createStringArt(
-        baseImgRef.current,
-        settingsObj.lines,
-        settingsObj.outputCanvasId,
-        resArr[resArr.length - 1]?.mathResult,
-        resArr[resArr.length - 1]?.stepsArr
-      );
-      resArr.push({ ...result, outputCanvasId: settingsObj.outputCanvasId });
-    }
+    const stepsArr = await createStringArt(
+      baseImgRef.current,
+      3000,
+      'canvasOutput0',
+      setLineCalcProgress
+    );
 
-    setResultsArr(resArr);
+    console.log('stepsArr: ', stepsArr.join(','));
+
+    // setResultsArr(resArr);
 
     setProcessing(false);
   };
@@ -112,7 +118,7 @@ const GeneratorMainBlock = () => {
 
       if (resObj) {
         const { stepsArr, mathResult, outputCanvasId } = resObj;
-        DrawResIntoCanvas(mathResult, 455, 'canvasGray'); // size - width and height of target canvas
+        //DrawResIntoCanvas(mathResult, 455, 'canvasGray'); // size - width and height of target canvas
 
         setSelectedRes({ stepsArr, outputCanvasId, currIndex: 0 });
       }
@@ -188,6 +194,7 @@ const GeneratorMainBlock = () => {
           selectedRes={selectedRes}
           processing={processing}
           onFileSave={onFileSave}
+          lineCalcProgress={lineCalcProgress}
         />
       )}
       <StepsModal
