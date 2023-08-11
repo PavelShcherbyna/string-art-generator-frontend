@@ -441,7 +441,9 @@ export async function drawLines(
 ) {
   const canvas = document.getElementById(canvasId);
   const context = canvas.getContext('2d');
-  context.reset();
+  // context.reset(); // not supported on iOS, we are using 'canvas.width = canvas.width' instead
+  // eslint-disable-next-line no-self-assign
+  canvas.width = canvas.width;
   const centerX = canvas.width / 2;
   const centerY = canvas.height / 2;
   const radius = Math.min(centerX, centerY);
