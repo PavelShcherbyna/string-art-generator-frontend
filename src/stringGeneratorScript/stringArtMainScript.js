@@ -53,8 +53,8 @@ function getLineErr(arr, coords1, coords2) {
 export async function createStringArt(
   baseCanvasElement,
   lines = 1000,
-  canvasId = 'canvasOutput1',
   setLineCalcProgress
+  // canvasId = 'canvasOutput1',
   // prevResult,
   // prevLineSequence = [],
 ) {
@@ -81,7 +81,7 @@ export async function createStringArt(
   let R;
   const lineThickness = 1.4; // 2
 
-  let outputCanvasId = canvasId;
+  // let outputCanvasId = canvasId;
 
   // Main flow functions:
   function canvasInit() {
@@ -247,7 +247,7 @@ export async function createStringArt(
   }
 
   async function NonBlockingLineCalculator() {
-    console.log('Drawing Lines...');
+    console.log('Calculating Lines...');
 
     error = nj
       .ones([IMG_SIZE, IMG_SIZE])
@@ -378,7 +378,7 @@ export async function createStringArt(
           l++;
           setTimeout(() => resolve(codeBlock()), 0);
         } else {
-          console.log('Done Drawing Lines');
+          console.log('Done Calculating Lines');
           resolve();
         }
       });
@@ -432,3 +432,75 @@ export async function createStringArt(
 //
 //   dst.delete();
 // }
+
+export async function drawLines(
+  canvasId,
+  stepsArr,
+  lineWidth = 0.1,
+  immediatelyFinished = true
+) {
+  const canvas = document.getElementById(canvasId);
+  const context = canvas.getContext('2d');
+  context.reset();
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const radius = Math.min(centerX, centerY);
+
+  function definePoints(numPoints) {
+    const angleIncrement = (2 * Math.PI) / numPoints;
+    const points = [];
+
+    for (let i = 0; i < numPoints; i++) {
+      const x = centerX + radius * Math.cos(i * angleIncrement);
+      const y = centerY + radius * Math.sin(i * angleIncrement);
+      points.push({ x, y });
+    }
+
+    return points;
+  }
+
+  function drawLinesImmediately(points, indexes) {
+    context.beginPath();
+    context.strokeStyle = 'black';
+    context.lineWidth = lineWidth;
+    context.moveTo(points[indexes[0]].x, points[indexes[0]].y);
+    for (let i = 1; i < indexes.length; i++) {
+      context.lineTo(points[indexes[i]].x, points[indexes[i]].y);
+    }
+    context.stroke();
+  }
+
+  let j = 0;
+
+  async function drawLineSequentially(points, indexes) {
+    return new Promise((resolve) => {
+      if (j < indexes.length - 1) {
+        const currentPointIndex = indexes[j];
+        const nextPointIndex = indexes[j + 1];
+
+        context.strokeStyle = 'black';
+        context.lineWidth = lineWidth;
+        context.beginPath();
+        context.moveTo(
+          points[currentPointIndex].x,
+          points[currentPointIndex].y
+        );
+        context.lineTo(points[nextPointIndex].x, points[nextPointIndex].y);
+        context.stroke();
+
+        j++;
+
+        setTimeout(() => resolve(drawLineSequentially(points, indexes)), 0);
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  const numPoints = 36 * 8;
+  const points = definePoints(numPoints);
+
+  immediatelyFinished
+    ? drawLinesImmediately(points, stepsArr)
+    : await drawLineSequentially(points, stepsArr);
+}

@@ -5,7 +5,10 @@ import { saveAs } from 'file-saver';
 import PhotoInputCenter from '../PhotoInputCenter/PhotoInputCenter';
 import GeneratorSettingsContainer from '../GeneratorSettingsContainer/GeneratorSettingsContainer';
 import ResultsContainer from '../ResultsContainer/ResultsContainer';
-import { createStringArt } from '../../stringGeneratorScript/stringArtMainScript';
+import {
+  createStringArt,
+  drawLines
+} from '../../stringGeneratorScript/stringArtMainScript';
 import StepsModal from '../StepsModal/StepsModal';
 import PickStepModal from '../StepsModal/PickStepModal';
 
@@ -13,9 +16,10 @@ const GeneratorMainBlock = () => {
   const [baseImageSrc, setBaseImageSrc] = useState('');
   const [generatorStep, setGeneratorStep] = useState(0);
   const [processing, setProcessing] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
   const [delay, setDelay] = useState(5000);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [resultsArr, setResultsArr] = useState([{}]); // { stepsArr, mathResult, outputCanvasId }
+  const [resultsArr, setResultsArr] = useState([{}]); // { stepsArr, outputCanvasId }
   const [selectedRes, setSelectedRes] = useState({}); // { stepsArr, outputCanvasId, currIndex }
   const [stepsModalOpen, setStepsModalOpen] = useState(false);
   const [currentStepText, setCurrentStepText] = useState('');
@@ -84,41 +88,60 @@ const GeneratorMainBlock = () => {
   const generateButtonHandler = async () => {
     await setGeneratorStep(2);
     setProcessing(true);
+    setIsCalculating(true);
     setSelectedRes({});
 
-    // const resArr = [];
-    // setLineCalcProgress
-    //     for (const settingsObj of generalSettingsArr) {
-    //       const result = await createStringArt(
-    //         baseImgRef.current,
-    //         settingsObj.lines,
-    //         settingsObj.outputCanvasId,
-    //         resArr[resArr.length - 1]?.stepsArr
-    //       );
-    //       resArr.push({ ...result, outputCanvasId: settingsObj.outputCanvasId });
-    //     }
+    const maxLines = generalSettingsArr.reduce(
+      (a, b) => Math.max(a, b.lines),
+      -Infinity
+    );
 
-    const stepsArr = await createStringArt(
+    const maxStepsArr = await createStringArt(
       baseImgRef.current,
-      3000,
-      'canvasOutput0',
+      maxLines,
       setLineCalcProgress
     );
 
-    console.log('stepsArr: ', stepsArr.join(','));
+    const resArr = [];
 
-    // setResultsArr(resArr);
+    for (const settingsObj of generalSettingsArr) {
+      const stepsArr = maxStepsArr.slice(0, settingsObj.lines + 1);
+
+      resArr.push({ stepsArr, outputCanvasId: settingsObj.outputCanvasId });
+    }
+
+    setResultsArr(resArr);
+
+    setIsCalculating(false);
+
+    const lineWidth = 0.03;
+    const immediatelyFinished = false;
+
+    await Promise.all(
+      resArr.map((resObj) =>
+        drawLines(
+          resObj.outputCanvasId,
+          resObj.stepsArr,
+          lineWidth,
+          immediatelyFinished
+        )
+      )
+    );
 
     setProcessing(false);
   };
 
-  const pickCanvasHandler = (e) => {
+  const pickCanvasHandler = async (e) => {
     if (!processing) {
       const resObj = resultsArr.find((el) => el.outputCanvasId === e.target.id);
 
       if (resObj) {
-        const { stepsArr, mathResult, outputCanvasId } = resObj;
-        //DrawResIntoCanvas(mathResult, 455, 'canvasGray'); // size - width and height of target canvas
+        const { stepsArr, outputCanvasId } = resObj;
+
+        const lineWidth = 0.1;
+        const immediatelyFinished = true;
+
+        await drawLines('canvasGray', stepsArr, lineWidth, immediatelyFinished);
 
         setSelectedRes({ stepsArr, outputCanvasId, currIndex: 0 });
       }
@@ -195,6 +218,7 @@ const GeneratorMainBlock = () => {
           processing={processing}
           onFileSave={onFileSave}
           lineCalcProgress={lineCalcProgress}
+          isCalculating={isCalculating}
         />
       )}
       <StepsModal
