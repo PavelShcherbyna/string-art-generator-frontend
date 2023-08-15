@@ -114,17 +114,12 @@ const GeneratorMainBlock = () => {
 
     setIsCalculating(false);
 
-    const lineWidth = 0.03;
+    // const lineWidth = 0.03;
     const immediatelyFinished = false;
 
     await Promise.all(
       resArr.map((resObj) =>
-        drawLines(
-          resObj.outputCanvasId,
-          resObj.stepsArr,
-          lineWidth,
-          immediatelyFinished
-        )
+        drawLines(resObj.outputCanvasId, resObj.stepsArr, immediatelyFinished)
       )
     );
 
@@ -138,10 +133,10 @@ const GeneratorMainBlock = () => {
       if (resObj) {
         const { stepsArr, outputCanvasId } = resObj;
 
-        const lineWidth = 0.1;
+        // const lineWidth = 0.1;
         const immediatelyFinished = true;
 
-        await drawLines('canvasGray', stepsArr, lineWidth, immediatelyFinished);
+        await drawLines('canvasGray', stepsArr, immediatelyFinished);
 
         setSelectedRes({ stepsArr, outputCanvasId, currIndex: 0 });
       }

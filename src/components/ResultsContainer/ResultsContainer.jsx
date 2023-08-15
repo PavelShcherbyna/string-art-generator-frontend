@@ -45,9 +45,9 @@ const ResultsContainer = (props) => {
           )}
         </div>
         <div
-          className={cn({
-            hidden: isCalculating,
-            'result-images-wrapper': !isCalculating
+          className={cn('result-images-wrapper', {
+            // hidden: isCalculating,
+            // 'result-images-wrapper': !isCalculating
           })}
         >
           {generalSettings.map(({ outputCanvasId, lines }, index) => {
@@ -63,7 +63,7 @@ const ResultsContainer = (props) => {
                   width="131"
                   height="131"
                 />
-                <span>{lines}</span>
+                {isCalculating ? null : <span>{lines}</span>}
               </div>
             );
           })}
