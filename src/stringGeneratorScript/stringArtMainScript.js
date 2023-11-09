@@ -1,5 +1,8 @@
 /* eslint-disable no-undef */
 
+// Constants
+const numberOfPins = 250;
+
 // Helpers:
 function linspace(a, b, n) {
   if (typeof n === 'undefined') n = Math.max(Math.round(b - a) + 1, 1);
@@ -74,7 +77,7 @@ export async function createStringArt(
   let thread_length;
 
   let ctx;
-  let N_PINS = 36 * 8;
+  let N_PINS = numberOfPins;
   let MAX_LINES = lines; // 4000;
   const IMG_SIZE = 455;
   const OUTPUT_CANVAS_SIZE = 131;
@@ -436,17 +439,35 @@ export async function createStringArt(
 export async function drawLines(
   canvasId,
   stepsArr,
-  lineWidth = 0.1,
+  // lineWidth = 0.1,
   immediatelyFinished = true
 ) {
   const canvas = document.getElementById(canvasId);
+  const { width } = canvas.getBoundingClientRect();
+
   const context = canvas.getContext('2d');
   // context.reset(); // not supported on iOS, we are using 'canvas.width = canvas.width' instead
   // eslint-disable-next-line no-self-assign
-  canvas.width = canvas.width;
+  if (context.reset) {
+    context.reset()
+  } else {
+    canvas.width = canvas.width;
+  }
+
   const centerX = canvas.width / 2;
   const centerY = canvas.height / 2;
   const radius = Math.min(centerX, centerY);
+
+  const pixelRatio = window.devicePixelRatio || 1;
+  const actualDeviceWidth = window.innerWidth;
+  const deviceWidthStandard = 1920;
+
+  const baseWidth = 455;
+  // const baseLineWidth = actualDeviceWidth / deviceWidthStandard / 10;
+  const baseLineWidth = 0.1;
+
+  const actualLineWidth =
+    (baseLineWidth * (canvas.width / baseWidth)) / pixelRatio;
 
   function definePoints(numPoints) {
     const angleIncrement = (2 * Math.PI) / numPoints;
@@ -464,7 +485,7 @@ export async function drawLines(
   function drawLinesImmediately(points, indexes) {
     context.beginPath();
     context.strokeStyle = 'black';
-    context.lineWidth = lineWidth;
+    context.lineWidth = actualLineWidth;
     context.moveTo(points[indexes[0]].x, points[indexes[0]].y);
     for (let i = 1; i < indexes.length; i++) {
       context.lineTo(points[indexes[i]].x, points[indexes[i]].y);
@@ -481,7 +502,7 @@ export async function drawLines(
         const nextPointIndex = indexes[j + 1];
 
         context.strokeStyle = 'black';
-        context.lineWidth = lineWidth;
+        context.lineWidth = actualLineWidth;
         context.beginPath();
         context.moveTo(
           points[currentPointIndex].x,
@@ -499,8 +520,7 @@ export async function drawLines(
     });
   }
 
-  const numPoints = 36 * 8;
-  const points = definePoints(numPoints);
+  const points = definePoints(numberOfPins);
 
   immediatelyFinished
     ? drawLinesImmediately(points, stepsArr)
