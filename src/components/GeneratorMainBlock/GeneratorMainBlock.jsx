@@ -116,7 +116,7 @@ const GeneratorMainBlock = () => {
     setIsCalculating(false);
 
     // const lineWidth = 0.03;
-    const immediatelyFinished = true;
+    const immediatelyFinished = false;
 
     await Promise.all([
       ...resArr.map((resObj) =>
