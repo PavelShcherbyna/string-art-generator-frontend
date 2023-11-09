@@ -36,14 +36,25 @@ const ResultsContainer = (props) => {
         <div className="big-img-wrapper">
           <canvas
             id="canvasGray"
-            className="chosen-result"
+            className={cn('chosen-result', {
+              invisible: selectedRes.outputCanvasId
+            })}
             width="455"
             height="455"
+          />
+          <img
+            id="resultImage"
+            alt={''}
+            src={''}
+            className={cn('chosen-result', {
+              invisible: !selectedRes.outputCanvasId
+            })}
           />
           {isCalculating && (
             <LinearProgressWithLabel value={lineCalcProgress} />
           )}
         </div>
+
         <div
           className={cn('result-images-wrapper', {
             // hidden: isCalculating,
@@ -54,14 +65,20 @@ const ResultsContainer = (props) => {
             return (
               <div className="canvas-output-wrap" key={index}>
                 <canvas
+                  className={'invisible'}
+                  id={`${outputCanvasId}-hd`}
+                  width="2000"
+                  height="2000"
+                />
+                <canvas
                   className={cn('canvas-output', {
                     clickable: !processing,
                     selected: selectedRes.outputCanvasId === outputCanvasId
                   })}
                   id={outputCanvasId}
                   onClick={(e) => pickCanvasHandler(e)}
-                  width="131"
-                  height="131"
+                  width="400"
+                  height="400"
                 />
                 {isCalculating ? null : <span>{lines}</span>}
               </div>

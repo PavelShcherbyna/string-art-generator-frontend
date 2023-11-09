@@ -19,8 +19,8 @@ const GeneratorMainBlock = () => {
   const [isCalculating, setIsCalculating] = useState(false);
   const [delay, setDelay] = useState(5000);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [resultsArr, setResultsArr] = useState([{}]); // { stepsArr, outputCanvasId }
-  const [selectedRes, setSelectedRes] = useState({}); // { stepsArr, outputCanvasId, currIndex }
+  const [resultsArr, setResultsArr] = useState([{}]); // { stepsArr, outputCanvasId, imgSrc }
+  const [selectedRes, setSelectedRes] = useState({}); // { stepsArr, outputCanvasId, currIndex, imgSrc }
   const [stepsModalOpen, setStepsModalOpen] = useState(false);
   const [currentStepText, setCurrentStepText] = useState('');
   const [pickStepModalOpen, setPickStepModalOpen] = useState(false);
@@ -82,6 +82,7 @@ const GeneratorMainBlock = () => {
     if (e.target.files[0]) {
       setBaseImageSrc(URL.createObjectURL(e.target.files[0]));
       setGeneratorStep(1);
+      setLineCalcProgress(0);
     }
   };
 
@@ -115,13 +116,22 @@ const GeneratorMainBlock = () => {
     setIsCalculating(false);
 
     // const lineWidth = 0.03;
-    const immediatelyFinished = false;
+    const immediatelyFinished = true;
 
-    await Promise.all(
-      resArr.map((resObj) =>
+    await Promise.all([
+      ...resArr.map((resObj) =>
         drawLines(resObj.outputCanvasId, resObj.stepsArr, immediatelyFinished)
+      ),
+      ...resArr.map((resObj) =>
+        drawLines(`${resObj.outputCanvasId}-hd`, resObj.stepsArr, immediatelyFinished)
       )
-    );
+    ]);
+
+    resArr.forEach((resObj) => {
+      const canvas = document.getElementById(`${resObj.outputCanvasId}-hd`);
+
+      resObj.imgSrc = canvas.toDataURL('image/png');
+    });
 
     setProcessing(false);
   };
@@ -131,12 +141,15 @@ const GeneratorMainBlock = () => {
       const resObj = resultsArr.find((el) => el.outputCanvasId === e.target.id);
 
       if (resObj) {
-        const { stepsArr, outputCanvasId } = resObj;
+        const { stepsArr, outputCanvasId, imgSrc } = resObj;
 
         // const lineWidth = 0.1;
-        const immediatelyFinished = true;
+        // const immediatelyFinished = true;
+        //
+        // await drawLines('canvasGray', stepsArr, immediatelyFinished);
 
-        await drawLines('canvasGray', stepsArr, immediatelyFinished);
+        const image = document.getElementById('resultImage');
+        image.src = imgSrc;
 
         setSelectedRes({ stepsArr, outputCanvasId, currIndex: 0 });
       }
