@@ -1,3 +1,5 @@
+import { createAction } from 'redux-act';
+
 export const sagaActions = {
-  TEST_ACTION: 'TEST_ACTION'
+  CODE_LOGIN: createAction('CODE_LOGIN')
 };

@@ -4,7 +4,7 @@ export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin: 0 0 65px;
+  margin: 0 0 55px;
 
   .header-block {
     @media (min-width: 650px) {

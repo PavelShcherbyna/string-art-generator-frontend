@@ -32,12 +32,12 @@ export const SliderWrapper = styled.div`
 
 export const ButtonWithBorder = styled.button`
   cursor: pointer;
-  font-family: 'Inter', sans-serif;
+  font-family: Inter;
   font-style: normal;
   font-weight: 600;
   font-size: 26px;
   line-height: 31px;
-  color: #000000;
+  color: #484848;
   padding: 12px 40px;
   border: 2px solid black;
   background: transparent;
@@ -45,9 +45,21 @@ export const ButtonWithBorder = styled.button`
   justify-content: center;
   align-items: center;
   gap: 15px;
+  border-radius: 4px;
 
   &:focus {
     outline: none;
+  }
+
+  &.font18 {
+    font-size: 18px;
+  }
+
+  &.hover-black {
+    &:hover {
+      background: #484848;
+      color: #fff;
+    }
   }
 `;
 
@@ -164,11 +176,11 @@ export const AuthFormContainer = styled.div`
         outline: none;
       }
     }
-    
-    .btm-link-wrap{
+
+    .btm-link-wrap {
       color: #888;
 
-      .link{
+      .link {
         color: #000;
         font-weight: 800;
       }
