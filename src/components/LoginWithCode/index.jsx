@@ -19,6 +19,23 @@ const LoginSchema = Yup.object().shape({
     .required('Введите код!')
 });
 
+const EnterBlock = ({ setStep }) => {
+  return (
+    <div className={'enter-block-wrap'}>
+      <ButtonWithBorder
+        className={'font18 hover-black'}
+        onClick={() => setStep(1)}
+      >
+        Войти
+      </ButtonWithBorder>
+      <div className={'instruction'}>
+        <img src={HelpIconSVG} alt="question mark" />
+        <span>ИНСТРУКЦИЯ</span>
+      </div>
+    </div>
+  );
+};
+
 const LoginWithCode = () => {
   const [step, setStep] = useState(0);
   const dispatch = useDispatch();
@@ -85,20 +102,7 @@ const LoginWithCode = () => {
           </ButtonWithBorder>
         </form>
       )}
-      {!loginLoading && step !== 1 && (
-        <div className={'enter-block-wrap'}>
-          <ButtonWithBorder
-            className={'font18 hover-black'}
-            onClick={() => setStep(1)}
-          >
-            Войти
-          </ButtonWithBorder>
-          <div className={'instruction'}>
-            <img src={HelpIconSVG} alt="question mark" />
-            <span>ИНСТРУКЦИЯ</span>
-          </div>
-        </div>
-      )}
+      {!loginLoading && step !== 1 && <EnterBlock setStep={setStep} />}
     </AuthWithCodePageWrap>
   );
 };

@@ -1,13 +1,15 @@
 import styled from 'styled-components';
 
 export const AuthWithCodePageWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  margin: 0 0 55px; // Margin-bottom needed for better centering inside 'flex' parent
-
-  flex: 1;
+  //display: flex;
+  //justify-content: center;
+  //align-items: center;
+  //margin: 0 0 55px; // Margin-bottom needed for better centering inside 'flex' parent
+  //flex: 1;
+  width: 100%;
+  height: 50vh;
+  display: grid;
+  place-items: center;
 
   form {
     display: flex;
