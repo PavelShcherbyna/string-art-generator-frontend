@@ -3,8 +3,12 @@ import { HeaderContainer } from './styles';
 import RomanFlagSVG from '../../assets/roman_flag.svg';
 import MainLogo from '../../assets/mainLogo.svg';
 import NoteSVG from '../../assets/note.svg';
-import BookmarkSVG from '../../assets/bookmark.svg';
 import HelpIconSVG from '../../assets/help_icon.svg';
+import HomeSVG from '../../assets/Home.svg';
+import ShadedHomeSVG from '../../assets/Shaded_home.svg';
+import BookmarkSVG from '../../assets/bookmark.svg';
+import ShadedBookmarkSVG from '../../assets/Shaded_bookmark.svg';
+import { NavLink } from 'react-router-dom';
 
 const languages = {
   roman: { flagSVG: RomanFlagSVG, code: 'RO' }
@@ -21,15 +25,30 @@ const Header = ({ language = 'roman' }) => {
         <img src={MainLogo} alt="Logotype" />
       </div>
       <div className="header-button-panel header-block">
-        <button className="toggle-mute">
-          <img src={NoteSVG} alt="Note" />
-        </button>
-        <button className="toggle-bookmark">
-          <img src={BookmarkSVG} alt="Bookmark" />
-        </button>
-        <button className="toggle-help">
+        {/*<button className="toggle-mute">*/}
+        {/*  <img src={NoteSVG} alt="Note" />*/}
+        {/*</button>*/}
+        <NavLink end to="/app">
+          {({ isActive }) => {
+            return isActive ? (
+              <img src={ShadedHomeSVG} alt="Shaded home icon" />
+            ) : (
+              <img src={HomeSVG} alt="Home icon" />
+            );
+          }}
+        </NavLink>
+        <NavLink to="/app/saved">
+          {({ isActive }) => {
+            return isActive ? (
+              <img src={ShadedBookmarkSVG} alt="Shaded bookmark icon" />
+            ) : (
+              <img src={BookmarkSVG} alt="Bookmark icon" />
+            );
+          }}
+        </NavLink>
+        <div>
           <img src={HelpIconSVG} alt="Help" />
-        </button>
+        </div>
       </div>
     </HeaderContainer>
   );

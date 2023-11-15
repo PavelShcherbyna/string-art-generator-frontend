@@ -7,6 +7,7 @@ import Toast from './components/shared/Toast';
 import { removeSessionStorageItem } from './helpers/sessionStorage';
 import { access_token } from './constants';
 import { AppLayout } from './components/RoutesComponents/AppLayout';
+import SavedProjectsContainer from './components/SavedProjectsContainer';
 
 function App() {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ function App() {
         <Route path="/" element={<LoginWithCode />} />
         <Route path="/app" element={<AppLayout />}>
           <Route path="/app" element={<GeneratorMainBlock />} />
+          <Route path="/app/saved" element={<SavedProjectsContainer />} />
         </Route>
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
       </Routes>

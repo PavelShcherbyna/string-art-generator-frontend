@@ -449,7 +449,7 @@ export async function drawLines(
   // context.reset(); // not supported on iOS, we are using 'canvas.width = canvas.width' instead
   // eslint-disable-next-line no-self-assign
   if (context.reset) {
-    context.reset()
+    context.reset();
   } else {
     canvas.width = canvas.width;
   }
@@ -525,4 +525,65 @@ export async function drawLines(
   immediatelyFinished
     ? drawLinesImmediately(points, stepsArr)
     : await drawLineSequentially(points, stepsArr);
+}
+
+export function drawLinesSync(
+  canvasId,
+  stepsArr
+  // lineWidth = 0.1,
+) {
+  const canvas = document.getElementById(canvasId);
+  const { width } = canvas.getBoundingClientRect();
+
+  const context = canvas.getContext('2d');
+  // context.reset(); // not supported on iOS, we are using 'canvas.width = canvas.width' instead
+  // eslint-disable-next-line no-self-assign
+  if (context.reset) {
+    context.reset();
+  } else {
+    canvas.width = canvas.width;
+  }
+
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const radius = Math.min(centerX, centerY);
+
+  const pixelRatio = window.devicePixelRatio || 1;
+  const actualDeviceWidth = window.innerWidth;
+  const deviceWidthStandard = 1920;
+
+  const baseWidth = 455;
+  // const baseLineWidth = actualDeviceWidth / deviceWidthStandard / 10;
+  const baseLineWidth = 0.1;
+
+  const actualLineWidth =
+    (baseLineWidth * (canvas.width / baseWidth)) / pixelRatio;
+
+  function definePoints(numPoints) {
+    const angleIncrement = (2 * Math.PI) / numPoints;
+    const points = [];
+
+    for (let i = 0; i < numPoints; i++) {
+      const x = centerX + radius * Math.cos(i * angleIncrement);
+      const y = centerY + radius * Math.sin(i * angleIncrement);
+      points.push({ x, y });
+    }
+
+    return points;
+  }
+
+  function drawLinesImmediately(points, indexes) {
+    context.beginPath();
+    context.strokeStyle = 'black';
+    context.lineWidth = actualLineWidth;
+    context.moveTo(points[indexes[0]].x, points[indexes[0]].y);
+    for (let i = 1; i < indexes.length; i++) {
+      context.lineTo(points[indexes[i]].x, points[indexes[i]].y);
+    }
+    context.stroke();
+  }
+
+  const points = definePoints(numberOfPins);
+
+  drawLinesImmediately(points, stepsArr);
 }

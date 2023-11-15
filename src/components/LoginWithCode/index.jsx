@@ -7,10 +7,9 @@ import { ButtonWithBorder } from '../reusableStyles';
 import HelpIconSVG from '../../assets/help_icon.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getSessionStorageItem } from '../../helpers/sessionStorage';
-import { access_token } from '../../constants';
 import { loginUser } from '../../store/userData/slice';
 import { Progress } from '../Progress/Progress';
+import { useIsLoggedIn } from '../../helpers/customHooks';
 
 const LoginSchema = Yup.object().shape({
   password: Yup.string()
@@ -43,21 +42,20 @@ const LoginWithCode = () => {
   const paramsCode = searchParams.get('code');
 
   const navigate = useNavigate();
-  const { isLoggedIn, loginLoading } = useSelector((state) => state.userData);
-  const token = getSessionStorageItem(access_token);
+  const { loginLoading } = useSelector((state) => state.userData);
+  const isLoggedIn = useIsLoggedIn();
 
   useEffect(() => {
     if (paramsCode && paramsCode.replace(/\D/g, '').length === 6) {
-      console.log('GOT CODE FROM URL!');
       dispatch(loginUser({ password: paramsCode }));
     }
   }, [dispatch, paramsCode]);
 
   useEffect(() => {
-    if (isLoggedIn || token) {
+    if (isLoggedIn) {
       navigate('/app');
     }
-  }, [isLoggedIn, navigate, token]);
+  }, [isLoggedIn, navigate]);
 
   const formik = useFormik({
     initialValues: {
@@ -85,6 +83,7 @@ const LoginWithCode = () => {
         <form onSubmit={formik.handleSubmit}>
           <div className={'input-wrap'}>
             <input
+              autoFocus
               id="password"
               name="password"
               type="text"

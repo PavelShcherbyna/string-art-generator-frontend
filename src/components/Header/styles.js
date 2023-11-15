@@ -24,19 +24,24 @@ export const HeaderContainer = styled.header`
   }
   .header-button-panel {
     display: flex;
-    gap: 12px;
-
-    button {
-      border: none;
-      width: 31px;
-      height: 31px;
-      background-color: transparent;
-      padding: 0;
-      cursor: pointer;
-
-      &:focus {
-        outline: none;
-      }
+    gap: 20px;
+    
+    img {
+      width: 23px;
+      height: 23px;
     }
+
+    //button {
+    //  border: none;
+    //  width: 31px;
+    //  height: 31px;
+    //  background-color: transparent;
+    //  padding: 0;
+    //  cursor: pointer;
+    //
+    //  &:focus {
+    //    outline: none;
+    //  }
+    //}
   }
 `;
