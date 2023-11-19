@@ -8,6 +8,7 @@ import { removeSessionStorageItem } from './helpers/sessionStorage';
 import { access_token } from './constants';
 import { AppLayout } from './components/RoutesComponents/AppLayout';
 import SavedProjectsContainer from './components/SavedProjectsContainer';
+import StepsPlayer from "./components/StepsPlayer";
 
 function App() {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ function App() {
     <>
       <Toast />
       <Header />
+      {/*<StepsPlayer/>*/}
       <Routes>
         <Route path="/" element={<LoginWithCode />} />
         <Route path="/app" element={<AppLayout />}>

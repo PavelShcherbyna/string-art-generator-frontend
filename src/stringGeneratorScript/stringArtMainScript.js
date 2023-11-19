@@ -532,7 +532,11 @@ export function drawLinesSync(
   stepsArr
   // lineWidth = 0.1,
 ) {
+  if (!stepsArr || stepsArr.length < 1) {
+    return;
+  }
   const canvas = document.getElementById(canvasId);
+
   const { width } = canvas.getBoundingClientRect();
 
   const context = canvas.getContext('2d');
@@ -586,4 +590,86 @@ export function drawLinesSync(
   const points = definePoints(numberOfPins);
 
   drawLinesImmediately(points, stepsArr);
+}
+
+export function drawLinesSVG(svgId, stepsArr, immediatelyFinished = true) {
+  if (!stepsArr || stepsArr.length < 1) {
+    return;
+  }
+
+  const svg = document.getElementById(svgId);
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  const { width, height } = svg.getBoundingClientRect();
+
+  // Очистка SVG
+  while (svg.firstChild) {
+    svg.removeChild(svg.firstChild);
+  }
+
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const radius = Math.min(centerX, centerY);
+
+  const baseLineWidth = 0.04;
+
+  function definePoints(numPoints) {
+    const angleIncrement = (2 * Math.PI) / numPoints;
+    const points = [];
+
+    for (let i = 0; i < numPoints; i++) {
+      const x = centerX + radius * Math.cos(i * angleIncrement);
+      const y = centerY + radius * Math.sin(i * angleIncrement);
+      points.push({ x, y });
+    }
+
+    return points;
+  }
+
+  function drawLinesImmediately(points, indexes) {
+    const path = document.createElementNS(svgNS, 'path');
+    const d = indexes
+      .map((index, i) => {
+        return `${i === 0 ? 'M' : 'L'} ${points[index].x} ${points[index].y}`;
+      })
+      .join(' ');
+
+    path.setAttribute('d', d);
+    path.setAttribute('stroke', 'black');
+    path.setAttribute('stroke-width', baseLineWidth.toString());
+    path.setAttribute('fill', 'none');
+    svg.appendChild(path);
+  }
+
+  // let j = 0;
+  //
+  // async function drawLineSequentially(points, indexes) {
+  //   return new Promise((resolve) => {
+  //     if (j < indexes.length - 1) {
+  //       const currentPointIndex = indexes[j];
+  //       const nextPointIndex = indexes[j + 1];
+  //
+  //       const path = document.createElementNS(svgNS, "path");
+  //       const d = `${j === 0 ? 'M' : 'L'} ${points[currentPointIndex].x} ${points[currentPointIndex].y} L ${points[nextPointIndex].x} ${points[nextPointIndex].y}`;
+  //
+  //       path.setAttribute("d", d);
+  //       path.setAttribute("stroke", "black");
+  //       path.setAttribute("stroke-width", baseLineWidth);
+  //       path.setAttribute("fill", "none");
+  //       svg.appendChild(path);
+  //
+  //       j++;
+  //
+  //       setTimeout(() => resolve(drawLineSequentially(points, indexes)), 0);
+  //     } else {
+  //       resolve();
+  //     }
+  //   });
+  // }
+
+  const points = definePoints(numberOfPins);
+  drawLinesImmediately(points, stepsArr);
+  // immediatelyFinished
+  //   ? drawLinesImmediately(points, stepsArr)
+  //   : await drawLineSequentially(points, stepsArr);
 }

@@ -3,21 +3,36 @@ import { createSlice } from '@reduxjs/toolkit';
 export const userDataSlice = createSlice({
   name: 'userData',
   initialState: {
-    drawnings: [],
+    loginLoading: false,
     isLoggedIn: false,
-    loginLoading: false
+    drawings: [],
+    justGenDrawId: '',
+    inPlayerDrawId: ''
   },
   reducers: {
     loginUser: (state, action) => {
       return { ...state, loginLoading: true };
     },
     saveUserData: (state, action) => {
-      const { drawnings = [], isLoggedIn = false } = action.payload;
-      return { ...state, drawnings, isLoggedIn, loginLoading: false };
+      const { drawings = [], isLoggedIn = false } = action.payload;
+
+      return { ...state, drawings, isLoggedIn, loginLoading: false };
+    },
+    postDrawings: (state, action) => {
+      const { drawings = [] } = action.payload;
+      const justGenDrawId = drawings[0]?.f_id;
+
+      return { ...state, justGenDrawId };
+    },
+    saveDrawings: (state, action) => {
+      const { drawings = [] } = action.payload;
+
+      return { ...state, drawings };
     }
   }
 });
 
-export const { loginUser, saveUserData } = userDataSlice.actions;
+export const { loginUser, saveUserData, postDrawings, saveDrawings } =
+  userDataSlice.actions;
 
 export default userDataSlice.reducer;

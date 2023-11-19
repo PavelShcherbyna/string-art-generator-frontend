@@ -61,29 +61,29 @@ const ResultsContainer = (props) => {
             // 'result-images-wrapper': !isCalculating
           })}
         >
-          {generalSettings.map(({ outputCanvasId, lines }, index) => {
-            return (
-              <div className="canvas-output-wrap" key={index}>
-                <canvas
-                  className={'invisible'}
-                  id={`${outputCanvasId}-hd`}
-                  width="2000"
-                  height="2000"
-                />
-                <canvas
-                  className={cn('canvas-output', {
-                    clickable: !processing,
-                    selected: selectedRes.outputCanvasId === outputCanvasId
-                  })}
-                  id={outputCanvasId}
-                  onClick={(e) => pickCanvasHandler(e)}
-                  width="400"
-                  height="400"
-                />
-                {isCalculating ? null : <span>{lines}</span>}
-              </div>
-            );
-          })}
+          {/*{generalSettings.map(({ outputCanvasId, lines }, index) => {*/}
+          {/*  return (*/}
+          {/*    <div className="canvas-output-wrap" key={index}>*/}
+          {/*      <canvas*/}
+          {/*        className={'invisible'}*/}
+          {/*        id={`${outputCanvasId}-hd`}*/}
+          {/*        width="2000"*/}
+          {/*        height="2000"*/}
+          {/*      />*/}
+          {/*      <canvas*/}
+          {/*        className={cn('canvas-output', {*/}
+          {/*          clickable: !processing,*/}
+          {/*          selected: selectedRes.outputCanvasId === outputCanvasId*/}
+          {/*        })}*/}
+          {/*        id={outputCanvasId}*/}
+          {/*        onClick={(e) => pickCanvasHandler(e)}*/}
+          {/*        width="400"*/}
+          {/*        height="400"*/}
+          {/*      />*/}
+          {/*      {isCalculating ? null : <span>{lines}</span>}*/}
+          {/*    </div>*/}
+          {/*  );*/}
+          {/*})}*/}
         </div>
         {!processing && <LoadAnotherInput onFileUploaded={onFileUploaded} />}
       </div>

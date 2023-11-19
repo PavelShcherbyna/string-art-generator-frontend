@@ -15,20 +15,31 @@ export const SavedProjectsWrapper = styled.div`
     line-height: normal;
   }
 
-  .saved-drawnings-wrap {
+  .saved-drawings-wrap {
     display: flex;
     flex-wrap: wrap;
     gap: 50px;
-    
+
     canvas {
       max-width: 200px;
       max-height: 200px;
-      
+
       @media (max-width: 480px) {
         max-width: 140px;
         max-height: 140px;
       }
+    }
+
+    svg {
+      width: 200px;
+      height: 200px;
       
+      
+
+      @media (max-width: 480px) {
+        max-width: 140px;
+        max-height: 140px;
+      }
     }
   }
 `;
