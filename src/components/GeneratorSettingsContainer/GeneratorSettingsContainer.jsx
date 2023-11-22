@@ -4,11 +4,13 @@ import AvatarEditor from 'react-avatar-editor';
 import { GenSettingContainerWrapper } from './styles';
 import { SliderWrapper, ButtonWithBorder } from '../reusableStyles';
 import { Box, Slider, Stack } from '@mui/material';
-import IconLowBright from '../../assets/IconLowBright';
-import IconHighBright from '../../assets/IconHighBright';
-import IconLowContrast from '../../assets/IconLowContrast';
-import IconHighContrast from '../../assets/IconHighContrast';
 import LoadAnotherInput from '../LoadAnotherInput/LoadAnotherInput';
+import minusSVG from '../../assets/icon_minus.svg';
+import plusSVG from '../../assets/icon_plus.svg';
+import lowBrightSVG from '../../assets/low_bright.svg';
+import highBrightSVG from '../../assets/high_bright.svg';
+import lowContrastSVG from '../../assets/low_contrast.svg';
+import highContrastSVG from '../../assets/high_contrast.svg';
 
 const GeneratorSettingsContainer = ({
   imageSrc,
@@ -17,15 +19,21 @@ const GeneratorSettingsContainer = ({
   onGenerate,
   baseImgRef
 }) => {
-  const [imgForm, setImgForm] = useState('circle');
+  // const [imgForm, setImgForm] = useState('circle');
   const [imgScale, setImgScale] = useState(1.1);
-  const [imgRotate, setImgRotate] = useState(0);
-  // const [bright, setBright] = useState(0);
-  // const [contrast, setContrast] = useState(0);
+  // const [imgRotate, setImgRotate] = useState(0);
+  const [bright, setBright] = useState(0);
+  const [contrast, setContrast] = useState(0);
+
+  const imgEditorStyle = {
+    width: 'clamp(390px, 33vw, 455px)',
+    height: 'clamp(390px, 33vw, 455px)',
+    touchAction: 'auto'
+  };
 
   useEffect(() => {
     setImgScale(1.1);
-    setImgRotate(0);
+    // setImgRotate(0);
   }, [imageSrc]);
 
   let editor;
@@ -44,7 +52,6 @@ const GeneratorSettingsContainer = ({
       // croppedImg.width = canvasScaled.width;
       // croppedImg.height = canvasScaled.height;
 
-
       // await setImageSrc(croppedImgURL);
     }
   };
@@ -54,40 +61,23 @@ const GeneratorSettingsContainer = ({
       <div className="image-block">
         <div className={cn('image-wrapper')}>
           <AvatarEditor
+            style={imgEditorStyle}
             ref={setEditorRef}
             image={imageSrc}
-            width={439}
-            height={439}
-            border={20}
+            width={455}
+            height={455}
+            border={0}
             color={[0, 0, 0, 0.5]}
             borderRadius={240}
             scale={imgScale}
-            rotate={imgRotate}
+            // rotate={imgRotate}
           />
         </div>
-        <LoadAnotherInput onFileUploaded={onFileUploaded} />
-      </div>
-      <div className="settings-block">
-        <h3>Настройки</h3>
-        <div className="form-picker-wrap">
-          <p>Форма</p>
-          <div className="form-buttons-wrap">
-            <button
-              className={cn('square-form', { disabled: imgForm !== 'square' })}
-              onClick={() => setImgForm('square')}
-              disabled={true}
-            />
-            <button
-              className={cn('circle-form', { disabled: imgForm !== 'circle' })}
-              onClick={() => setImgForm('circle')}
-            />
-          </div>
-        </div>
         <div className="zoom-wrap">
-          <p>Масштаб</p>
           <SliderWrapper>
-            <Box sx={{ width: 282 }}>
+            <Box sx={{ width: '100%' }}>
               <Stack spacing={2} direction="row" alignItems="center">
+                <img src={minusSVG} alt="minus" />
                 <Slider
                   size="small"
                   value={imgScale}
@@ -96,68 +86,88 @@ const GeneratorSettingsContainer = ({
                   min={1}
                   max={5}
                 />
+                <img src={plusSVG} alt="plus" />
               </Stack>
             </Box>
           </SliderWrapper>
         </div>
-        <div className="rotate-wrap">
-          <p>Вращение</p>
+        <LoadAnotherInput onFileUploaded={onFileUploaded} />
+      </div>
+      <div className="settings-block">
+        <h3>Настройки</h3>
+        {/*<div className="form-picker-wrap">*/}
+        {/*  <p>Форма</p>*/}
+        {/*  <div className="form-buttons-wrap">*/}
+        {/*    <button*/}
+        {/*      className={cn('square-form', { disabled: imgForm !== 'square' })}*/}
+        {/*      onClick={() => setImgForm('square')}*/}
+        {/*      disabled={true}*/}
+        {/*    />*/}
+        {/*    <button*/}
+        {/*      className={cn('circle-form', { disabled: imgForm !== 'circle' })}*/}
+        {/*      onClick={() => setImgForm('circle')}*/}
+        {/*    />*/}
+        {/*  </div>*/}
+        {/*</div>*/}
+
+        {/*<div className="rotate-wrap">*/}
+        {/*  <p>Вращение</p>*/}
+        {/*  <SliderWrapper>*/}
+        {/*    <Box sx={{ width: 282 }}>*/}
+        {/*      <Stack spacing={2} direction="row" alignItems="center">*/}
+        {/*        <Slider*/}
+        {/*          size="small"*/}
+        {/*          value={imgRotate}*/}
+        {/*          onChange={(e) => setImgRotate(e.target.value)}*/}
+        {/*          step={5}*/}
+        {/*          min={-180}*/}
+        {/*          max={180}*/}
+        {/*        />*/}
+        {/*      </Stack>*/}
+        {/*    </Box>*/}
+        {/*  </SliderWrapper>*/}
+        {/*</div>*/}
+        <div className="slider-wrapper">
+          <p>Яркость</p>
           <SliderWrapper>
-            <Box sx={{ width: 282 }}>
+            <Box sx={{ width: '100%' }}>
               <Stack spacing={2} direction="row" alignItems="center">
+                <img src={lowBrightSVG} alt="dark sun" />
                 <Slider
                   size="small"
-                  value={imgRotate}
-                  onChange={(e) => setImgRotate(e.target.value)}
-                  step={5}
-                  min={-180}
-                  max={180}
+                  aria-label="Volume"
+                  value={bright}
+                  onChange={(e) => setBright(e.target.value)}
                 />
+                <img src={highBrightSVG} alt="bright sun" />
               </Stack>
             </Box>
           </SliderWrapper>
         </div>
-        {/*<div className="bright-wrap">*/}
-        {/*  <p>Яркость</p>*/}
-        {/*  <SliderWrapper>*/}
-        {/*    <Box sx={{ width: 282 }}>*/}
-        {/*      <Stack spacing={2} direction="row" alignItems="center">*/}
-        {/*        <IconLowBright />*/}
-        {/*        <Slider*/}
-        {/*          size="small"*/}
-        {/*          aria-label="Volume"*/}
-        {/*          value={bright}*/}
-        {/*          onChange={(e) => setBright(e.target.value)}*/}
-        {/*        />*/}
-        {/*        <IconHighBright />*/}
-        {/*      </Stack>*/}
-        {/*    </Box>*/}
-        {/*  </SliderWrapper>*/}
-        {/*</div>*/}
-        {/*<div className="contrast-wrap">*/}
-        {/*  <p>Контрастность</p>*/}
-        {/*  <SliderWrapper>*/}
-        {/*    <Box sx={{ width: 282 }}>*/}
-        {/*      <Stack spacing={2} direction="row" alignItems="center">*/}
-        {/*        <IconLowContrast />*/}
-        {/*        <Slider*/}
-        {/*          size="small"*/}
-        {/*          aria-label="Volume"*/}
-        {/*          value={contrast}*/}
-        {/*          onChange={(e) => setContrast(e.target.value)}*/}
-        {/*        />*/}
-        {/*        <IconHighContrast />*/}
-        {/*      </Stack>*/}
-        {/*    </Box>*/}
-        {/*  </SliderWrapper>*/}
-        {/*</div>*/}
+        <div className="slider-wrapper">
+          <p>Контрастность</p>
+          <SliderWrapper>
+            <Box sx={{ width: '100%' }}>
+              <Stack spacing={2} direction="row" alignItems="center">
+                <img src={lowContrastSVG} alt="low contrast" />
+                <Slider
+                  size="small"
+                  aria-label="Volume"
+                  value={contrast}
+                  onChange={(e) => setContrast(e.target.value)}
+                />
+                <img src={highContrastSVG} alt="high contrast" />
+              </Stack>
+            </Box>
+          </SliderWrapper>
+        </div>
         <ButtonWithBorder
           onClick={() => {
             cropImage();
             onGenerate();
           }}
         >
-          <span>ГЕНЕРИРОВАТЬ</span>
+          <span>Генерировать</span>
         </ButtonWithBorder>
       </div>
     </GenSettingContainerWrapper>

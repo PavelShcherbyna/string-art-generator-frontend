@@ -16,7 +16,7 @@ export const AuthWithCodePageWrap = styled.div`
     flex-direction: column;
     justify-content: center;
     gap: 15px;
-    padding: 20px;
+    //padding: 20px;
 
     input {
       width: calc(100vw - 40px);

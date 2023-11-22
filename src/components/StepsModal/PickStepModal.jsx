@@ -3,10 +3,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import { ButtonWithBorder } from '../reusableStyles';
 import { PickStepText, StepsModalContainer, PickStepInputWrap } from './styles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TextField } from '@mui/material';
 import BootstrapDialog from './CommonComponents/BootstrapDialog';
 import BootstrapDialogTitle from './CommonComponents/BootstrapDialogTitle';
+import { useLocation } from 'react-router-dom';
 
 export default function PickStepModal({
   open,
@@ -18,10 +19,18 @@ export default function PickStepModal({
   const [inputErrorText, setInputErrorText] = useState('');
   const [inputError, setInputError] = useState(false);
 
+  const location = useLocation();
+
+  useEffect(() => {
+    if (selectedRes?.currentIndex) {
+      setStepInputValue(selectedRes.currentIndex + 1);
+    }
+  }, [selectedRes]);
+
   const handleClose = () => {
     onClose();
 
-    setStepInputValue(1);
+    // setStepInputValue(1);
     setInputErrorText('');
     setInputError(false);
   };
@@ -36,14 +45,10 @@ export default function PickStepModal({
   const onStart = () => {
     if (
       stepInputValue - 1 < 0 ||
-      stepInputValue > selectedRes.stepsArr.length
+      stepInputValue > selectedRes.steps.length - 1
     ) {
       setInputError(true);
-      setInputErrorText(
-        `Значение должно быть в диапазоне 1 - ${
-          selectedRes.stepsArr.length - 1
-        }`
-      );
+      setInputErrorText(`Укажите значение 1 - ${selectedRes.steps.length - 1}`);
     } else {
       setInputError(false);
       setInputErrorText('');
@@ -65,7 +70,20 @@ export default function PickStepModal({
             onClose={handleClose}
           />
           <DialogContent>
-            <PickStepText>Укажите шаг, с которого следует начать:</PickStepText>
+            {location?.state?.from === 'saved' &&
+            selectedRes?.currentIndex > 0 ? (
+              <PickStepText>
+                Вы остановились на {selectedRes?.currentIndex + 1} шаге.
+                <br />
+                <span>Продолжить с {selectedRes?.currentIndex + 1} шага</span>,
+                или укажите шаг, с которого следует начать:
+              </PickStepText>
+            ) : (
+              <PickStepText>
+                Укажите шаг, с которого следует начать:
+              </PickStepText>
+            )}
+
             <PickStepInputWrap>
               <TextField
                 error={inputError}
@@ -76,13 +94,14 @@ export default function PickStepModal({
                 onChange={handleChange}
                 fullWidth
               />
+              <ButtonWithBorder onClick={onStart}>
+                <span>Применить</span>
+              </ButtonWithBorder>
             </PickStepInputWrap>
           </DialogContent>
-          <DialogActions>
-            <ButtonWithBorder onClick={onStart}>
-              <span>Применить</span>
-            </ButtonWithBorder>
-          </DialogActions>
+          {/*<DialogActions>*/}
+          {/*  */}
+          {/*</DialogActions>*/}
         </StepsModalContainer>
       </BootstrapDialog>
     </div>

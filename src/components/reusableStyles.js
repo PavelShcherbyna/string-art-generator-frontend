@@ -6,7 +6,7 @@ export const SliderWrapper = styled.div`
 
     .MuiSlider-thumb {
       color: white;
-      border: 2px solid black;
+      border: 2px solid #484848;
       width: 16px;
       height: 16px;
 
@@ -22,10 +22,12 @@ export const SliderWrapper = styled.div`
     margin-bottom: 18px;
     .MuiSlider-valueLabelOpen {
       transform: translateY(100%) scale(1);
-      color: rgba(0, 0, 0, 0.6);
+      color: #484848;
+      opacity: 0.6;
       background-color: transparent;
+      font-size: clamp(13px, 2vw, 19px);
 
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter';
     }
   }
 `;
@@ -35,7 +37,7 @@ export const ButtonWithBorder = styled.button`
   font-family: Inter;
   font-style: normal;
   font-weight: 600;
-  font-size: 26px;
+  font-size: clamp(18px, 2vw, 22px);
   line-height: 31px;
   color: #484848;
   padding: 12px 40px;
@@ -59,6 +61,14 @@ export const ButtonWithBorder = styled.button`
     &:hover {
       background: #484848;
       color: #fff;
+    }
+  }
+
+  &.min-width-set {
+    min-width: 315px;
+
+    @media (max-width: 480px) {
+      min-width: 100%;
     }
   }
 `;

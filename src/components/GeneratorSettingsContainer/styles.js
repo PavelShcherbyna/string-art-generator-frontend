@@ -1,17 +1,21 @@
 import styled from 'styled-components';
 
 export const GenSettingContainerWrapper = styled.div`
+  font-family: 'Inter', sans-serif;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 96px;
-  font-family: 'Inter', sans-serif;
+  gap: clamp(7px, 6vw, 96px);
+
+  @media (max-width: 480px) {
+    gap: 7px;
+  }
 
   .image-block {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
 
     .image-wrapper {
       position: relative;
@@ -38,28 +42,50 @@ export const GenSettingContainerWrapper = styled.div`
       height: 479px;
       object-fit: cover;
     }
+
+    .zoom-wrap {
+      width: 100%;
+
+      .MuiSlider-thumb {
+        width: clamp(16px, 2vw, 25px);
+        height: clamp(16px, 2vw, 25px);
+      }
+    }
   }
 
   .settings-block {
     display: flex;
     flex-direction: column;
-    gap: 49px;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: clamp(20px, 3vw, 48px);
+    //align-items: flex-start;
+
+    min-width: 315px;
+
+    @media (max-width: 480px) {
+      min-width: 100%;
+    }
 
     h3 {
       font-style: normal;
       font-weight: 700;
-      font-size: 35px;
+      font-size: clamp(20px, 3vw, 35px);
       line-height: 42px;
     }
 
     p {
       font-style: normal;
       font-weight: 500;
-      font-size: 22px;
+      font-size: clamp(16px, 2vw, 22px);
       line-height: 27px;
       color: #2c2c2c;
-      margin-bottom: 23px;
+      margin: 0;
+    }
+
+    .slider-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(14px, 2vw, 25px);
     }
 
     .form-picker-wrap {

@@ -1,57 +1,49 @@
 import React, { useEffect } from 'react';
 import { SavedProjectsWrapper } from './styles';
-import { useSelector } from 'react-redux';
-import {
-  drawLines,
-  drawLinesSVG,
-  drawLinesSync
-} from '../../stringGeneratorScript/stringArtMainScript';
+import { useSelector, useDispatch } from 'react-redux';
+import { drawLinesSVG } from '../../stringGeneratorScript/stringArtMainScript';
+import { setActiveDrawing } from '../../store/userData/slice';
+import { useNavigate } from 'react-router-dom';
 
 export default function SavedProjectsContainer() {
-  const { drawings, justGenDrawId } = useSelector((state) => state.userData);
+  const { drawings } = useSelector((state) => state.userData);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  function filterSavedProjects(drawing) {
-    return drawing.f_id !== justGenDrawId;
-  }
-
-  const filteredDrawings = drawings.filter(filterSavedProjects);
-
-  useEffect(() => {
-    filteredDrawings.forEach((obj, index) => {
-      drawLinesSync(`saved-project-canvas-${index}`, obj.steps);
-    });
-  }, [filteredDrawings]);
+  // function filterSavedProjects(drawing) {
+  //   return drawing.f_id !== justGenDrawId;
+  // }
+  //
+  // const filteredDrawings = drawings.filter(filterSavedProjects);
 
   useEffect(() => {
-    filteredDrawings.forEach((obj, index) => {
+    drawings.forEach((obj, index) => {
       drawLinesSVG(`saved-project-${index}`, obj.steps);
     });
-  }, [filteredDrawings]);
+  }, [drawings]);
+
+  function onDrawingClick(id) {
+    return function onClick() {
+      dispatch(setActiveDrawing({ f_id: id }));
+      navigate('/app', { state: { from: 'saved' } });
+    };
+  }
 
   return (
     <SavedProjectsWrapper>
       <h3>Сохраненные проекты</h3>
       <div className={'saved-drawings-wrap'}>
-        {filteredDrawings.map((obj, index) => {
+        {drawings.map((obj, index) => {
           return (
-            <canvas
-              id={`saved-project-canvas-${index}`}
-              key={index}
-              width="400"
-              height="400"
-            />
-          );
-        })}
-      </div>
-      <div className={'saved-drawings-wrap'}>
-        {filteredDrawings.map((obj, index) => {
-          return (
-            <svg
-              id={`saved-project-${index}`}
-              key={index}
-              // width="400"
-              // height="400"
-            />
+            <div className={'saved-drawings-item'} key={obj.f_id}>
+              <svg
+                id={`saved-project-${index}`}
+                onClick={onDrawingClick(obj.f_id)}
+              />
+              <p>
+                <span>{obj.currentIndex}</span> шагов из {obj.steps.length - 1}
+              </p>
+            </div>
           );
         })}
       </div>

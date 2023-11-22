@@ -7,7 +7,7 @@ export const userDataSlice = createSlice({
     isLoggedIn: false,
     drawings: [],
     justGenDrawId: '',
-    inPlayerDrawId: ''
+    inPlayerDrawId: '' //TODO: check is 'inPlayerDrawId' value redundant
   },
   reducers: {
     loginUser: (state, action) => {
@@ -28,11 +28,31 @@ export const userDataSlice = createSlice({
       const { drawings = [] } = action.payload;
 
       return { ...state, drawings };
+    },
+    changeDrawingStep: (state, action) => {
+      const drawing = action.payload;
+
+      const filteredDrawings = state.drawings.filter(
+        (obj) => obj.f_id !== drawing.f_id
+      );
+
+      return { ...state, drawings: [...filteredDrawings, drawing] };
+    },
+    setActiveDrawing: (state, action) => {
+      const { f_id } = action.payload;
+
+      return { ...state, justGenDrawId: f_id };
     }
   }
 });
 
-export const { loginUser, saveUserData, postDrawings, saveDrawings } =
-  userDataSlice.actions;
+export const {
+  loginUser,
+  saveUserData,
+  postDrawings,
+  saveDrawings,
+  changeDrawingStep,
+  setActiveDrawing
+} = userDataSlice.actions;
 
 export default userDataSlice.reducer;

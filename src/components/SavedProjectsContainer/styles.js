@@ -9,7 +9,7 @@ export const SavedProjectsWrapper = styled.div`
   h3 {
     color: #484848;
     font-family: Inter;
-    font-size: 35px;
+    font-size: clamp(20px, 4vw, 35px);
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -20,25 +20,36 @@ export const SavedProjectsWrapper = styled.div`
     flex-wrap: wrap;
     gap: 50px;
 
-    canvas {
-      max-width: 200px;
-      max-height: 200px;
+    .saved-drawings-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
 
-      @media (max-width: 480px) {
-        max-width: 140px;
-        max-height: 140px;
+      color: #484848;
+      font-family: Inter;
+      font-size: clamp(16px, 2vw, 20px);
+      font-style: normal;
+      line-height: normal;
+
+      svg {
+        width: clamp(140px, 16vw, 200px);
+        height: clamp(140px, 16vw, 200px);
+        border-radius: 50%;
+        cursor: pointer;
+
+        @media (max-width: 480px) {
+          max-width: 140px;
+          max-height: 140px;
+        }
       }
-    }
 
-    svg {
-      width: 200px;
-      height: 200px;
-      
-      
+      p {
+        font-weight: 500;
 
-      @media (max-width: 480px) {
-        max-width: 140px;
-        max-height: 140px;
+        span {
+          font-weight: 700;
+        }
       }
     }
   }

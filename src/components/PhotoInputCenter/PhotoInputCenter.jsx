@@ -5,9 +5,9 @@ import DownloadSVG from '../../assets/download_icon.svg';
 const PhotoInputCenter = ({ onFileUploaded }) => {
   return (
     <BordFileInputContainer>
-      <label>
+      <label className={'min-width-set'}>
         <img src={DownloadSVG} alt="download" />
-        ЗАГРУЗИТЬ ФОТО
+        Загрузить фото
         <input
           onChange={(e) => onFileUploaded(e)}
           type="file"

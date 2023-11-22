@@ -12,4 +12,4 @@ export const AnotherInputContainer = styled.label`
   img {
     margin-right: 18px;
   }
-`
+`;
