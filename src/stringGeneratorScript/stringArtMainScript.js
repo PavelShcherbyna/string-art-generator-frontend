@@ -436,38 +436,186 @@ export async function createStringArt(
 //   dst.delete();
 // }
 
-export async function drawLines(
-  canvasId,
-  stepsArr,
-  // lineWidth = 0.1,
-  immediatelyFinished = true
-) {
-  const canvas = document.getElementById(canvasId);
-  const { width } = canvas.getBoundingClientRect();
+// export async function drawLines(
+//   canvasId,
+//   stepsArr,
+//   // lineWidth = 0.1,
+//   immediatelyFinished = true
+// ) {
+//   const canvas = document.getElementById(canvasId);
+//   const { width } = canvas.getBoundingClientRect();
+//
+//   const context = canvas.getContext('2d');
+//   // context.reset(); // not supported on iOS, we are using 'canvas.width = canvas.width' instead
+//   // eslint-disable-next-line no-self-assign
+//   if (context.reset) {
+//     context.reset();
+//   } else {
+//     canvas.width = canvas.width;
+//   }
+//
+//   const centerX = canvas.width / 2;
+//   const centerY = canvas.height / 2;
+//   const radius = Math.min(centerX, centerY);
+//
+//   const pixelRatio = window.devicePixelRatio || 1;
+//   const actualDeviceWidth = window.innerWidth;
+//   const deviceWidthStandard = 1920;
+//
+//   const baseWidth = 455;
+//   // const baseLineWidth = actualDeviceWidth / deviceWidthStandard / 10;
+//   const baseLineWidth = 0.1;
+//
+//   const actualLineWidth =
+//     (baseLineWidth * (canvas.width / baseWidth)) / pixelRatio;
+//
+//   function definePoints(numPoints) {
+//     const angleIncrement = (2 * Math.PI) / numPoints;
+//     const points = [];
+//
+//     for (let i = 0; i < numPoints; i++) {
+//       const x = centerX + radius * Math.cos(i * angleIncrement);
+//       const y = centerY + radius * Math.sin(i * angleIncrement);
+//       points.push({ x, y });
+//     }
+//
+//     return points;
+//   }
+//
+//   function drawLinesImmediately(points, indexes) {
+//     context.beginPath();
+//     context.strokeStyle = 'black';
+//     context.lineWidth = actualLineWidth;
+//     context.moveTo(points[indexes[0]].x, points[indexes[0]].y);
+//     for (let i = 1; i < indexes.length; i++) {
+//       context.lineTo(points[indexes[i]].x, points[indexes[i]].y);
+//     }
+//     context.stroke();
+//   }
+//
+//   let j = 0;
+//
+//   async function drawLineSequentially(points, indexes) {
+//     return new Promise((resolve) => {
+//       if (j < indexes.length - 1) {
+//         const currentPointIndex = indexes[j];
+//         const nextPointIndex = indexes[j + 1];
+//
+//         context.strokeStyle = 'black';
+//         context.lineWidth = actualLineWidth;
+//         context.beginPath();
+//         context.moveTo(
+//           points[currentPointIndex].x,
+//           points[currentPointIndex].y
+//         );
+//         context.lineTo(points[nextPointIndex].x, points[nextPointIndex].y);
+//         context.stroke();
+//
+//         j++;
+//
+//         setTimeout(() => resolve(drawLineSequentially(points, indexes)), 0);
+//       } else {
+//         resolve();
+//       }
+//     });
+//   }
+//
+//   const points = definePoints(numberOfPins);
+//
+//   immediatelyFinished
+//     ? drawLinesImmediately(points, stepsArr)
+//     : await drawLineSequentially(points, stepsArr);
+// }
+//
+// export function drawLinesSync(
+//   canvasId,
+//   stepsArr
+//   // lineWidth = 0.1,
+// ) {
+//   if (!stepsArr || stepsArr.length < 1) {
+//     return;
+//   }
+//   const canvas = document.getElementById(canvasId);
+//
+//   const { width } = canvas.getBoundingClientRect();
+//
+//   const context = canvas.getContext('2d');
+//   // context.reset(); // not supported on iOS, we are using 'canvas.width = canvas.width' instead
+//   // eslint-disable-next-line no-self-assign
+//   if (context.reset) {
+//     context.reset();
+//   } else {
+//     canvas.width = canvas.width;
+//   }
+//
+//   const centerX = canvas.width / 2;
+//   const centerY = canvas.height / 2;
+//   const radius = Math.min(centerX, centerY);
+//
+//   const pixelRatio = window.devicePixelRatio || 1;
+//   const actualDeviceWidth = window.innerWidth;
+//   const deviceWidthStandard = 1920;
+//
+//   const baseWidth = 455;
+//   // const baseLineWidth = actualDeviceWidth / deviceWidthStandard / 10;
+//   const baseLineWidth = 0.1;
+//
+//   const actualLineWidth =
+//     (baseLineWidth * (canvas.width / baseWidth)) / pixelRatio;
+//
+//   function definePoints(numPoints) {
+//     const angleIncrement = (2 * Math.PI) / numPoints;
+//     const points = [];
+//
+//     for (let i = 0; i < numPoints; i++) {
+//       const x = centerX + radius * Math.cos(i * angleIncrement);
+//       const y = centerY + radius * Math.sin(i * angleIncrement);
+//       points.push({ x, y });
+//     }
+//
+//     return points;
+//   }
+//
+//   function drawLinesImmediately(points, indexes) {
+//     context.beginPath();
+//     context.strokeStyle = 'black';
+//     context.lineWidth = actualLineWidth;
+//     context.moveTo(points[indexes[0]].x, points[indexes[0]].y);
+//     for (let i = 1; i < indexes.length; i++) {
+//       context.lineTo(points[indexes[i]].x, points[indexes[i]].y);
+//     }
+//     context.stroke();
+//   }
+//
+//   const points = definePoints(numberOfPins);
+//
+//   drawLinesImmediately(points, stepsArr);
+// }
 
-  const context = canvas.getContext('2d');
-  // context.reset(); // not supported on iOS, we are using 'canvas.width = canvas.width' instead
-  // eslint-disable-next-line no-self-assign
-  if (context.reset) {
-    context.reset()
-  } else {
-    canvas.width = canvas.width;
+export function drawLinesSVG(svgId, stepsArr, immediatelyFinished = true) {
+  if (!stepsArr || stepsArr.length < 1) {
+    return;
   }
 
-  const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
+  const svg = document.getElementById(svgId);
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  const { width, height } = svg.getBoundingClientRect();
+
+  // Очистка SVG
+  while (svg.firstChild) {
+    svg.removeChild(svg.firstChild);
+  }
+
+  const centerX = width / 2;
+  const centerY = height / 2;
   const radius = Math.min(centerX, centerY);
 
-  const pixelRatio = window.devicePixelRatio || 1;
-  const actualDeviceWidth = window.innerWidth;
-  const deviceWidthStandard = 1920;
-
-  const baseWidth = 455;
-  // const baseLineWidth = actualDeviceWidth / deviceWidthStandard / 10;
+  // const pixelRatio = window.devicePixelRatio || 1;
+  const pixelRatio = 1;
   const baseLineWidth = 0.1;
-
-  const actualLineWidth =
-    (baseLineWidth * (canvas.width / baseWidth)) / pixelRatio;
+  const baseWidth = 455;
+  const actualLineWidth = (baseLineWidth * (width / baseWidth)) / pixelRatio;
 
   function definePoints(numPoints) {
     const angleIncrement = (2 * Math.PI) / numPoints;
@@ -483,46 +631,49 @@ export async function drawLines(
   }
 
   function drawLinesImmediately(points, indexes) {
-    context.beginPath();
-    context.strokeStyle = 'black';
-    context.lineWidth = actualLineWidth;
-    context.moveTo(points[indexes[0]].x, points[indexes[0]].y);
-    for (let i = 1; i < indexes.length; i++) {
-      context.lineTo(points[indexes[i]].x, points[indexes[i]].y);
-    }
-    context.stroke();
+    const path = document.createElementNS(svgNS, 'path');
+    const d = indexes
+      .map((index, i) => {
+        return `${i === 0 ? 'M' : 'L'} ${points[index].x} ${points[index].y}`;
+      })
+      .join(' ');
+
+    path.setAttribute('d', d);
+    path.setAttribute('stroke', 'black');
+    path.setAttribute('stroke-width', actualLineWidth.toString());
+    path.setAttribute('fill', 'none');
+    svg.appendChild(path);
   }
 
-  let j = 0;
-
-  async function drawLineSequentially(points, indexes) {
-    return new Promise((resolve) => {
-      if (j < indexes.length - 1) {
-        const currentPointIndex = indexes[j];
-        const nextPointIndex = indexes[j + 1];
-
-        context.strokeStyle = 'black';
-        context.lineWidth = actualLineWidth;
-        context.beginPath();
-        context.moveTo(
-          points[currentPointIndex].x,
-          points[currentPointIndex].y
-        );
-        context.lineTo(points[nextPointIndex].x, points[nextPointIndex].y);
-        context.stroke();
-
-        j++;
-
-        setTimeout(() => resolve(drawLineSequentially(points, indexes)), 0);
-      } else {
-        resolve();
-      }
-    });
-  }
+  // let j = 0;
+  //
+  // async function drawLineSequentially(points, indexes) {
+  //   return new Promise((resolve) => {
+  //     if (j < indexes.length - 1) {
+  //       const currentPointIndex = indexes[j];
+  //       const nextPointIndex = indexes[j + 1];
+  //
+  //       const path = document.createElementNS(svgNS, "path");
+  //       const d = `${j === 0 ? 'M' : 'L'} ${points[currentPointIndex].x} ${points[currentPointIndex].y} L ${points[nextPointIndex].x} ${points[nextPointIndex].y}`;
+  //
+  //       path.setAttribute("d", d);
+  //       path.setAttribute("stroke", "black");
+  //       path.setAttribute("stroke-width", baseLineWidth);
+  //       path.setAttribute("fill", "none");
+  //       svg.appendChild(path);
+  //
+  //       j++;
+  //
+  //       setTimeout(() => resolve(drawLineSequentially(points, indexes)), 0);
+  //     } else {
+  //       resolve();
+  //     }
+  //   });
+  // }
 
   const points = definePoints(numberOfPins);
-
-  immediatelyFinished
-    ? drawLinesImmediately(points, stepsArr)
-    : await drawLineSequentially(points, stepsArr);
+  drawLinesImmediately(points, stepsArr);
+  // immediatelyFinished
+  //   ? drawLinesImmediately(points, stepsArr)
+  //   : await drawLineSequentially(points, stepsArr);
 }

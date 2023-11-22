@@ -1,16 +1,19 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useId, useEffect } from 'react';
 import Voice from 'artyom.js';
 import { useInterval } from 'usehooks-ts';
 import { saveAs } from 'file-saver';
+import { useDispatch, useSelector } from 'react-redux';
 import PhotoInputCenter from '../PhotoInputCenter/PhotoInputCenter';
 import GeneratorSettingsContainer from '../GeneratorSettingsContainer/GeneratorSettingsContainer';
 import ResultsContainer from '../ResultsContainer/ResultsContainer';
 import {
   createStringArt,
-  drawLines
+  drawLinesSVG
 } from '../../stringGeneratorScript/stringArtMainScript';
 import StepsModal from '../StepsModal/StepsModal';
 import PickStepModal from '../StepsModal/PickStepModal';
+import { changeDrawingStep, postDrawings } from '../../store/userData/slice';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const GeneratorMainBlock = () => {
   const [baseImageSrc, setBaseImageSrc] = useState('');
@@ -27,56 +30,89 @@ const GeneratorMainBlock = () => {
   const baseImgRef = useRef(null);
   const [lineCalcProgress, setLineCalcProgress] = useState(0);
 
-  const voice = new Voice();
-  voice.initialize({ lang: 'ru-RU', debug: false });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const lineCountSettings = process.env.REACT_APP_LINES_SET || '';
-  const lineSetArr = lineCountSettings.split(',');
+  const { drawings, justGenDrawId } = useSelector((state) => state.userData);
+  const activeDrawing = drawings.find((el) => el.f_id === justGenDrawId);
 
-  const generalSettingsArr = lineSetArr.map((linesNum, index) => {
-    return { lines: Number(linesNum), outputCanvasId: `canvasOutput${index}` };
-  });
+  const generatedId = `${useId()}${new Date().getTime()}`;
+
+  // const voice = new Voice();
+  // voice.initialize({ lang: 'ru-RU', debug: false });
+
+  const lineCountSettings = process.env.REACT_APP_LINES_SET || '3700';
+  // const lineSetArr = lineCountSettings.split(',');
+  //
+  // const generalSettingsArr = lineSetArr.map((linesNum, index) => {
+  //   return { lines: Number(linesNum), outputCanvasId: `canvasOutput${index}` };
+  // });
+
+  useEffect(() => {
+    if (justGenDrawId) {
+      setGeneratorStep(2);
+    }
+  }, [justGenDrawId]);
+
+  useEffect(() => {
+    if (justGenDrawId && generatorStep === 2 && activeDrawing) {
+      const steps = activeDrawing.steps;
+
+      drawLinesSVG('resultImage', steps);
+    }
+  }, [justGenDrawId, activeDrawing, generatorStep]);
+
+  useEffect(() => {
+    if (
+      justGenDrawId &&
+      activeDrawing?.currentIndex > 0 &&
+      location?.state?.from === 'saved'
+    ) {
+      onChangeStepClick();
+    }
+  }, []);
 
   const onPlayClick = () => {
-    if (selectedRes.stepsArr) {
-      setStepsModalOpen(true);
-      setIsPlaying(true);
-      showNextStep();
-    }
+    // if (selectedRes.stepsArr) {
+    //   setStepsModalOpen(true);
+    //   setIsPlaying(true);
+    //   showNextStep();
+    // }
+    navigate('/app/player');
   };
 
-  const onChangeStepClick = () => {
-    if (selectedRes.stepsArr) {
+  function onChangeStepClick() {
+    if (activeDrawing?.steps) {
       setPickStepModalOpen(true);
     }
-  };
+  }
 
   const setStepIndex = (index) => {
-    setSelectedRes((prevRes) => {
-      return { ...prevRes, currIndex: index };
-    });
+    dispatch(changeDrawingStep({ ...activeDrawing, currentIndex: index }));
 
     setPickStepModalOpen(false);
+    navigate('/app/player');
   };
 
-  const onStopClick = () => {
-    setIsPlaying(false);
-    // voice.shutUp()
-  };
+  // const onStopClick = () => {
+  //   setIsPlaying(false);
+  //   // voice.shutUp()
+  // };
 
-  const onFileSave = () => {
-    if (selectedRes.stepsArr) {
-      const fileTextArr = selectedRes.stepsArr
-        .map((step) => Number(step) + 1)
-        .join(', ');
-
-      const blob = new Blob([...fileTextArr], {
-        type: 'text/plain;charset=utf-8'
-      });
-
-      saveAs(blob, 'String art steps.txt');
-    }
-  };
+  // const onFileSave = () => {
+  //   if (selectedRes.stepsArr) {
+  //     const fileTextArr = selectedRes.stepsArr
+  //       .map((step) => Number(step) + 1)
+  //       .join(', ');
+  //
+  //     const blob = new Blob([...fileTextArr], {
+  //       type: 'text/plain;charset=utf-8'
+  //     });
+  //
+  //     saveAs(blob, 'String art steps.txt');
+  //   }
+  // };
 
   const photoUploadedHandler = (e) => {
     if (e.target.files[0]) {
@@ -90,113 +126,101 @@ const GeneratorMainBlock = () => {
     await setGeneratorStep(2);
     setProcessing(true);
     setIsCalculating(true);
-    setSelectedRes({});
+    // setSelectedRes({});
 
-    const maxLines = generalSettingsArr.reduce(
-      (a, b) => Math.max(a, b.lines),
-      -Infinity
-    );
+    // const maxLines = generalSettingsArr.reduce(
+    //   (a, b) => Math.max(a, b.lines),
+    //   -Infinity
+    // );
 
-    const maxStepsArr = await createStringArt(
+    // const maxStepsArr = await createStringArt(
+    //   baseImgRef.current,
+    //   maxLines,
+    //   setLineCalcProgress
+    // );
+
+    const stepsArr = await createStringArt(
       baseImgRef.current,
-      maxLines,
+      Number(lineCountSettings),
       setLineCalcProgress
     );
 
-    const resArr = [];
-
-    for (const settingsObj of generalSettingsArr) {
-      const stepsArr = maxStepsArr.slice(0, settingsObj.lines + 1);
-
-      resArr.push({ stepsArr, outputCanvasId: settingsObj.outputCanvasId });
-    }
-
-    setResultsArr(resArr);
+    const resObj = { steps: stepsArr, currentIndex: 0, f_id: generatedId };
 
     setIsCalculating(false);
 
+    dispatch(postDrawings({ drawings: [resObj] }));
+
     // const lineWidth = 0.03;
-    const immediatelyFinished = false;
+    // const immediatelyFinished = false;
 
-    await Promise.all([
-      ...resArr.map((resObj) =>
-        drawLines(resObj.outputCanvasId, resObj.stepsArr, immediatelyFinished)
-      ),
-      ...resArr.map((resObj) =>
-        drawLines(`${resObj.outputCanvasId}-hd`, resObj.stepsArr, immediatelyFinished)
-      )
-    ]);
-
-    resArr.forEach((resObj) => {
-      const canvas = document.getElementById(`${resObj.outputCanvasId}-hd`);
-
-      resObj.imgSrc = canvas.toDataURL('image/png');
-    });
+    // drawLinesSync('canvasGray', stepsArr);
+    drawLinesSVG('resultImage', stepsArr);
 
     setProcessing(false);
   };
 
-  const pickCanvasHandler = async (e) => {
-    if (!processing) {
-      const resObj = resultsArr.find((el) => el.outputCanvasId === e.target.id);
+  // const pickCanvasHandler = async (e) => {
+  //   if (!processing) {
+  //     const resObj = resultsArr.find((el) => el.outputCanvasId === e.target.id);
+  //
+  //     if (resObj) {
+  //       const { stepsArr, outputCanvasId, imgSrc } = resObj;
+  //
+  //       // const lineWidth = 0.1;
+  //       // const immediatelyFinished = true;
+  //       //
+  //       // await drawLines('canvasGray', stepsArr, immediatelyFinished);
+  //
+  //       const image = document.getElementById('resultImage');
+  //       image.src = imgSrc;
+  //
+  //       setSelectedRes({ stepsArr, outputCanvasId, currIndex: 0 });
+  //     }
+  //   }
+  // };
 
-      if (resObj) {
-        const { stepsArr, outputCanvasId, imgSrc } = resObj;
+  // const onStepsModalClose = (e, reason) => {
+  //   if (reason !== 'backdropClick') {
+  //     setStepsModalOpen(false);
+  //     // setSelectedRes({ ...selectedRes, currIndex: 0 });
+  //     setCurrentStepText('');
+  //     setIsPlaying(false);
+  //
+  //     voice.shutUp();
+  //   }
+  // };
 
-        // const lineWidth = 0.1;
-        // const immediatelyFinished = true;
-        //
-        // await drawLines('canvasGray', stepsArr, immediatelyFinished);
-
-        const image = document.getElementById('resultImage');
-        image.src = imgSrc;
-
-        setSelectedRes({ stepsArr, outputCanvasId, currIndex: 0 });
-      }
-    }
-  };
-
-  const onStepsModalClose = (e, reason) => {
-    if (reason !== 'backdropClick') {
-      setStepsModalOpen(false);
-      // setSelectedRes({ ...selectedRes, currIndex: 0 });
-      setCurrentStepText('');
-      setIsPlaying(false);
-
-      voice.shutUp();
-    }
-  };
-
-  function showNextStep() {
-    let i = selectedRes.currIndex;
-
-    if (i < selectedRes.stepsArr?.length - 1) {
-      // We add 1 to the point number as workaround, because the numbering on the
-      // physical model does not start from 0, but from 1
-      const nextPointNumber = Number(selectedRes.stepsArr[i + 1]) + 1;
-
-      const textToShow = `Шаг ${i + 1}. Следующая точка: ${nextPointNumber}`;
-      const textToSpeak = `${nextPointNumber}`;
-
-      setCurrentStepText(textToShow);
-
-      voice.say(textToSpeak);
-
-      setSelectedRes({ ...selectedRes, currIndex: i + 1 });
-    } else {
-      voice.say('Конец!');
-      setCurrentStepText('Конец!');
-
-      setIsPlaying(false);
-    }
-  }
-
-  useInterval(
-    () => {
-      showNextStep();
-    },
-    isPlaying ? delay : null
-  );
+  // function showNextStep() {
+  //   let i = selectedRes.currIndex;
+  //
+  //   if (i < selectedRes.stepsArr?.length - 1) {
+  //     // We add 1 to the point number as workaround, because the numbering on the
+  //     // physical model does not start from 0, but from 1
+  //     const nextPointNumber = Number(selectedRes.stepsArr[i + 1]) + 1;
+  //
+  //     const textToShow = `Шаг ${i + 1}. Следующая точка: ${nextPointNumber}`;
+  //     const textToSpeak = `${nextPointNumber}`;
+  //
+  //     setCurrentStepText(textToShow);
+  //
+  //     voice.say(textToSpeak);
+  //
+  //     setSelectedRes({ ...selectedRes, currIndex: i + 1 });
+  //   } else {
+  //     voice.say('Конец!');
+  //     setCurrentStepText('Конец!');
+  //
+  //     setIsPlaying(false);
+  //   }
+  // }
+  //
+  // useInterval(
+  //   () => {
+  //     showNextStep();
+  //   },
+  //   isPlaying ? delay : null
+  // );
 
   return (
     <>
@@ -216,34 +240,32 @@ const GeneratorMainBlock = () => {
       {generatorStep === 2 && (
         <ResultsContainer
           onFileUploaded={photoUploadedHandler}
-          delay={delay}
-          setDelay={setDelay}
           onPlayClick={onPlayClick}
           onChangeStepClick={onChangeStepClick}
-          generalSettings={generalSettingsArr}
-          pickCanvasHandler={pickCanvasHandler}
-          selectedRes={selectedRes}
+          // generalSettings={generalSettingsArr}
+          // pickCanvasHandler={pickCanvasHandler}
+          selectedRes={activeDrawing}
           processing={processing}
-          onFileSave={onFileSave}
+          // onFileSave={onFileSave}
           lineCalcProgress={lineCalcProgress}
           isCalculating={isCalculating}
+          activeDrawingId={justGenDrawId}
         />
       )}
-      <StepsModal
-        open={stepsModalOpen}
-        handleClose={onStepsModalClose}
-        isPlaying={isPlaying}
-        onPlayClick={onPlayClick}
-        onStopClick={onStopClick}
-        currentStepText={currentStepText}
-      />
+      {/*<StepsModal*/}
+      {/*  open={stepsModalOpen}*/}
+      {/*  handleClose={onStepsModalClose}*/}
+      {/*  isPlaying={isPlaying}*/}
+      {/*  onPlayClick={onPlayClick}*/}
+      {/*  onStopClick={onStopClick}*/}
+      {/*  currentStepText={currentStepText}*/}
+      {/*/>*/}
       <PickStepModal
         open={pickStepModalOpen}
         onClose={() => {
           setPickStepModalOpen(false);
         }}
-        selectedRes={selectedRes}
-        setSelectedRes={setSelectedRes}
+        selectedRes={activeDrawing}
         setStepIndex={setStepIndex}
       />
     </>

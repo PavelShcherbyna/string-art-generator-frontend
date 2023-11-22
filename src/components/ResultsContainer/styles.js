@@ -2,9 +2,11 @@ import styled from 'styled-components';
 
 export const ResultsContainerWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-content: center;
   flex-wrap: wrap;
-  gap: 96px;
+  gap: 20px;
   font-family: 'Inter', sans-serif;
 
   .images-block {
@@ -23,8 +25,8 @@ export const ResultsContainerWrapper = styled.div`
       }
 
       .chosen-result {
-        width: 455px;
-        height: 455px;
+        width: clamp(390px, 33vw, 455px);
+        height: clamp(390px, 33vw, 455px);
       }
     }
     .result-images-wrapper {
@@ -69,8 +71,8 @@ export const ResultsContainerWrapper = styled.div`
   .controls-block {
     display: flex;
     flex-direction: column;
-    gap: 49px;
-    align-items: flex-start;
+    gap: 16px;
+    align-items: center;
 
     h3 {
       font-style: normal;
@@ -112,7 +114,7 @@ export const ResultsContainerWrapper = styled.div`
 `;
 
 export const StepsStartContainer = styled.div`
-  margin: 20px 0 0;
+  //margin: 20px 0 0;
 
   .change-step-btn {
     cursor: pointer;
