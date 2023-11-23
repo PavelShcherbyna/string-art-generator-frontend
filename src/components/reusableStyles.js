@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const SliderWrapper = styled.div`
   .MuiSlider-root {
     color: rgba(0, 0, 0, 0.34);
+    padding: 0;
 
     .MuiSlider-thumb {
       color: white;

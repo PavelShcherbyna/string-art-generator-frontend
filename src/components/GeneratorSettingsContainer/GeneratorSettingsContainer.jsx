@@ -26,8 +26,8 @@ const GeneratorSettingsContainer = ({
   const [contrast, setContrast] = useState(0);
 
   const imgEditorStyle = {
-    width: 'clamp(390px, 33vw, 455px)',
-    height: 'clamp(390px, 33vw, 455px)',
+    width: 'clamp(240px, 90vw, 455px)',
+    height: 'clamp(240px, 90vw, 455px)',
     touchAction: 'auto'
   };
 
