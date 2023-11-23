@@ -18,7 +18,8 @@ export const SavedProjectsWrapper = styled.div`
   .saved-drawings-wrap {
     display: flex;
     flex-wrap: wrap;
-    gap: 50px;
+    column-gap: 50px;
+    justify-content: center;
 
     .saved-drawings-item {
       display: flex;

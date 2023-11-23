@@ -25,8 +25,8 @@ export const ResultsContainerWrapper = styled.div`
       }
 
       .chosen-result {
-        width: clamp(390px, 33vw, 455px);
-        height: clamp(390px, 33vw, 455px);
+        width: clamp(240px, 90vw, 455px);
+        height: clamp(240px, 90vw, 455px);
       }
     }
     .result-images-wrapper {
