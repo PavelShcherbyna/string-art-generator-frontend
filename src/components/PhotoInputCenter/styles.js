@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const BordFileInputContainer = styled.div`
   width: 100%;
-  height: 70vh;
+  height: 60vh;
   display: grid;
   place-items: center;
 
