@@ -58,7 +58,7 @@ const GeneratorSettingsContainer = ({
   return (
     <GenSettingContainerWrapper>
       <div className="image-block">
-        <div className={'image-wrapper imgCircled'}>
+        <div className={'image-wrapper'}>
           <AvatarEditor
             style={imgEditorStyle}
             ref={setEditorRef}
