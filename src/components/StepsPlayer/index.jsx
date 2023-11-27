@@ -14,6 +14,8 @@ import { DelaySlider } from './DelaySlider';
 import { useInterval } from 'usehooks-ts';
 import { useSelector, useDispatch } from 'react-redux';
 import { postDrawings } from '../../store/userData/slice';
+import ArrowsNavigation from '../ArrowsNavigation';
+import { useNavigate } from 'react-router-dom';
 
 export default function StepsPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -27,6 +29,7 @@ export default function StepsPlayer() {
   const stepsToShow = steps.map((num) => num + 1);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const voice = new Voice();
   voice.initialize({ lang: 'ru-RU', debug: false });
@@ -105,59 +108,62 @@ export default function StepsPlayer() {
   // }, []);
 
   return (
-    <StepsPlayerWrapper>
-      <Grid
-        container
-        columns={{ xs: 1, sm: 1, md: 6, lg: 12, xl: 12 }}
-        sx={{ justifyContent: 'space-evenly' }}
-      >
-        <Grid xs={0} sm={0} md={1} lg={2} xl={2} />
-        <Grid xs={1} sm={1} md={4} lg={6} xl={4} className={'player'}>
-          <div className={'steps-display-wrap'}>
-            <TranslucentStep
-              stepNum={currentIndex - 2}
-              stepVal={stepsToShow[currentIndex - 2]}
-            />
-            <NormalStep
-              stepNum={currentIndex - 1}
-              stepVal={stepsToShow[currentIndex - 1]}
-            />
-            <BoldStep
-              stepNum={currentIndex}
-              stepVal={stepsToShow[currentIndex]}
-            />
-            <NormalStep
-              stepNum={currentIndex + 1}
-              stepVal={stepsToShow[currentIndex + 1]}
-            />
-            <TranslucentStep
-              stepNum={currentIndex + 2}
-              stepVal={stepsToShow[currentIndex + 2]}
-            />
-          </div>
-          <div className={'ctrl-panel-wrap'}>
-            <DblBackRewindBtn onButtonClick={() => onRewind(-10)} />
-            <BackRewindBtn onButtonClick={() => onRewind(-1)} />
-            <PlayOrPauseBtn
-              isPlaying={isPlaying}
-              onButtonClick={onPlayOrPauseClick}
-            />
-            <ForwardRewindBtn onButtonClick={() => onRewind(1)} />
-            <DblForwardRewindBtn onButtonClick={() => onRewind(10)} />
-          </div>
-        </Grid>
+    <>
+      <ArrowsNavigation backHandler={() => navigate('/app')} />
+      <StepsPlayerWrapper>
         <Grid
-          xs={1}
-          sm={1}
-          md={1}
-          lg={2}
-          xl={2}
-          className={'interval-settings'}
+          container
+          columns={{ xs: 1, sm: 1, md: 6, lg: 12, xl: 12 }}
+          sx={{ justifyContent: 'space-evenly' }}
         >
-          <p>Паузы между цифрами</p>
-          <DelaySlider delay={delay} onChange={onSliderChange} />
+          <Grid xs={0} sm={0} md={1} lg={2} xl={2} />
+          <Grid xs={1} sm={1} md={4} lg={6} xl={4} className={'player'}>
+            <div className={'steps-display-wrap'}>
+              <TranslucentStep
+                stepNum={currentIndex - 2}
+                stepVal={stepsToShow[currentIndex - 2]}
+              />
+              <NormalStep
+                stepNum={currentIndex - 1}
+                stepVal={stepsToShow[currentIndex - 1]}
+              />
+              <BoldStep
+                stepNum={currentIndex}
+                stepVal={stepsToShow[currentIndex]}
+              />
+              <NormalStep
+                stepNum={currentIndex + 1}
+                stepVal={stepsToShow[currentIndex + 1]}
+              />
+              <TranslucentStep
+                stepNum={currentIndex + 2}
+                stepVal={stepsToShow[currentIndex + 2]}
+              />
+            </div>
+            <div className={'ctrl-panel-wrap'}>
+              <DblBackRewindBtn onButtonClick={() => onRewind(-10)} />
+              <BackRewindBtn onButtonClick={() => onRewind(-1)} />
+              <PlayOrPauseBtn
+                isPlaying={isPlaying}
+                onButtonClick={onPlayOrPauseClick}
+              />
+              <ForwardRewindBtn onButtonClick={() => onRewind(1)} />
+              <DblForwardRewindBtn onButtonClick={() => onRewind(10)} />
+            </div>
+          </Grid>
+          <Grid
+            xs={1}
+            sm={1}
+            md={1}
+            lg={2}
+            xl={2}
+            className={'interval-settings'}
+          >
+            <p>Паузы между цифрами</p>
+            <DelaySlider delay={delay} onChange={onSliderChange} />
+          </Grid>
         </Grid>
-      </Grid>
-    </StepsPlayerWrapper>
+      </StepsPlayerWrapper>
+    </>
   );
 }

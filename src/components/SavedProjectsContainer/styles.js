@@ -5,6 +5,7 @@ export const SavedProjectsWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 47px;
+  margin-top: clamp(24px, 3vw, 36px);
 
   h3 {
     color: #484848;

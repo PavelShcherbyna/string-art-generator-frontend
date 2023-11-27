@@ -4,7 +4,7 @@ export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 0 55px;
+  //margin: 0 0 55px;
   @media (max-width: 480px) {
     flex-direction: row-reverse;
   }

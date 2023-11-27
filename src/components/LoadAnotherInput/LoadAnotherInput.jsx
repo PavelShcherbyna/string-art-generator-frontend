@@ -2,9 +2,9 @@ import React from 'react';
 import DownloadSVG from '../../assets/download_icon.svg';
 import { AnotherInputContainer } from './styles';
 
-const LoadAnotherInput = ({ onFileUploaded }) => {
+const LoadAnotherInput = ({ className = '', onFileUploaded }) => {
   return (
-    <AnotherInputContainer>
+    <AnotherInputContainer className={`${className}`}>
       <img src={DownloadSVG} alt="download" />
       Загрузить другое фото
       <input

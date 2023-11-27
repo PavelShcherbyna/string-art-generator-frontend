@@ -2,13 +2,13 @@ import styled from 'styled-components';
 
 export const BordFileInputContainer = styled.div`
   width: 100%;
-  height: 50vh;
+  height: 70vh;
   display: grid;
   place-items: center;
 
   label {
     cursor: pointer;
-    padding: 17px 40px;
+    padding: 17px 0;
     border: 2px solid black;
     border-radius: 4px;
     font-size: 18px;

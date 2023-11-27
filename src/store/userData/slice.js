@@ -6,8 +6,7 @@ export const userDataSlice = createSlice({
     loginLoading: false,
     isLoggedIn: false,
     drawings: [],
-    justGenDrawId: '',
-    inPlayerDrawId: '' //TODO: check is 'inPlayerDrawId' value redundant
+    justGenDrawId: ''
   },
   reducers: {
     loginUser: (state, action) => {
@@ -16,7 +15,13 @@ export const userDataSlice = createSlice({
     saveUserData: (state, action) => {
       const { drawings = [], isLoggedIn = false } = action.payload;
 
-      return { ...state, drawings, isLoggedIn, loginLoading: false };
+      return {
+        ...state,
+        drawings,
+        isLoggedIn,
+        loginLoading: false,
+        justGenDrawId: ''
+      };
     },
     postDrawings: (state, action) => {
       const { drawings = [] } = action.payload;

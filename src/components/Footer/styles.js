@@ -1,15 +1,16 @@
 import styled from 'styled-components';
 
 export const FooterWrapper = styled.footer`
-  @media (min-width: 480px) {
-    display: none;
+  @media (max-width: 480px) {
+    display: flex;
   }
+  display: none;
   background: white;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  display: flex;
+
   justify-content: center;
   gap: 14px;
 
