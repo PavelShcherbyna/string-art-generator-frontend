@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import cn from 'classnames';
 import AvatarEditor from 'react-avatar-editor';
 import { GenSettingContainerWrapper } from './styles';
 import { SliderWrapper, ButtonWithBorder } from '../reusableStyles';
@@ -59,7 +58,7 @@ const GeneratorSettingsContainer = ({
   return (
     <GenSettingContainerWrapper>
       <div className="image-block">
-        <div className={cn('image-wrapper')}>
+        <div className={'image-wrapper imgCircled'}>
           <AvatarEditor
             style={imgEditorStyle}
             ref={setEditorRef}
@@ -71,6 +70,10 @@ const GeneratorSettingsContainer = ({
             borderRadius={240}
             scale={imgScale}
             // rotate={imgRotate}
+          />
+          <LoadAnotherInput
+            className={'small-top-absolute'}
+            onFileUploaded={onFileUploaded}
           />
         </div>
         <div className="zoom-wrap">
@@ -91,7 +94,10 @@ const GeneratorSettingsContainer = ({
             </Box>
           </SliderWrapper>
         </div>
-        <LoadAnotherInput onFileUploaded={onFileUploaded} />
+        <LoadAnotherInput
+          className={'sm-invisible'}
+          onFileUploaded={onFileUploaded}
+        />
       </div>
       <div className="settings-block">
         <h3>Настройки</h3>

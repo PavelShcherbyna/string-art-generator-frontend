@@ -10,6 +10,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { loginUser } from '../../store/userData/slice';
 import { Progress } from '../Progress/Progress';
 import { useIsLoggedIn } from '../../helpers/customHooks';
+import ArrowsNavigation from '../ArrowsNavigation';
 
 const LoginSchema = Yup.object().shape({
   password: Yup.string()
@@ -77,32 +78,38 @@ const LoginWithCode = () => {
   }
 
   return (
-    <AuthWithCodePageWrap>
-      {loginLoading && <Progress />}
-      {!loginLoading && step === 1 && (
-        <form onSubmit={formik.handleSubmit}>
-          <div className={'input-wrap'}>
-            <input
-              autoFocus
-              id="password"
-              name="password"
-              type="text"
-              placeholder="Внести код"
-              onChange={(e) =>
-                formik.setFieldValue('password', onChangeFormat(e.target.value))
-              }
-              value={valueFormat(formik.values.password)}
-            />
-            {/*{formik.errors.password ? <span className={'err-msg'}>{formik.errors.password}</span> : null}*/}
-          </div>
+    <>
+      {step !== 0 && <ArrowsNavigation backHandler={() => setStep(0)} />}
+      <AuthWithCodePageWrap>
+        {loginLoading && <Progress />}
+        {!loginLoading && step === 1 && (
+          <form onSubmit={formik.handleSubmit}>
+            <div className={'input-wrap'}>
+              <input
+                autoFocus
+                id="password"
+                name="password"
+                type="text"
+                placeholder="Внести код"
+                onChange={(e) =>
+                  formik.setFieldValue(
+                    'password',
+                    onChangeFormat(e.target.value)
+                  )
+                }
+                value={valueFormat(formik.values.password)}
+              />
+              {/*{formik.errors.password ? <span className={'err-msg'}>{formik.errors.password}</span> : null}*/}
+            </div>
 
-          <ButtonWithBorder type="submit" className={'font18 hover-black'}>
-            Далее
-          </ButtonWithBorder>
-        </form>
-      )}
-      {!loginLoading && step !== 1 && <EnterBlock setStep={setStep} />}
-    </AuthWithCodePageWrap>
+            <ButtonWithBorder type="submit" className={'font18 hover-black'}>
+              Далее
+            </ButtonWithBorder>
+          </form>
+        )}
+        {!loginLoading && step !== 1 && <EnterBlock setStep={setStep} />}
+      </AuthWithCodePageWrap>
+    </>
   );
 };
 

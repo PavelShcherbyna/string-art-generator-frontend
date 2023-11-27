@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const StepsPlayerWrapper = styled.div`
   width: 100%;
   min-height: 70vh;
+  margin-top: clamp(24px, 3vw, 36px);
 
   .player {
     justify-self: center;

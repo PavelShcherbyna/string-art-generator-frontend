@@ -14,6 +14,9 @@ import StepsModal from '../StepsModal/StepsModal';
 import PickStepModal from '../StepsModal/PickStepModal';
 import { changeDrawingStep, postDrawings } from '../../store/userData/slice';
 import { useNavigate, useLocation } from 'react-router-dom';
+import ArrowsNavigation from '../ArrowsNavigation';
+import { removeSessionStorageItem } from '../../helpers/sessionStorage';
+import { access_token } from '../../constants';
 
 const GeneratorMainBlock = () => {
   const [baseImageSrc, setBaseImageSrc] = useState('');
@@ -126,6 +129,7 @@ const GeneratorMainBlock = () => {
     await setGeneratorStep(2);
     setProcessing(true);
     setIsCalculating(true);
+    setLineCalcProgress(0);
     // setSelectedRes({});
 
     // const maxLines = generalSettingsArr.reduce(
@@ -222,35 +226,62 @@ const GeneratorMainBlock = () => {
   //   isPlaying ? delay : null
   // );
 
+  function backToLoginPage() {
+    removeSessionStorageItem(access_token);
+    navigate('/');
+  }
+
+  function backToStep0() {
+    setBaseImageSrc('');
+    setGeneratorStep(0);
+  }
+
+  function backToStep1() {
+    if (baseImageSrc) {
+      setGeneratorStep(1);
+    } else {
+      setGeneratorStep(0);
+    }
+  }
+
   return (
     <>
       {/*<img className="hidden" id="imageSrc" alt="Source" src={baseImageSrc} />*/}
       {!baseImageSrc && generatorStep === 0 && (
-        <PhotoInputCenter onFileUploaded={photoUploadedHandler} />
+        <>
+          <ArrowsNavigation backHandler={backToLoginPage} />
+          <PhotoInputCenter onFileUploaded={photoUploadedHandler} />
+        </>
       )}
       {baseImageSrc && generatorStep === 1 && (
-        <GeneratorSettingsContainer
-          imageSrc={baseImageSrc}
-          setImageSrc={setBaseImageSrc}
-          onFileUploaded={photoUploadedHandler}
-          onGenerate={generateButtonHandler}
-          baseImgRef={baseImgRef}
-        />
+        <>
+          <ArrowsNavigation backHandler={backToStep0} />
+          <GeneratorSettingsContainer
+            imageSrc={baseImageSrc}
+            setImageSrc={setBaseImageSrc}
+            onFileUploaded={photoUploadedHandler}
+            onGenerate={generateButtonHandler}
+            baseImgRef={baseImgRef}
+          />
+        </>
       )}
       {generatorStep === 2 && (
-        <ResultsContainer
-          onFileUploaded={photoUploadedHandler}
-          onPlayClick={onPlayClick}
-          onChangeStepClick={onChangeStepClick}
-          // generalSettings={generalSettingsArr}
-          // pickCanvasHandler={pickCanvasHandler}
-          selectedRes={activeDrawing}
-          processing={processing}
-          // onFileSave={onFileSave}
-          lineCalcProgress={lineCalcProgress}
-          isCalculating={isCalculating}
-          activeDrawingId={justGenDrawId}
-        />
+        <>
+          {!isCalculating && <ArrowsNavigation backHandler={backToStep1} />}
+          <ResultsContainer
+            onFileUploaded={photoUploadedHandler}
+            onPlayClick={onPlayClick}
+            onChangeStepClick={onChangeStepClick}
+            // generalSettings={generalSettingsArr}
+            // pickCanvasHandler={pickCanvasHandler}
+            selectedRes={activeDrawing}
+            processing={processing}
+            // onFileSave={onFileSave}
+            lineCalcProgress={lineCalcProgress}
+            isCalculating={isCalculating}
+            activeDrawingId={justGenDrawId}
+          />
+        </>
       )}
       {/*<StepsModal*/}
       {/*  open={stepsModalOpen}*/}

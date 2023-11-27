@@ -6,6 +6,7 @@ export const GenSettingContainerWrapper = styled.div`
   justify-content: center;
   flex-wrap: wrap;
   gap: clamp(7px, 6vw, 96px);
+  margin-top: clamp(24px, 3vw, 36px);
 
   @media (max-width: 480px) {
     gap: 7px;
@@ -19,20 +20,21 @@ export const GenSettingContainerWrapper = styled.div`
 
     .image-wrapper {
       position: relative;
-      overflow: hidden;
+      //overflow: hidden;
 
       &.imgCircled {
         &::after {
           content: '';
           position: absolute;
-          width: 430px;
-          height: 430px;
-          border: 4px solid white;
+          width: clamp(240px, 90vw, 455px);
+          height: clamp(240px, 90vw, 455px);
+          border: 3px solid white;
           border-radius: 50%;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          box-shadow: 0 0 0 125px rgba(0, 0, 0, 0.4);
+          left: 0;
+          top: 0;
+          //transform: translate(-50%, -50%);
+          box-sizing: border-box;
+          //box-shadow: 0 0 0 125px rgba(0, 0, 0, 0.4);
         }
       }
     }
@@ -70,7 +72,8 @@ export const GenSettingContainerWrapper = styled.div`
       font-style: normal;
       font-weight: 700;
       font-size: clamp(20px, 3vw, 35px);
-      line-height: 42px;
+      line-height: normal;
+      margin: 0;
     }
 
     p {

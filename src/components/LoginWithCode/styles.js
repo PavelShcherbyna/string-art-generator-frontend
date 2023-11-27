@@ -7,7 +7,7 @@ export const AuthWithCodePageWrap = styled.div`
   //margin: 0 0 55px; // Margin-bottom needed for better centering inside 'flex' parent
   //flex: 1;
   width: 100%;
-  height: 60vh;
+  height: 70vh;
   display: grid;
   place-items: center;
 

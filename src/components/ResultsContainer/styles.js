@@ -8,12 +8,13 @@ export const ResultsContainerWrapper = styled.div`
   flex-wrap: wrap;
   gap: 20px;
   font-family: 'Inter', sans-serif;
+  margin-top: clamp(24px, 3vw, 36px);
 
   .images-block {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: clamp(0px, 2vw, 30px);
 
     .big-img-wrapper {
       .base-image-grayed {
