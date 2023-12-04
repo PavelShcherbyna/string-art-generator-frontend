@@ -1,8 +1,6 @@
 import React from 'react';
 import { HeaderContainer } from './styles';
 import RomanFlagSVG from '../../assets/roman_flag.svg';
-import MainLogo from '../../assets/mainLogo.svg';
-import mainLogoSVG from '../../assets/main_logo_diy.svg';
 import NoteSVG from '../../assets/note.svg';
 import HelpIconSVG from '../../assets/help_icon.svg';
 import HomeSVG from '../../assets/Home.svg';
@@ -10,6 +8,7 @@ import ShadedHomeSVG from '../../assets/Shaded_home.svg';
 import BookmarkSVG from '../../assets/bookmark.svg';
 import ShadedBookmarkSVG from '../../assets/Shaded_bookmark.svg';
 import { NavLink, useLocation } from 'react-router-dom';
+import logoPng from '../../assets/logo.png';
 
 const languages = {
   roman: { flagSVG: RomanFlagSVG, code: 'RO' }
@@ -27,7 +26,7 @@ const Header = ({ language = 'roman' }) => {
         <span>{languages[language].code}</span>
       </div>
       <div className="logo-container header-block">
-        <img src={mainLogoSVG} alt="Logotype" />
+        <img src={logoPng} alt="Logotype" />
       </div>
 
       <div className="header-button-panel header-block">
