@@ -22,4 +22,11 @@ export const MusicPlayerWrapper = styled.div`
   @media (max-width: 480px) {
     margin: 0 20px 94px;
   }
+
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
+
+  &.invisible {
+    opacity: 0;
+  }
 `;

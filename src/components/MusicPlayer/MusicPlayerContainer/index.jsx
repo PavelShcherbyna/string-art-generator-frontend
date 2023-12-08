@@ -4,9 +4,12 @@ import { getSongs, clearSongs } from '../../../store/audioData/slice';
 import { MusicPlayerWrapper } from './styles';
 import SongComponent from '../SongComponent';
 import { Progress } from '../../Progress/Progress';
+import cn from 'classnames';
 
 export default function MusicPlayerContainer() {
-  const { songs, songsLoading } = useSelector((state) => state.audioData);
+  const { songs, songsLoading, showMusicPlayer } = useSelector(
+    (state) => state.audioData
+  );
   const [activeSongId, setActiveSongId] = useState('');
   const dispatch = useDispatch();
 
@@ -52,7 +55,7 @@ export default function MusicPlayerContainer() {
 
   return (
     <>
-      <MusicPlayerWrapper>
+      <MusicPlayerWrapper className={cn({ invisible: !showMusicPlayer })}>
         {songsLoading ? (
           <Progress />
         ) : (
