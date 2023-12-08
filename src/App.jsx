@@ -11,8 +11,9 @@ import SavedProjectsContainer from './components/SavedProjectsContainer';
 import StepsPlayer from './components/StepsPlayer';
 import Footer from './components/Footer';
 import styled from 'styled-components';
+import MusicPlayer from './components/MusicPlayer';
 
-const AppWrap = styled.footer`
+const AppWrap = styled.div`
   padding: 0 clamp(20px, 10vw, 160px);
 
   @media (max-width: 480px) {
@@ -48,6 +49,7 @@ function App() {
           </Route>
           <Route path="*" element={<p>There's nothing here: 404!</p>} />
         </Routes>
+        <MusicPlayer />
       </AppWrap>
       <Footer />
     </>

@@ -7,7 +7,7 @@ export const FooterWrapper = styled.footer`
   display: none;
   background: white;
   position: fixed;
-  bottom: 0;
+  bottom: 20px;
   left: 0;
   right: 0;
 
@@ -24,6 +24,13 @@ export const FooterWrapper = styled.footer`
     align-content: center;
     justify-content: center;
     margin-top: -1px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
 
     img {
       width: 25px;

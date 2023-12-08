@@ -26,4 +26,15 @@ export function applyContrast(data, contrast) {
     data[i + 2] = truncateColor(factor * (data[i + 2] - 128.0) + 128.0);
   }
 }
-// ---
+
+// Format seconds number into MM:SS format string
+export const formatTime = (time) => {
+  if (time && !isNaN(time)) {
+    const minutes = Math.floor(time / 60);
+    const formatMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const seconds = Math.floor(time % 60);
+    const formatSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    return `${formatMinutes}:${formatSeconds}`;
+  }
+  return '00:00';
+};
