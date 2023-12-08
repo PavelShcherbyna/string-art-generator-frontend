@@ -26,7 +26,7 @@ export const HeaderContainer = styled.header`
     margin-top: 19px;
 
     img {
-      width: clamp(78px, 10vw, 144px);
+      width: clamp(78px, 13vw, 144px);
       height: clamp(60px, 10vw, 110px);
     }
   }
