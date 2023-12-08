@@ -44,17 +44,15 @@ export const HeaderContainer = styled.header`
       height: 23px;
     }
 
-    //button {
-    //  border: none;
-    //  width: 31px;
-    //  height: 31px;
-    //  background-color: transparent;
-    //  padding: 0;
-    //  cursor: pointer;
-    //
-    //  &:focus {
-    //    outline: none;
-    //  }
-    //}
+    button {
+      border: none;
+      background-color: transparent;
+      padding: 0;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+      }
+    }
   }
 `;

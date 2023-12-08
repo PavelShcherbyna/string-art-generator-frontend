@@ -1,7 +1,6 @@
 import React from 'react';
 import { HeaderContainer } from './styles';
 import RomanFlagSVG from '../../assets/roman_flag.svg';
-import NoteSVG from '../../assets/note.svg';
 import HelpIconSVG from '../../assets/help_icon.svg';
 import HomeSVG from '../../assets/Home.svg';
 import ShadedHomeSVG from '../../assets/Shaded_home.svg';
@@ -9,6 +8,10 @@ import BookmarkSVG from '../../assets/bookmark.svg';
 import ShadedBookmarkSVG from '../../assets/Shaded_bookmark.svg';
 import { NavLink, useLocation } from 'react-router-dom';
 import logoPng from '../../assets/logo.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { openMusicPlayer } from '../../store/audioData/slice';
+import shadedNoteSVG from '../../assets/Shaded_note.svg';
+import noteSVG from '../../assets/note.svg';
 
 const languages = {
   roman: { flagSVG: RomanFlagSVG, code: 'RO' }
@@ -18,6 +21,8 @@ const Header = ({ language = 'roman' }) => {
   const location = useLocation();
   const urlStr = location?.pathname || '';
   const showNavigation = urlStr.includes('/app');
+  const dispatch = useDispatch();
+  const { showMusicPlayer } = useSelector((state) => state.audioData);
 
   return (
     <HeaderContainer>
@@ -32,9 +37,16 @@ const Header = ({ language = 'roman' }) => {
       <div className="header-button-panel header-block">
         {showNavigation && (
           <>
-            {/*<button className="toggle-mute">*/}
-            {/*  <img src={NoteSVG} alt="Note" />*/}
-            {/*</button>*/}
+            <button
+              className="toggle-mute"
+              onClick={() => dispatch(openMusicPlayer())}
+            >
+              {showMusicPlayer ? (
+                <img src={shadedNoteSVG} alt="Shaded note" />
+              ) : (
+                <img src={noteSVG} alt="Note" />
+              )}
+            </button>
             <NavLink end to="/app">
               {({ isActive }) => {
                 return isActive ? (
