@@ -11,6 +11,7 @@ import highBrightSVG from '../../assets/high_bright.svg';
 import lowContrastSVG from '../../assets/low_contrast.svg';
 import highContrastSVG from '../../assets/high_contrast.svg';
 import { applyBrightness, applyContrast } from '../../helpers';
+import { NoSleepContext } from '../../App';
 
 const GeneratorSettingsContainer = ({
   imageSrc,
@@ -23,6 +24,7 @@ const GeneratorSettingsContainer = ({
   // const [imgRotate, setImgRotate] = useState(0);
   const [brightness, setBrightness] = useState(0);
   const [contrast, setContrast] = useState(0);
+  const noSleep = React.useContext(NoSleepContext);
 
   const imgEditorStyle = {
     width: 'clamp(240px, 90vw, 455px)',
@@ -57,6 +59,12 @@ const GeneratorSettingsContainer = ({
       baseImgRef.current = canvas;
     }
   };
+
+  function generateHandler() {
+    noSleep.enable();
+    cropImage();
+    onGenerate();
+  }
 
   return (
     <GenSettingContainerWrapper>
@@ -178,12 +186,7 @@ const GeneratorSettingsContainer = ({
             </Box>
           </SliderWrapper>
         </div>
-        <ButtonWithBorder
-          onClick={() => {
-            cropImage();
-            onGenerate();
-          }}
-        >
+        <ButtonWithBorder onClick={generateHandler}>
           <span>Генерировать</span>
         </ButtonWithBorder>
       </div>

@@ -12,6 +12,9 @@ import StepsPlayer from './components/StepsPlayer';
 import Footer from './components/Footer';
 import styled from 'styled-components';
 import MusicPlayer from './components/MusicPlayer';
+import NoSleep from '@marsgames/nosleep.js';
+
+export const NoSleepContext = React.createContext(null);
 
 const AppWrap = styled.div`
   padding: 0 clamp(20px, 10vw, 160px);
@@ -23,6 +26,7 @@ const AppWrap = styled.div`
 
 function App() {
   const navigate = useNavigate();
+  const noSleep = new NoSleep();
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -39,17 +43,19 @@ function App() {
     <>
       <Toast />
       <AppWrap>
-        <Header />
-        <Routes>
-          <Route path="/" element={<LoginWithCode />} />
-          <Route path="/app" element={<AppLayout />}>
-            <Route path="/app" element={<GeneratorMainBlock />} />
-            <Route path="/app/saved" element={<SavedProjectsContainer />} />
-            <Route path="/app/player" element={<StepsPlayer />} />
-          </Route>
-          <Route path="*" element={<p>There's nothing here: 404!</p>} />
-        </Routes>
-        <MusicPlayer />
+        <NoSleepContext.Provider value={noSleep}>
+          <Header />
+          <Routes>
+            <Route path="/" element={<LoginWithCode />} />
+            <Route path="/app" element={<AppLayout />}>
+              <Route path="/app" element={<GeneratorMainBlock />} />
+              <Route path="/app/saved" element={<SavedProjectsContainer />} />
+              <Route path="/app/player" element={<StepsPlayer />} />
+            </Route>
+            <Route path="*" element={<p>There's nothing here: 404!</p>} />
+          </Routes>
+          <MusicPlayer />
+        </NoSleepContext.Provider>
       </AppWrap>
       <Footer />
     </>

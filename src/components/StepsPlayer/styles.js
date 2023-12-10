@@ -34,7 +34,7 @@ export const StepsPlayerWrapper = styled.div`
           font-size: clamp(13px, 2vw, 20px);
           font-style: normal;
           font-weight: 600;
-          line-height: normal;
+          line-height: 250%;
         }
         .step-val {
           grid-area: val;
@@ -62,7 +62,7 @@ export const StepsPlayerWrapper = styled.div`
           font-size: clamp(13px, 2vw, 20px);
           font-style: normal;
           font-weight: 600;
-          line-height: normal;
+          line-height: 250%;
         }
         .step-val {
           grid-area: val;
@@ -91,7 +91,7 @@ export const StepsPlayerWrapper = styled.div`
           font-size: clamp(22px, 4vw, 35px);
           font-style: normal;
           font-weight: 600;
-          line-height: normal;
+          line-height: 280%;
         }
         .step-val {
           grid-area: val;

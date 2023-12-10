@@ -16,10 +16,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { postDrawings } from '../../store/userData/slice';
 import ArrowsNavigation from '../ArrowsNavigation';
 import { useNavigate } from 'react-router-dom';
+import { NoSleepContext } from '../../App';
 
 export default function StepsPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [delay, setDelay] = useState(5000);
+  const noSleep = React.useContext(NoSleepContext);
   const { drawings, justGenDrawId } = useSelector((state) => state.userData);
 
   const activeDrawing = drawings.find((el) => el.f_id === justGenDrawId) || {};
@@ -76,8 +78,10 @@ export default function StepsPlayer() {
 
   function onPlayOrPauseClick() {
     if (isPlaying) {
+      noSleep.disable();
       // voice.shutUp()
     } else {
+      noSleep.enable();
       showNextStep();
     }
     setIsPlaying((prevState) => !prevState);
