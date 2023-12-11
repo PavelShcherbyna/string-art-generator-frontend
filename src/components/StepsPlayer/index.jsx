@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/joy';
 import Voice from 'artyom.js';
 import { StepsPlayerWrapper } from './styles';
@@ -86,6 +86,14 @@ export default function StepsPlayer() {
     }
     setIsPlaying((prevState) => !prevState);
   }
+
+  useEffect(() => {
+    return () => {
+      if (noSleep.isEnabled) {
+        noSleep.disable();
+      }
+    };
+  }, []);
 
   function onRewind(val) {
     // setIsPlaying(false);
