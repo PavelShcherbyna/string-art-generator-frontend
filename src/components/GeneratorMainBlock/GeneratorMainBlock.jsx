@@ -78,6 +78,14 @@ const GeneratorMainBlock = () => {
     }
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (noSleep.isEnabled) {
+        noSleep.disable();
+      }
+    };
+  }, []);
+
   const onPlayClick = () => {
     // if (selectedRes.stepsArr) {
     //   setStepsModalOpen(true);
