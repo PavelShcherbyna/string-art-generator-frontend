@@ -23,6 +23,7 @@ export default function SongComponent({
   useEffect(() => {
     if (!!activeSongId && activeSongId === song.id) {
       setIsPlaying(true);
+      audioRef.current.play().catch(() => toast.error('Error playing audio'));
     } else if (!activeSongId) {
       audioRef.current.pause();
 
