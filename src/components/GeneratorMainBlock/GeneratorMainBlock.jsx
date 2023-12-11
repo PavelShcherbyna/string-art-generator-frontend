@@ -17,6 +17,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import ArrowsNavigation from '../ArrowsNavigation';
 import { removeSessionStorageItem } from '../../helpers/sessionStorage';
 import { access_token } from '../../constants';
+import { NoSleepContext } from '../../App';
 
 const GeneratorMainBlock = () => {
   const [baseImageSrc, setBaseImageSrc] = useState('');
@@ -36,6 +37,7 @@ const GeneratorMainBlock = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const noSleep = React.useContext(NoSleepContext);
 
   const { drawings, justGenDrawId } = useSelector((state) => state.userData);
   const activeDrawing = drawings.find((el) => el.f_id === justGenDrawId);
@@ -162,6 +164,7 @@ const GeneratorMainBlock = () => {
     drawLinesSVG('resultImage', stepsArr);
 
     setProcessing(false);
+    noSleep.disable();
   };
 
   // const pickCanvasHandler = async (e) => {
