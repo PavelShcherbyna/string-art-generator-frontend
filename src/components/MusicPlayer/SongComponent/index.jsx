@@ -23,6 +23,7 @@ export default function SongComponent({
   useEffect(() => {
     if (!!activeSongId && activeSongId === song.id) {
       setIsPlaying(true);
+      audioRef.current.play().catch(() => toast.error('Error playing audio'));
     } else if (!activeSongId) {
       audioRef.current.pause();
 
@@ -35,18 +36,28 @@ export default function SongComponent({
     }
   }, [activeSongId, song, audioRef]);
 
-  useEffect(() => {
-    if (isPlaying) {
-      audioRef.current.error
-        ? toast.error('Error loading audio')
-        : audioRef.current.play();
-    } else {
-      audioRef.current.pause();
-    }
-  }, [isPlaying]);
+  // useEffect(() => {
+  //   if (isPlaying) {
+  //     audioRef.current.error
+  //       ? toast.error('Error loading audio')
+  //       : audioRef.current.play();
+  //   } else {
+  //     audioRef.current.pause();
+  //   }
+  // }, [isPlaying]);
+  //
+  // function onBtnClick() {
+  //   handlePlay(song.id);
+  // }
 
   function onBtnClick() {
     handlePlay(song.id);
+
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(() => toast.error('Error playing audio'));
+    }
   }
 
   return (

@@ -7,9 +7,10 @@ export const FooterWrapper = styled.footer`
   display: none;
   background: white;
   position: fixed;
-  bottom: 20px;
+  bottom: 0;
   left: 0;
   right: 0;
+  padding-bottom: 20px;
 
   justify-content: center;
   gap: 14px;
