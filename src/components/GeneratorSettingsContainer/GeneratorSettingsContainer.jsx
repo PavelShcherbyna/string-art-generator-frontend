@@ -10,10 +10,11 @@ import lowBrightSVG from '../../assets/low_bright.svg';
 import highBrightSVG from '../../assets/high_bright.svg';
 import lowContrastSVG from '../../assets/low_contrast.svg';
 import highContrastSVG from '../../assets/high_contrast.svg';
+import { applyBrightness, applyContrast } from '../../helpers';
+import { NoSleepContext } from '../../App';
 
 const GeneratorSettingsContainer = ({
   imageSrc,
-  setImageSrc,
   onFileUploaded,
   onGenerate,
   baseImgRef
@@ -21,18 +22,21 @@ const GeneratorSettingsContainer = ({
   // const [imgForm, setImgForm] = useState('circle');
   const [imgScale, setImgScale] = useState(1.1);
   // const [imgRotate, setImgRotate] = useState(0);
-  const [bright, setBright] = useState(0);
+  const [brightness, setBrightness] = useState(0);
   const [contrast, setContrast] = useState(0);
+  const noSleep = React.useContext(NoSleepContext);
 
   const imgEditorStyle = {
     width: 'clamp(240px, 90vw, 455px)',
     height: 'clamp(240px, 90vw, 455px)',
-    touchAction: 'auto'
+    touchAction: 'auto',
+    filter: `contrast(${contrast + 100}%) brightness(${brightness + 100}%)`
   };
 
   useEffect(() => {
     setImgScale(1.1);
-    // setImgRotate(0);
+    setBrightness(0);
+    setContrast(0);
   }, [imageSrc]);
 
   let editor;
@@ -43,34 +47,43 @@ const GeneratorSettingsContainer = ({
 
   const cropImage = () => {
     if (setEditorRef) {
-      baseImgRef.current = editor.getImage();
-      // const croppedImgURL = canvasScaled.toDataURL();
+      const canvas = editor.getImage();
+      const ctx = canvas.getContext('2d');
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-      // const croppedImg = new Image();
-      // croppedImg.src = canvasScaled.toDataURL();
-      // croppedImg.width = canvasScaled.width;
-      // croppedImg.height = canvasScaled.height;
+      applyBrightness(imageData.data, brightness);
+      applyContrast(imageData.data, contrast);
 
-      // await setImageSrc(croppedImgURL);
+      ctx.putImageData(imageData, 0, 0);
+
+      baseImgRef.current = canvas;
     }
   };
+
+  function generateHandler() {
+    noSleep.enable();
+    cropImage();
+    onGenerate();
+  }
 
   return (
     <GenSettingContainerWrapper>
       <div className="image-block">
         <div className={'image-wrapper'}>
-          <AvatarEditor
-            style={imgEditorStyle}
-            ref={setEditorRef}
-            image={imageSrc}
-            width={455}
-            height={455}
-            border={0}
-            color={[0, 0, 0, 0.5]}
-            borderRadius={240}
-            scale={imgScale}
-            // rotate={imgRotate}
-          />
+          <div className={'imgCircled'}>
+            <AvatarEditor
+              style={imgEditorStyle}
+              ref={setEditorRef}
+              image={imageSrc}
+              width={455}
+              height={455}
+              border={0}
+              // color={[0, 0, 0, 0.5]}
+              // borderRadius={240}
+              scale={imgScale}
+              // rotate={imgRotate}
+            />
+          </div>
           <LoadAnotherInput
             className={'small-top-absolute'}
             onFileUploaded={onFileUploaded}
@@ -142,8 +155,11 @@ const GeneratorSettingsContainer = ({
                 <Slider
                   size="small"
                   aria-label="Volume"
-                  value={bright}
-                  onChange={(e) => setBright(e.target.value)}
+                  value={brightness}
+                  onChange={(e) => setBrightness(e.target.value)}
+                  step={5}
+                  min={-80}
+                  max={80}
                 />
                 <img src={highBrightSVG} alt="bright sun" />
               </Stack>
@@ -161,18 +177,16 @@ const GeneratorSettingsContainer = ({
                   aria-label="Volume"
                   value={contrast}
                   onChange={(e) => setContrast(e.target.value)}
+                  step={5}
+                  min={-80}
+                  max={80}
                 />
                 <img src={highContrastSVG} alt="high contrast" />
               </Stack>
             </Box>
           </SliderWrapper>
         </div>
-        <ButtonWithBorder
-          onClick={() => {
-            cropImage();
-            onGenerate();
-          }}
-        >
+        <ButtonWithBorder onClick={generateHandler}>
           <span>Генерировать</span>
         </ButtonWithBorder>
       </div>

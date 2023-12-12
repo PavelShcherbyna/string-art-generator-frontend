@@ -26,7 +26,7 @@ export const HeaderContainer = styled.header`
     margin-top: 19px;
 
     img {
-      width: clamp(78px, 10vw, 144px);
+      width: clamp(78px, 13vw, 144px);
       height: clamp(60px, 10vw, 110px);
     }
   }
@@ -44,17 +44,15 @@ export const HeaderContainer = styled.header`
       height: 23px;
     }
 
-    //button {
-    //  border: none;
-    //  width: 31px;
-    //  height: 31px;
-    //  background-color: transparent;
-    //  padding: 0;
-    //  cursor: pointer;
-    //
-    //  &:focus {
-    //    outline: none;
-    //  }
-    //}
+    button {
+      border: none;
+      background-color: transparent;
+      padding: 0;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+      }
+    }
   }
 `;

@@ -10,6 +10,7 @@ export const FooterWrapper = styled.footer`
   bottom: 0;
   left: 0;
   right: 0;
+  padding-bottom: 20px;
 
   justify-content: center;
   gap: 14px;
@@ -24,6 +25,13 @@ export const FooterWrapper = styled.footer`
     align-content: center;
     justify-content: center;
     margin-top: -1px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
 
     img {
       width: 25px;
