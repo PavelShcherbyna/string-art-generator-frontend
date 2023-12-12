@@ -1,0 +1,71 @@
+{
+  "name": "String Art",
+  "short_name": "String Art",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "any_icon_x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "maskable_icon_x500.png",
+      "sizes": "500x500",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    { "src": "logo192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "logo256.png", "sizes": "256x256", "type": "image/png" },
+    { "src": "logo384.png", "sizes": "384x384", "type": "image/png" },
+    { "src": "logo512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/wide1.png",
+      "sizes": "720x480",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Photo selection"
+    },
+    {
+      "src": "screenshots/wide2.png",
+      "sizes": "720x480",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Generated string art"
+    },
+    {
+      "src": "screenshots/wide3.png",
+      "sizes": "720x480",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Player"
+    },
+    {
+      "src": "screenshots/narrow1.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Photo selection"
+    },
+    {
+      "src": "screenshots/narrow2.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Generated string art"
+    },
+    {
+      "src": "screenshots/narrow3.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Player"
+    }
+  ]
+}
