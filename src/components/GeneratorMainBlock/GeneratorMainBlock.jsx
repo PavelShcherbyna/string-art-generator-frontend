@@ -18,6 +18,7 @@ import ArrowsNavigation from '../ArrowsNavigation';
 import { removeSessionStorageItem } from '../../helpers/sessionStorage';
 import { access_token } from '../../constants';
 import { NoSleepContext } from '../../App';
+import { ButtonWithBorder } from '../reusableStyles';
 
 const GeneratorMainBlock = () => {
   const [baseImageSrc, setBaseImageSrc] = useState('');
@@ -33,6 +34,7 @@ const GeneratorMainBlock = () => {
   const [pickStepModalOpen, setPickStepModalOpen] = useState(false);
   const baseImgRef = useRef(null);
   const [lineCalcProgress, setLineCalcProgress] = useState(0);
+  const [showInstallBtn, setShowInstallBtn] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,6 +55,32 @@ const GeneratorMainBlock = () => {
   // const generalSettingsArr = lineSetArr.map((linesNum, index) => {
   //   return { lines: Number(linesNum), outputCanvasId: `canvasOutput${index}` };
   // });
+
+  async function installAppHandler() {
+    console.log('👍', 'butInstall-clicked');
+    const promptEvent = window.deferredPrompt;
+    if (!promptEvent) {
+      // The deferred prompt isn't available.
+      return;
+    }
+    // Show the install prompt.
+    promptEvent.prompt();
+    // Log the result
+    const result = await promptEvent.userChoice;
+    console.log('👍', 'userChoice', result);
+    // Reset the deferred prompt variable, since
+    // prompt() can only be called once.
+    window.deferredPrompt = null;
+    // Hide the install button.
+    setShowInstallBtn(false);
+    // divInstall.classList.toggle('hidden', true);
+  }
+
+  useEffect(() => {
+    if (!!window.deferredPrompt) {
+      setShowInstallBtn(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (justGenDrawId) {
@@ -257,6 +285,11 @@ const GeneratorMainBlock = () => {
 
   return (
     <>
+      {showInstallBtn && (
+        <ButtonWithBorder onClick={installAppHandler}>
+          Установить на рабочий стол?
+        </ButtonWithBorder>
+      )}
       {/*<img className="hidden" id="imageSrc" alt="Source" src={baseImageSrc} />*/}
       {!baseImageSrc && generatorStep === 0 && (
         <>
