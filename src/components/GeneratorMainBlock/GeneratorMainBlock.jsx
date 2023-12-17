@@ -80,9 +80,6 @@ const GeneratorMainBlock = () => {
     if (!!window.deferredPrompt) {
       setShowPWAInstall(true);
     }
-    return () => {
-      window.deferredPrompt = null;
-    };
   }, []);
 
   useEffect(() => {
