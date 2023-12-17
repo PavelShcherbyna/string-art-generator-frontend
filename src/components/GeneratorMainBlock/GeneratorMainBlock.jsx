@@ -18,7 +18,7 @@ import ArrowsNavigation from '../ArrowsNavigation';
 import { removeSessionStorageItem } from '../../helpers/sessionStorage';
 import { access_token } from '../../constants';
 import { NoSleepContext } from '../../App';
-import { ButtonWithBorder } from '../reusableStyles';
+import SnackbarPWAInstall from '../SnackbarPWAInstall';
 
 const GeneratorMainBlock = () => {
   const [baseImageSrc, setBaseImageSrc] = useState('');
@@ -34,7 +34,7 @@ const GeneratorMainBlock = () => {
   const [pickStepModalOpen, setPickStepModalOpen] = useState(false);
   const baseImgRef = useRef(null);
   const [lineCalcProgress, setLineCalcProgress] = useState(0);
-  const [showInstallBtn, setShowInstallBtn] = useState(false);
+  const [showPWAInstall, setShowPWAInstall] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,14 +72,17 @@ const GeneratorMainBlock = () => {
     // prompt() can only be called once.
     window.deferredPrompt = null;
     // Hide the install button.
-    setShowInstallBtn(false);
+    setShowPWAInstall(false);
     // divInstall.classList.toggle('hidden', true);
   }
 
   useEffect(() => {
     if (!!window.deferredPrompt) {
-      setShowInstallBtn(true);
+      setShowPWAInstall(true);
     }
+    return () => {
+      window.deferredPrompt = null;
+    };
   }, []);
 
   useEffect(() => {
@@ -283,13 +286,16 @@ const GeneratorMainBlock = () => {
     }
   }
 
+  function pwaInstallHandleClose(event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setShowPWAInstall(false);
+  }
+
   return (
     <>
-      {showInstallBtn && (
-        <ButtonWithBorder onClick={installAppHandler}>
-          Установить на рабочий стол?
-        </ButtonWithBorder>
-      )}
       {/*<img className="hidden" id="imageSrc" alt="Source" src={baseImageSrc} />*/}
       {!baseImageSrc && generatorStep === 0 && (
         <>
@@ -342,6 +348,11 @@ const GeneratorMainBlock = () => {
         }}
         selectedRes={activeDrawing}
         setStepIndex={setStepIndex}
+      />
+      <SnackbarPWAInstall
+        open={showPWAInstall}
+        handleClose={pwaInstallHandleClose}
+        handleAction={installAppHandler}
       />
     </>
   );
