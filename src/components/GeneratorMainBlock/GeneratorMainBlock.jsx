@@ -71,9 +71,8 @@ const GeneratorMainBlock = () => {
     // Reset the deferred prompt variable, since
     // prompt() can only be called once.
     window.deferredPrompt = null;
-    // Hide the install button.
+
     setShowPWAInstall(false);
-    // divInstall.classList.toggle('hidden', true);
   }
 
   useEffect(() => {
@@ -283,12 +282,9 @@ const GeneratorMainBlock = () => {
     }
   }
 
-  function pwaInstallHandleClose(event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-
+  function pwaInstallHandleClose() {
     setShowPWAInstall(false);
+    window.deferredPrompt = null;
   }
 
   return (

@@ -15,10 +15,8 @@ const SnackbarPWAInstall = ({ open, handleClose, handleAction }) => {
         Установите приложение
         <br /> "String Art"
       </p>
+      <InstallPWABtn onClick={handleAction}>Установить</InstallPWABtn>
     </InstallPWAContent>
-  );
-  const PWASnackbarAction = (
-    <InstallPWABtn onClick={handleAction}>Установить</InstallPWABtn>
   );
 
   return (
@@ -29,7 +27,6 @@ const SnackbarPWAInstall = ({ open, handleClose, handleAction }) => {
         autoHideDuration={10000}
         onClose={handleClose}
         message={PWASnackbarContent}
-        action={PWASnackbarAction}
       />
     </SnackbarPWAInstallWrapper>
   );
