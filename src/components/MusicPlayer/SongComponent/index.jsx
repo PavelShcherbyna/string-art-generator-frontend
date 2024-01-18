@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
 import { SongWrapper } from './styles';
 import MusicPlayBtn from './MusicPlayBtn';
-import { formatTime } from '../../../helpers';
+// import { formatTime } from '../../../helpers';
 import { toast } from 'react-toastify';
 
 export default function SongComponent({
@@ -12,13 +12,13 @@ export default function SongComponent({
   handleNext
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
+  // const [duration, setDuration] = useState(0);
   const audioRef = useRef();
 
-  const onLoadedMetadata = () => {
-    const seconds = audioRef.current.duration;
-    setDuration(seconds);
-  };
+  // const onLoadedMetadata = () => {
+  //   const seconds = audioRef.current.duration;
+  //   setDuration(seconds);
+  // };
 
   useEffect(() => {
     if (!!activeSongId && activeSongId === song.id) {
@@ -69,14 +69,14 @@ export default function SongComponent({
       <audio
         src={song.src}
         ref={audioRef}
-        onLoadedMetadata={onLoadedMetadata}
+        // onLoadedMetadata={onLoadedMetadata}
         onEnded={handleNext}
       />
       <div>
         <MusicPlayBtn isPlaying={isPlaying} onClickHandler={onBtnClick} />
         <p>{song.name}</p>
       </div>
-      <p className={'time'}>{formatTime(duration)}</p>
+      {/*<p className={'time'}>{formatTime(duration)}</p>*/}
     </SongWrapper>
   );
 }
