@@ -17,7 +17,8 @@ const Footer = () => {
   const dispatch = useDispatch();
   const { showMusicPlayer } = useSelector((state) => state.audioData);
   const urlStr = location?.pathname || '';
-  const showComponent = urlStr.includes('/app');
+  const showComponent =
+    urlStr.includes('/app') || urlStr.includes('/instruction');
 
   return (
     <>
@@ -61,9 +62,9 @@ const Footer = () => {
               );
             }}
           </NavLink>
-          <div className={'nav-item-footer'}>
+          <NavLink to="/instruction" className={'nav-item-footer'}>
             <img src={HelpIconSVG} alt="Help" draggable={false} />
-          </div>
+          </NavLink>
         </FooterWrapper>
       ) : null}
     </>
