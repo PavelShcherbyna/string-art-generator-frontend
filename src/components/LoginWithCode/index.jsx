@@ -4,9 +4,9 @@ import * as Yup from 'yup';
 
 import { AuthWithCodePageWrap } from './styles';
 import { ButtonWithBorder } from '../reusableStyles';
-import HelpIconSVG from '../../assets/help_icon.svg';
+import HelpIconSVG from '../../assets/help_icon_info.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { loginUser } from '../../store/userData/slice';
 import { Progress } from '../Progress/Progress';
 import { useIsLoggedIn } from '../../helpers/customHooks';
@@ -28,10 +28,10 @@ const EnterBlock = ({ setStep }) => {
       >
         Войти
       </ButtonWithBorder>
-      <div className={'instruction'}>
+      <NavLink to="/instruction" className={'instruction'}>
         <img src={HelpIconSVG} alt="question mark" />
         <span>ИНСТРУКЦИЯ</span>
-      </div>
+      </NavLink>
     </div>
   );
 };

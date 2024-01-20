@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import styled from 'styled-components';
 import MusicPlayer from './components/MusicPlayer';
 import NoSleep from '@marsgames/nosleep.js';
+import InfoPage from './components/InfoPage';
 
 export const NoSleepContext = React.createContext(null);
 
@@ -52,6 +53,7 @@ function App() {
               <Route path="/app/saved" element={<SavedProjectsContainer />} />
               <Route path="/app/player" element={<StepsPlayer />} />
             </Route>
+            <Route path="/instruction" element={<InfoPage />} />
             <Route path="*" element={<p>There's nothing here: 404!</p>} />
           </Routes>
           <MusicPlayer />

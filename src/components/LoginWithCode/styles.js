@@ -91,9 +91,13 @@ export const AuthWithCodePageWrap = styled.div`
       font-weight: 600;
       line-height: normal;
 
+      &:hover {
+        text-decoration: none;
+      }
+
       img {
         width: 33px;
-        heigth: 33px;
+        height: 33px;
       }
     }
   }

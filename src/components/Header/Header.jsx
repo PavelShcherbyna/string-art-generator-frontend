@@ -65,9 +65,9 @@ const Header = ({ language = 'roman' }) => {
                 );
               }}
             </NavLink>
-            <div>
+            <NavLink to="/instruction">
               <img src={HelpIconSVG} alt="Help" />
-            </div>
+            </NavLink>
           </>
         )}
       </div>
