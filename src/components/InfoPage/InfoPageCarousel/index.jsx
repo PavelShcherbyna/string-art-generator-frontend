@@ -26,6 +26,7 @@ const InfoCarouselComponent = ({ photosArr = [], className }) => {
         totalSlides={photosArr.length}
         visibleSlides={1}
         dragEnabled={false}
+        touchEnabled={false}
       >
         <Slider>
           {photosArr.map((photoSRC, index) => {
