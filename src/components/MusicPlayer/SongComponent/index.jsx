@@ -71,6 +71,7 @@ export default function SongComponent({
         ref={audioRef}
         // onLoadedMetadata={onLoadedMetadata}
         onEnded={handleNext}
+        loop={true}
       />
       <div>
         <MusicPlayBtn isPlaying={isPlaying} onClickHandler={onBtnClick} />
