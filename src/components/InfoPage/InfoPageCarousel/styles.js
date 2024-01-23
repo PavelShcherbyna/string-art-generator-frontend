@@ -52,7 +52,7 @@ export const InfoCarouselWrap = styled.div`
 
     img {
       border: 1px solid #e3e3e3;
-      height: 350px;
+      height: 100%;
       width: 205px;
       max-width: 100%;
 
@@ -104,7 +104,7 @@ export const InfoCarouselWrap = styled.div`
   &.wideSlides {
     .carousel__inner-slide {
       img {
-        border: none;
+        //border: none;
         height: 350px;
         width: 350px;
       }
