@@ -11,7 +11,7 @@ import { InfoCarouselWrap } from './styles';
 import backArrSVG from '../../../assets/info-page-carousels/BackSlideArrow.svg';
 import forwardArrSVG from '../../../assets/info-page-carousels/ForwardSlideArrow.svg';
 
-const InfoCarouselComponent = ({ photosArr, className }) => {
+const InfoCarouselComponent = ({ photosArr = [], className }) => {
   const [currentSlideNum, setCurrentSlideNum] = useState(1);
 
   const slideStyle = {
@@ -26,6 +26,7 @@ const InfoCarouselComponent = ({ photosArr, className }) => {
         totalSlides={photosArr.length}
         visibleSlides={1}
         dragEnabled={false}
+        touchEnabled={false}
       >
         <Slider>
           {photosArr.map((photoSRC, index) => {

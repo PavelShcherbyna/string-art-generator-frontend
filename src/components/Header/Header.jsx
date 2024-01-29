@@ -20,7 +20,8 @@ const languages = {
 const Header = ({ language = 'roman' }) => {
   const location = useLocation();
   const urlStr = location?.pathname || '';
-  const showNavigation = urlStr.includes('/app');
+  const showNavigation =
+    urlStr.includes('/app') || urlStr.includes('/instruction');
   const dispatch = useDispatch();
   const { showMusicPlayer } = useSelector((state) => state.audioData);
 

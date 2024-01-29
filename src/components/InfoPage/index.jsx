@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'pure-react-carousel/dist/react-carousel.es.css';
-import lvl1Photos from '../../assets/info-page-carousels/lvl-1';
-import lvl2Photos from '../../assets/info-page-carousels/lvl-2';
-import lvl3Photos from '../../assets/info-page-carousels/lvl-3';
 import { CarouselContainer, InfoPageHeader, InfoPageWrap } from './styles';
 import InfoCarouselComponent from './InfoPageCarousel';
 import ArrowsNavigation from '../ArrowsNavigation';
 import HelpIconInfoSVG from '../../assets/help_icon_info.svg';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPhotoList } from '../../store/infoPageData/slice';
 
 const InfoPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { photoLists } = useSelector((state) => state.infoPageData);
+
+  useEffect(() => {
+    dispatch(getPhotoList());
+  }, [dispatch]);
 
   function backNavHandler() {
     navigate(-1);
@@ -25,12 +31,12 @@ const InfoPage = () => {
       </InfoPageHeader>
       <CarouselContainer>
         <h3>How to start?</h3>
-        <InfoCarouselComponent photosArr={lvl1Photos} />
+        <InfoCarouselComponent photosArr={photoLists.lvl1} />
       </CarouselContainer>
       <CarouselContainer>
         <h3>For better quality</h3>
         <InfoCarouselComponent
-          photosArr={lvl2Photos}
+          photosArr={photoLists.lvl2}
           className={'wideSlides'}
         />
       </CarouselContainer>
@@ -41,7 +47,7 @@ const InfoPage = () => {
           to begin work
         </h3>
         <InfoCarouselComponent
-          photosArr={lvl3Photos}
+          photosArr={photoLists.lvl3}
           className={'wideSlides'}
         />
       </CarouselContainer>
