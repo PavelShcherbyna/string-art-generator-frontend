@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { drawLinesSVG } from '../../stringGeneratorScript/stringArtMainScript';
 import { setActiveDrawing } from '../../store/userData/slice';
 import { useNavigate } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
 export default function SavedProjectsContainer() {
   const { drawings } = useSelector((state) => state.userData);
@@ -31,7 +32,12 @@ export default function SavedProjectsContainer() {
 
   return (
     <SavedProjectsWrapper>
-      <h3>Сохраненные проекты</h3>
+      <h3>
+        <FormattedMessage
+          id="saved.res.header"
+          defaultMessage="Saved projects"
+        />
+      </h3>
       <div className={'saved-drawings-wrap'}>
         {drawings.map((obj, index) => {
           return (
@@ -41,7 +47,15 @@ export default function SavedProjectsContainer() {
                 onClick={onDrawingClick(obj.f_id)}
               />
               <p>
-                <span>{obj.currentIndex}</span> шагов из {obj.steps.length - 1}
+                <FormattedMessage
+                  id="saved.res.steps"
+                  defaultMessage="<code>{steps}</code> steps out of {totalSteps}"
+                  values={{
+                    code: (text) => <span>{text}</span>,
+                    steps: obj.currentIndex,
+                    totalSteps: obj.steps.length - 1
+                  }}
+                />
               </p>
             </div>
           );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { HeaderContainer } from './styles';
 import RomanFlagSVG from '../../assets/roman_flag.svg';
 import HelpIconSVG from '../../assets/help_icon.svg';
@@ -12,12 +12,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openMusicPlayer } from '../../store/audioData/slice';
 import shadedNoteSVG from '../../assets/Shaded_note.svg';
 import noteSVG from '../../assets/note.svg';
+import { LocaleContext } from '../LocaleWrapper';
+import flag_UK from '../../assets/flag_UK.svg';
 
 const languages = {
-  roman: { flagSVG: RomanFlagSVG, code: 'RO' }
+  'ru-RU': { flagSVG: RomanFlagSVG, code: 'RO' },
+  'en-US': { flagSVG: flag_UK, code: 'RO' }
 };
 
-const Header = ({ language = 'roman' }) => {
+const Header = () => {
   const location = useLocation();
   const urlStr = location?.pathname || '';
   const showNavigation =
@@ -25,11 +28,23 @@ const Header = ({ language = 'roman' }) => {
   const dispatch = useDispatch();
   const { showMusicPlayer } = useSelector((state) => state.audioData);
 
+  const localeContext = useContext(LocaleContext);
+
   return (
     <HeaderContainer>
       <div className="lang-block header-block">
-        <img src={languages[language].flagSVG} alt="Language flag" />
-        <span>{languages[language].code}</span>
+        <img
+          src={languages[localeContext.locale].flagSVG}
+          alt="Language flag"
+        />
+        {/*<span>{languages[language].code}</span>*/}
+        <select
+          value={localeContext.locale}
+          onChange={localeContext.selectLang}
+        >
+          <option value="ru-RU">RO</option>
+          <option value="en-US">EN</option>
+        </select>
       </div>
       <div className="logo-container header-block">
         <img src={logoPng} alt="Logotype" />

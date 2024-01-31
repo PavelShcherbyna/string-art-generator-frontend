@@ -17,11 +17,14 @@ import { postDrawings } from '../../store/userData/slice';
 import ArrowsNavigation from '../ArrowsNavigation';
 import { useNavigate } from 'react-router-dom';
 import { NoSleepContext } from '../../App';
+import { LocaleContext } from '../LocaleWrapper';
+import { FormattedMessage } from 'react-intl';
 
 export default function StepsPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [delay, setDelay] = useState(5000);
   const noSleep = React.useContext(NoSleepContext);
+  const localeContext = React.useContext(LocaleContext);
   const { drawings, justGenDrawId } = useSelector((state) => state.userData);
 
   const activeDrawing = drawings.find((el) => el.f_id === justGenDrawId) || {};
@@ -34,7 +37,7 @@ export default function StepsPlayer() {
   const navigate = useNavigate();
 
   const voice = new Voice();
-  voice.initialize({ lang: 'ru-RU', debug: false });
+  voice.initialize({ lang: localeContext.locale, debug: false });
 
   function onSliderChange(event, newValue) {
     setDelay(newValue);
@@ -109,16 +112,6 @@ export default function StepsPlayer() {
     // setIsPlaying(true);
   }
 
-  // console.log('activeDrawing:', activeDrawing)
-  // useEffect(() => {
-  //   return function () {
-  //     console.log('useEffect UNMOUNT TRIGGERED!!!')
-  //     console.log('activeDrawing:', activeDrawing)
-  //     console.log('currentIndex:', currentIndex)
-  //     dispatch(postDrawings({ drawings: [activeDrawing] }));
-  //   };
-  // }, []);
-
   return (
     <>
       <ArrowsNavigation backHandler={() => navigate('/app')} />
@@ -171,7 +164,12 @@ export default function StepsPlayer() {
             xl={2}
             className={'interval-settings'}
           >
-            <p>Паузы между цифрами</p>
+            <p>
+              <FormattedMessage
+                id="steps.player.delay.slider"
+                defaultMessage="Pauses between numbers"
+              />
+            </p>
             <DelaySlider delay={delay} onChange={onSliderChange} />
           </Grid>
         </Grid>

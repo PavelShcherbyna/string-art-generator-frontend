@@ -6,13 +6,16 @@ import store from './store';
 import './index.scss';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import LocaleWrapper from './components/LocaleWrapper';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <LocaleWrapper>
+          <App />
+        </LocaleWrapper>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

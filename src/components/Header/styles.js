@@ -16,9 +16,20 @@ export const HeaderContainer = styled.header`
   }
 
   .lang-block {
+    select {
+      border: none;
+      background: transparent;
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+
     img {
       margin-right: 8px;
       cursor: pointer;
+      width: 29px;
+      height: 20px;
     }
   }
 

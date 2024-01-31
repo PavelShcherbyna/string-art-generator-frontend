@@ -6,16 +6,22 @@ import {
   SnackbarPWAInstallWrapper
 } from './styles';
 import logoPng from '../../assets/logo.png';
+import { FormattedMessage } from 'react-intl';
 
 const SnackbarPWAInstall = ({ open, handleClose, handleAction }) => {
   const PWASnackbarContent = (
     <InstallPWAContent>
       <img src={logoPng} alt="Logotype" />
       <p>
-        Установите приложение
-        <br /> "String Art"
+        <FormattedMessage
+          id="pwa.popup.text"
+          defaultMessage="Install the “String Art” {br} application"
+          values={{ br: <br /> }}
+        />
       </p>
-      <InstallPWABtn onClick={handleAction}>Установить</InstallPWABtn>
+      <InstallPWABtn onClick={handleAction}>
+        <FormattedMessage id="pwa.popup.btn" defaultMessage="Install" />
+      </InstallPWABtn>
     </InstallPWAContent>
   );
 

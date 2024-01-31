@@ -6,6 +6,7 @@ import doubleForwardSVG from '../../assets/player-controls/double_forward_rewind
 import forwardRewindSVG from '../../assets/player-controls/forward_rewind.svg';
 import playSVG from '../../assets/player-controls/play_button.svg';
 import pauseSVG from '../../assets/player-controls/pause_button.svg';
+import { useIntl } from 'react-intl';
 
 export const PlayerButton = ({
   onButtonClick,
@@ -24,20 +25,34 @@ export const PlayerButton = ({
 };
 
 export const DblBackRewindBtn = ({ onButtonClick }) => {
+  const intl = useIntl();
   return (
     <PlayerButton
       imgSrc={doubleBackSVG}
-      text={'10ш.'}
+      text={intl.formatMessage(
+        {
+          id: 'steps.player.btn.step',
+          defaultMessage: '{num}s.'
+        },
+        { num: 10 }
+      )}
       onButtonClick={onButtonClick}
     />
   );
 };
 
 export const BackRewindBtn = ({ onButtonClick }) => {
+  const intl = useIntl();
   return (
     <PlayerButton
       imgSrc={backRewindSVG}
-      text={'1ш.'}
+      text={intl.formatMessage(
+        {
+          id: 'steps.player.btn.step',
+          defaultMessage: '{num}s.'
+        },
+        { num: 1 }
+      )}
       onButtonClick={onButtonClick}
     />
   );
@@ -54,20 +69,34 @@ export const PlayOrPauseBtn = ({ onButtonClick, isPlaying }) => {
 };
 
 export const DblForwardRewindBtn = ({ onButtonClick }) => {
+  const intl = useIntl();
   return (
     <PlayerButton
       imgSrc={doubleForwardSVG}
-      text={'10ш.'}
+      text={intl.formatMessage(
+        {
+          id: 'steps.player.btn.step',
+          defaultMessage: '{num}s.'
+        },
+        { num: 10 }
+      )}
       onButtonClick={onButtonClick}
     />
   );
 };
 
 export const ForwardRewindBtn = ({ onButtonClick }) => {
+  const intl = useIntl();
   return (
     <PlayerButton
       imgSrc={forwardRewindSVG}
-      text={'1ш.'}
+      text={intl.formatMessage(
+        {
+          id: 'steps.player.btn.step',
+          defaultMessage: '{num}s.'
+        },
+        { num: 1 }
+      )}
       onButtonClick={onButtonClick}
     />
   );

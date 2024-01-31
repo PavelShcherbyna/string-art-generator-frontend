@@ -99,6 +99,10 @@ export const AuthWithCodePageWrap = styled.div`
         width: 33px;
         height: 33px;
       }
+
+      span {
+        text-transform: uppercase;
+      }
     }
   }
 `;

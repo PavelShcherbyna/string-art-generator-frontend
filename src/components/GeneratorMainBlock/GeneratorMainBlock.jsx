@@ -1,6 +1,4 @@
 import React, { useState, useRef, useId, useEffect } from 'react';
-import Voice from 'artyom.js';
-import { useInterval } from 'usehooks-ts';
 import { useDispatch, useSelector } from 'react-redux';
 import PhotoInputCenter from '../PhotoInputCenter/PhotoInputCenter';
 import GeneratorSettingsContainer from '../GeneratorSettingsContainer/GeneratorSettingsContainer';
@@ -9,7 +7,6 @@ import {
   createStringArt,
   drawLinesSVG
 } from '../../stringGeneratorScript/stringArtMainScript';
-import StepsModal from '../StepsModal/StepsModal';
 import PickStepModal from '../StepsModal/PickStepModal';
 import { changeDrawingStep, postDrawings } from '../../store/userData/slice';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -24,12 +21,6 @@ const GeneratorMainBlock = () => {
   const [generatorStep, setGeneratorStep] = useState(0);
   const [processing, setProcessing] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
-  const [delay, setDelay] = useState(5000);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [resultsArr, setResultsArr] = useState([{}]); // { stepsArr, outputCanvasId, imgSrc }
-  const [selectedRes, setSelectedRes] = useState({}); // { stepsArr, outputCanvasId, currIndex, imgSrc }
-  const [stepsModalOpen, setStepsModalOpen] = useState(false);
-  const [currentStepText, setCurrentStepText] = useState('');
   const [pickStepModalOpen, setPickStepModalOpen] = useState(false);
   const baseImgRef = useRef(null);
   const [lineCalcProgress, setLineCalcProgress] = useState(0);
@@ -45,18 +36,9 @@ const GeneratorMainBlock = () => {
 
   const generatedId = `${useId()}${new Date().getTime()}`;
 
-  // const voice = new Voice();
-  // voice.initialize({ lang: 'ru-RU', debug: false });
-
   const lineCountSettings = process.env.REACT_APP_LINES_SET || '3700';
-  // const lineSetArr = lineCountSettings.split(',');
-  //
-  // const generalSettingsArr = lineSetArr.map((linesNum, index) => {
-  //   return { lines: Number(linesNum), outputCanvasId: `canvasOutput${index}` };
-  // });
 
   async function installAppHandler() {
-    console.log('👍', 'butInstall-clicked');
     const promptEvent = window.deferredPrompt;
     if (!promptEvent) {
       // The deferred prompt isn't available.
@@ -65,8 +47,8 @@ const GeneratorMainBlock = () => {
     // Show the install prompt.
     promptEvent.prompt();
     // Log the result
-    const result = await promptEvent.userChoice;
-    console.log('👍', 'userChoice', result);
+    await promptEvent.userChoice;
+
     // Reset the deferred prompt variable, since
     // prompt() can only be called once.
     window.deferredPrompt = null;
@@ -113,11 +95,6 @@ const GeneratorMainBlock = () => {
   }, []);
 
   const onPlayClick = () => {
-    // if (selectedRes.stepsArr) {
-    //   setStepsModalOpen(true);
-    //   setIsPlaying(true);
-    //   showNextStep();
-    // }
     navigate('/app/player');
   };
 
@@ -134,11 +111,6 @@ const GeneratorMainBlock = () => {
     navigate('/app/player');
   };
 
-  // const onStopClick = () => {
-  //   setIsPlaying(false);
-  //   // voice.shutUp()
-  // };
-
   const photoUploadedHandler = (e) => {
     if (e.target.files[0]) {
       setBaseImageSrc(URL.createObjectURL(e.target.files[0]));
@@ -152,18 +124,6 @@ const GeneratorMainBlock = () => {
     setProcessing(true);
     setIsCalculating(true);
     setLineCalcProgress(0);
-    // setSelectedRes({});
-
-    // const maxLines = generalSettingsArr.reduce(
-    //   (a, b) => Math.max(a, b.lines),
-    //   -Infinity
-    // );
-
-    // const maxStepsArr = await createStringArt(
-    //   baseImgRef.current,
-    //   maxLines,
-    //   setLineCalcProgress
-    // );
 
     const stepsArr = await createStringArt(
       baseImgRef.current,
@@ -177,77 +137,11 @@ const GeneratorMainBlock = () => {
 
     dispatch(postDrawings({ drawings: [resObj] }));
 
-    // const lineWidth = 0.03;
-    // const immediatelyFinished = false;
-
-    // drawLinesSync('canvasGray', stepsArr);
     drawLinesSVG('resultImage', stepsArr);
 
     setProcessing(false);
     noSleep.disable();
   };
-
-  // const pickCanvasHandler = async (e) => {
-  //   if (!processing) {
-  //     const resObj = resultsArr.find((el) => el.outputCanvasId === e.target.id);
-  //
-  //     if (resObj) {
-  //       const { stepsArr, outputCanvasId, imgSrc } = resObj;
-  //
-  //       // const lineWidth = 0.1;
-  //       // const immediatelyFinished = true;
-  //       //
-  //       // await drawLines('canvasGray', stepsArr, immediatelyFinished);
-  //
-  //       const image = document.getElementById('resultImage');
-  //       image.src = imgSrc;
-  //
-  //       setSelectedRes({ stepsArr, outputCanvasId, currIndex: 0 });
-  //     }
-  //   }
-  // };
-
-  // const onStepsModalClose = (e, reason) => {
-  //   if (reason !== 'backdropClick') {
-  //     setStepsModalOpen(false);
-  //     // setSelectedRes({ ...selectedRes, currIndex: 0 });
-  //     setCurrentStepText('');
-  //     setIsPlaying(false);
-  //
-  //     voice.shutUp();
-  //   }
-  // };
-
-  // function showNextStep() {
-  //   let i = selectedRes.currIndex;
-  //
-  //   if (i < selectedRes.stepsArr?.length - 1) {
-  //     // We add 1 to the point number as workaround, because the numbering on the
-  //     // physical model does not start from 0, but from 1
-  //     const nextPointNumber = Number(selectedRes.stepsArr[i + 1]) + 1;
-  //
-  //     const textToShow = `Шаг ${i + 1}. Следующая точка: ${nextPointNumber}`;
-  //     const textToSpeak = `${nextPointNumber}`;
-  //
-  //     setCurrentStepText(textToShow);
-  //
-  //     voice.say(textToSpeak);
-  //
-  //     setSelectedRes({ ...selectedRes, currIndex: i + 1 });
-  //   } else {
-  //     voice.say('Конец!');
-  //     setCurrentStepText('Конец!');
-  //
-  //     setIsPlaying(false);
-  //   }
-  // }
-  //
-  // useInterval(
-  //   () => {
-  //     showNextStep();
-  //   },
-  //   isPlaying ? delay : null
-  // );
 
   function backToLoginPage() {
     removeSessionStorageItem(access_token);
@@ -274,7 +168,6 @@ const GeneratorMainBlock = () => {
 
   return (
     <>
-      {/*<img className="hidden" id="imageSrc" alt="Source" src={baseImageSrc} />*/}
       {!baseImageSrc && generatorStep === 0 && (
         <>
           <ArrowsNavigation backHandler={backToLoginPage} />
@@ -300,8 +193,6 @@ const GeneratorMainBlock = () => {
             onFileUploaded={photoUploadedHandler}
             onPlayClick={onPlayClick}
             onChangeStepClick={onChangeStepClick}
-            // generalSettings={generalSettingsArr}
-            // pickCanvasHandler={pickCanvasHandler}
             selectedRes={activeDrawing}
             processing={processing}
             lineCalcProgress={lineCalcProgress}
@@ -310,14 +201,6 @@ const GeneratorMainBlock = () => {
           />
         </>
       )}
-      {/*<StepsModal*/}
-      {/*  open={stepsModalOpen}*/}
-      {/*  handleClose={onStepsModalClose}*/}
-      {/*  isPlaying={isPlaying}*/}
-      {/*  onPlayClick={onPlayClick}*/}
-      {/*  onStopClick={onStopClick}*/}
-      {/*  currentStepText={currentStepText}*/}
-      {/*/>*/}
       <PickStepModal
         open={pickStepModalOpen}
         onClose={() => {
