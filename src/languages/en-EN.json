@@ -11,7 +11,7 @@
   "pwa.popup.text": "Install application {br} \"String Art\"",
   "pwa.popup.btn": "Install",
   "app.photo.input": "Upload a photo",
-  "app.settings.header": " - ",
+  "app.settings.header": "Settings",
   "app.settings.bright": "Brightness",
   "app.settings.contrast": "Contrast",
   "app.settings.gen.btn": "Generate",
