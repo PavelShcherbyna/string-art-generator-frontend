@@ -12,11 +12,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openMusicPlayer } from '../../store/audioData/slice';
 import shadedNoteSVG from '../../assets/Shaded_note.svg';
 import noteSVG from '../../assets/note.svg';
-import { LocaleContext } from '../LocaleWrapper';
+import { availableLanguages, LocaleContext } from '../LocaleWrapper';
 import flag_UK from '../../assets/flag_UK.svg';
 
 const languages = {
   'ru-RU': { flagSVG: RomanFlagSVG, code: 'RO' },
+  'de-DE': { flagSVG: RomanFlagSVG, code: 'RO' },
+  'it-IT': { flagSVG: RomanFlagSVG, code: 'RO' },
+  'ro-RO': { flagSVG: RomanFlagSVG, code: 'RO' },
   'en-US': { flagSVG: flag_UK, code: 'RO' }
 };
 
@@ -42,8 +45,13 @@ const Header = () => {
           value={localeContext.locale}
           onChange={localeContext.selectLang}
         >
-          <option value="ru-RU">RO</option>
-          <option value="en-US">EN</option>
+          {Object.keys(availableLanguages).map((lang, index) => {
+            return (
+              <option value={lang} key={index}>
+                {lang.slice(0, 2).toUpperCase()}
+              </option>
+            );
+          })}
         </select>
       </div>
       <div className="logo-container header-block">
