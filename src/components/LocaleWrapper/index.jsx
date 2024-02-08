@@ -38,6 +38,9 @@ const LocaleWrapper = (props) => {
   const [messages, setMessages] = useState(presetMessages);
 
   function selectLang(e) {
+    let langs = window.speechSynthesis.getVoices().map(l => l.lang)
+    alert(JSON.stringify(langs));
+    console.log('Lang:', window.speechSynthesis.getVoices())
     const newLocale = e.target.value;
     setLocale(newLocale);
 
