@@ -21,7 +21,7 @@
   "app.result.start.change": "Schimbare",
   "saved.res.header": "Proiecte salvate",
   "saved.res.steps": "<code>{steps}</code> pași din {totalSteps}",
-  "steps.player.step": "pasul {step}",
+  "steps.player.step": "Pasul {step}",
   "steps.player.btn.step": "{num}num.",
   "steps.player.delay.slider": "Pauza între numere",
   "steps.player.delay.slider.seconds": "sec",

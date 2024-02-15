@@ -17,7 +17,7 @@ export const PlayerButton = ({
   return (
     <div className={`rewind-btn-wrap ${specialCN}`}>
       <button onClick={onButtonClick}>
-        <img src={imgSrc} alt="Rewind arrow" />
+        <img src={imgSrc} alt="Rewind arrow" draggable={false} />
       </button>
       <span>{text}</span>
     </div>

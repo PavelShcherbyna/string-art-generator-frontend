@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/joy';
-import Voice from 'artyom.js';
+// import Voice from 'artyom.js';
 import { StepsPlayerWrapper } from './styles';
 import {
   BackRewindBtn,
@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { NoSleepContext } from '../../App';
 import { LocaleContext } from '../LocaleWrapper';
 import { FormattedMessage } from 'react-intl';
+import { clearTTSAudioSrc, sendTextToAudio } from '../../store/audioData/slice';
 
 export default function StepsPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -26,6 +27,7 @@ export default function StepsPlayer() {
   const noSleep = React.useContext(NoSleepContext);
   const localeContext = React.useContext(LocaleContext);
   const { drawings, justGenDrawId } = useSelector((state) => state.userData);
+  const { audioFromTextSrc } = useSelector((state) => state.audioData);
 
   const activeDrawing = drawings.find((el) => el.f_id === justGenDrawId) || {};
   const { steps, currentIndex } = activeDrawing;
@@ -36,8 +38,8 @@ export default function StepsPlayer() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const voice = new Voice();
-  voice.initialize({ lang: localeContext.locale, debug: false });
+  // const voice = new Voice();
+  // voice.initialize({ lang: localeContext.locale, debug: false });
 
   function onSliderChange(event, newValue) {
     setDelay(newValue);
@@ -54,7 +56,10 @@ export default function StepsPlayer() {
 
       // setCurrentStepText(textToShow);
 
-      voice.say(textToSpeak);
+      // voice.say(textToSpeak);
+      dispatch(
+        sendTextToAudio({ text: textToSpeak, lang: localeContext.locale })
+      );
 
       // dispatch(
       //   changeDrawingStep({ ...activeDrawing, currentIndex: currentIndex + 1 })
@@ -65,8 +70,7 @@ export default function StepsPlayer() {
         })
       );
     } else {
-      voice.say('Конец!');
-      // setCurrentStepText('Конец!');
+      // voice.say('Конец!');
 
       setIsPlaying(false);
     }
@@ -92,6 +96,8 @@ export default function StepsPlayer() {
 
   useEffect(() => {
     return () => {
+      dispatch(clearTTSAudioSrc());
+
       if (noSleep.isEnabled) {
         noSleep.disable();
       }
@@ -115,6 +121,7 @@ export default function StepsPlayer() {
   return (
     <>
       <ArrowsNavigation backHandler={() => navigate('/app')} />
+      {audioFromTextSrc && <audio src={audioFromTextSrc} autoPlay />}
       <StepsPlayerWrapper>
         <Grid
           container
