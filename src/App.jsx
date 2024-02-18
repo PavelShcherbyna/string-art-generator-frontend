@@ -17,6 +17,13 @@ import InfoPage from './components/InfoPage';
 
 export const NoSleepContext = React.createContext(null);
 
+try {
+  window.AudioContext = window.AudioContext || window.webkitAudioContext;
+  window.audioContext = new window.AudioContext();
+} catch (e) {
+  console.log("No Web Audio API support");
+}
+
 const AppWrap = styled.div`
   padding: 0 clamp(20px, 10vw, 160px);
 

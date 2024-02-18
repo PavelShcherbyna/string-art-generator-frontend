@@ -45,6 +45,29 @@ export default function StepsPlayer() {
     setDelay(newValue);
   }
 
+  useEffect(() => {
+    if (audioFromTextSrc) {
+      function _base64ToArrayBuffer(base64) {
+        const binary_string = window.atob(base64);
+        const len = binary_string.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binary_string.charCodeAt(i);
+        }
+        return bytes.buffer;
+      }
+      const audioToDecode = _base64ToArrayBuffer(audioFromTextSrc);
+      window.audioContext
+        .decodeAudioData(audioToDecode)
+        .then(function (buffer) {
+          const source = window.audioContext.createBufferSource();
+          source.buffer = buffer;
+          source.connect(window.audioContext.destination);
+          source.start();
+        });
+    }
+  }, [audioFromTextSrc]);
+
   function showNextStep() {
     let i = currentIndex;
 
@@ -84,6 +107,9 @@ export default function StepsPlayer() {
   );
 
   function onPlayOrPauseClick() {
+    if (window.audioContext.state === 'suspended') {
+      window.audioContext.resume();
+    }
     if (isPlaying) {
       noSleep.disable();
       // voice.shutUp()
@@ -121,7 +147,7 @@ export default function StepsPlayer() {
   return (
     <>
       <ArrowsNavigation backHandler={() => navigate('/app')} />
-      {audioFromTextSrc && <audio src={audioFromTextSrc} autoPlay />}
+      {/*{audioFromTextSrc && <audio src={audioFromTextSrc} autoPlay />}*/}
       <StepsPlayerWrapper>
         <Grid
           container

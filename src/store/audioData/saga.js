@@ -50,7 +50,7 @@ function* textToAudioRequest({ payload }) {
       }
     );
 
-    const audioSrc = `data:audio/mp3;base64,${res.data.audioContent}`;
+    const audioSrc = res.data.audioContent;
 
     yield put(saveTTSAudioSrc({ src: audioSrc }));
   } catch (error) {
