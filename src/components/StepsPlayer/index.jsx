@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/joy';
-// import Voice from 'artyom.js';
 import { StepsPlayerWrapper } from './styles';
 import {
   BackRewindBtn,
@@ -39,9 +38,6 @@ export default function StepsPlayer() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const voice = new Voice();
-  // voice.initialize({ lang: localeContext.locale, debug: false });
-
   function onSliderChange(event, newValue) {
     setDelay(newValue);
   }
@@ -57,6 +53,7 @@ export default function StepsPlayer() {
         }
         return bytes.buffer;
       }
+
       const audioToDecode = _base64ToArrayBuffer(audioFromTextSrc);
       audioContext.decodeAudioData(audioToDecode).then(function (buffer) {
         const source = audioContext.createBufferSource();
@@ -65,7 +62,7 @@ export default function StepsPlayer() {
         source.start();
       });
     }
-  }, [audioFromTextSrc]);
+  }, [audioContext, audioFromTextSrc]);
 
   function showNextStep() {
     let i = currentIndex;
@@ -73,12 +70,8 @@ export default function StepsPlayer() {
     if (i < steps.length - 1) {
       const nextPointNumber = Number(stepsToShow[i + 1]);
 
-      // const textToShow = `Шаг ${i + 1}. Следующая точка: ${nextPointNumber}`;
       const textToSpeak = `${nextPointNumber}`;
 
-      // setCurrentStepText(textToShow);
-
-      // voice.say(textToSpeak);
       dispatch(
         sendTextToAudio({ text: textToSpeak, lang: localeContext.locale })
       );
@@ -92,8 +85,6 @@ export default function StepsPlayer() {
         })
       );
     } else {
-      // voice.say('Конец!');
-
       setIsPlaying(false);
     }
   }
@@ -111,7 +102,6 @@ export default function StepsPlayer() {
     }
     if (isPlaying) {
       noSleep.disable();
-      // voice.shutUp()
     } else {
       noSleep.enable();
       showNextStep();
@@ -146,7 +136,6 @@ export default function StepsPlayer() {
   return (
     <>
       <ArrowsNavigation backHandler={() => navigate('/app')} />
-      {/*{audioFromTextSrc && <audio src={audioFromTextSrc} autoPlay />}*/}
       <StepsPlayerWrapper>
         <Grid
           container

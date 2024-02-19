@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import cn from 'classnames';
 import { SongWrapper } from './styles';
 import MusicPlayBtn from './MusicPlayBtn';
-// import { formatTime } from '../../../helpers';
 import { toast } from 'react-toastify';
 import { AudioApiContext } from '../../../App';
 
@@ -16,13 +15,6 @@ export default function SongComponent({
   const [audioBuffer, setAudioBuffer] = useState(null);
   const [sourceNode, setSourceNode] = useState(null);
   const audioContext = React.useContext(AudioApiContext);
-  // const [duration, setDuration] = useState(0);
-  // const audioRef = useRef();
-
-  // const onLoadedMetadata = () => {
-  //   const seconds = audioRef.current.duration;
-  //   setDuration(seconds);
-  // };
 
   const memoizedFetch = useMemo(() => {
     return fetch(song.src)
@@ -51,6 +43,7 @@ export default function SongComponent({
     const source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
+    source.loop = true;
     source.start();
     setSourceNode(source);
     setIsPlaying(true);
@@ -67,33 +60,16 @@ export default function SongComponent({
     if (!!activeSongId && activeSongId === song.id) {
       setIsPlaying(true);
       play();
-      // audioRef.current.play().catch(() => toast.error('Error playing audio'));
     } else if (!activeSongId) {
-      // audioRef.current.pause();
+      // pause implementation
       pause();
       setIsPlaying(false);
     } else {
-      // audioRef.current.pause();
-      // audioRef.current.currentTime = 0;
+      // stop implementation
       pause();
       setIsPlaying(false);
     }
-    // }, [activeSongId, song, audioRef]);
   }, [activeSongId, song]);
-
-  // useEffect(() => {
-  //   if (isPlaying) {
-  //     audioRef.current.error
-  //       ? toast.error('Error loading audio')
-  //       : audioRef.current.play();
-  //   } else {
-  //     audioRef.current.pause();
-  //   }
-  // }, [isPlaying]);
-  //
-  // function onBtnClick() {
-  //   handlePlay(song.id);
-  // }
 
   function onBtnClick() {
     handlePlay(song.id);
@@ -103,10 +79,8 @@ export default function SongComponent({
 
     if (isPlaying) {
       pause();
-      // audioRef.current.pause();
     } else {
       play();
-      // audioRef.current.play().catch(() => toast.error('Error playing audio'));
     }
   }
 
@@ -116,18 +90,10 @@ export default function SongComponent({
         playing: isPlaying
       })}
     >
-      {/*<audio*/}
-      {/*  src={song.src}*/}
-      {/*  ref={audioRef}*/}
-      {/*  // onLoadedMetadata={onLoadedMetadata}*/}
-      {/*  onEnded={handleNext}*/}
-      {/*  loop={true}*/}
-      {/*/>*/}
       <div>
         <MusicPlayBtn isPlaying={isPlaying} onClickHandler={onBtnClick} />
         <p>{song.name}</p>
       </div>
-      {/*<p className={'time'}>{formatTime(duration)}</p>*/}
     </SongWrapper>
   );
 }
