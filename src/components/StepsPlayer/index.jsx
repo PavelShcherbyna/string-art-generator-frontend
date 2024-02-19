@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { postDrawings } from '../../store/userData/slice';
 import ArrowsNavigation from '../ArrowsNavigation';
 import { useNavigate } from 'react-router-dom';
-import { NoSleepContext } from '../../App';
+import { AudioApiContext, NoSleepContext } from '../../App';
 import { LocaleContext } from '../LocaleWrapper';
 import { FormattedMessage } from 'react-intl';
 import { clearTTSAudioSrc, sendTextToAudio } from '../../store/audioData/slice';
@@ -26,6 +26,7 @@ export default function StepsPlayer() {
   const [delay, setDelay] = useState(5000);
   const noSleep = React.useContext(NoSleepContext);
   const localeContext = React.useContext(LocaleContext);
+  const audioContext = React.useContext(AudioApiContext);
   const { drawings, justGenDrawId } = useSelector((state) => state.userData);
   const { audioFromTextSrc } = useSelector((state) => state.audioData);
 
@@ -57,14 +58,12 @@ export default function StepsPlayer() {
         return bytes.buffer;
       }
       const audioToDecode = _base64ToArrayBuffer(audioFromTextSrc);
-      window.audioContext
-        .decodeAudioData(audioToDecode)
-        .then(function (buffer) {
-          const source = window.audioContext.createBufferSource();
-          source.buffer = buffer;
-          source.connect(window.audioContext.destination);
-          source.start();
-        });
+      audioContext.decodeAudioData(audioToDecode).then(function (buffer) {
+        const source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioContext.destination);
+        source.start();
+      });
     }
   }, [audioFromTextSrc]);
 
@@ -107,8 +106,8 @@ export default function StepsPlayer() {
   );
 
   function onPlayOrPauseClick() {
-    if (window.audioContext.state === 'suspended') {
-      window.audioContext.resume();
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
     }
     if (isPlaying) {
       noSleep.disable();
