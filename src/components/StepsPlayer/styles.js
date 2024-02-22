@@ -34,18 +34,21 @@ export const StepsPlayerWrapper = styled.div`
           font-size: clamp(13px, 2vw, 20px);
           font-style: normal;
           font-weight: 600;
-          line-height: 250%;
+          //line-height: 250%;
         }
         .step-val {
           grid-area: val;
           justify-self: center;
+          display: inline-block;
+          height: clamp(25px, 4vw, 40px);
+          line-height: 100%;
 
           color: #aeaeae;
           font-family: Inter;
           font-size: clamp(25px, 4vw, 40px);
           font-style: normal;
           font-weight: 600;
-          line-height: normal;
+          //line-height: normal;
         }
       }
       .normal-step {
@@ -62,18 +65,21 @@ export const StepsPlayerWrapper = styled.div`
           font-size: clamp(13px, 2vw, 20px);
           font-style: normal;
           font-weight: 600;
-          line-height: 250%;
+          //line-height: 250%;
         }
         .step-val {
           grid-area: val;
           justify-self: center;
+          display: inline-block;
+          height: clamp(25px, 4vw, 40px);
+          line-height: 100%;
 
           color: #777;
           font-family: Inter;
           font-size: clamp(25px, 4vw, 40px);
           font-style: normal;
           font-weight: 600;
-          line-height: normal;
+          //line-height: normal;
         }
       }
       .bold-step {
@@ -91,18 +97,21 @@ export const StepsPlayerWrapper = styled.div`
           font-size: clamp(22px, 4vw, 35px);
           font-style: normal;
           font-weight: 600;
-          line-height: 280%;
+          //line-height: 280%;
         }
         .step-val {
           grid-area: val;
           justify-self: center;
+          display: inline-block;
+          height: clamp(50px, 9vw, 80px);
+          line-height: 100%;
 
           color: #484848;
           font-family: Inter;
           font-size: clamp(50px, 9vw, 80px);
           font-style: normal;
           font-weight: 800;
-          line-height: normal;
+          //line-height: normal;
         }
       }
     }

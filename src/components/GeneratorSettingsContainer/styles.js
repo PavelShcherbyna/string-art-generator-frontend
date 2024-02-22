@@ -97,37 +97,5 @@ export const GenSettingContainerWrapper = styled.div`
       flex-direction: column;
       gap: clamp(14px, 2vw, 25px);
     }
-
-    .form-picker-wrap {
-      .form-buttons-wrap {
-        display: flex;
-        align-items: center;
-        gap: 22px;
-      }
-
-      button {
-        cursor: pointer;
-        border: 2px solid black;
-        background-color: transparent;
-        &:focus {
-          outline: none;
-        }
-
-        &.disabled {
-          border-color: rgba(0, 0, 0, 0.2);
-        }
-      }
-
-      .square-form {
-        width: 41px;
-        height: 41px;
-      }
-
-      .circle-form {
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-      }
-    }
   }
 `;

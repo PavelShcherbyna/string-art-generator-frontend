@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/joy';
-import Voice from 'artyom.js';
 import { StepsPlayerWrapper } from './styles';
 import {
   BackRewindBtn,
@@ -16,13 +15,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { postDrawings } from '../../store/userData/slice';
 import ArrowsNavigation from '../ArrowsNavigation';
 import { useNavigate } from 'react-router-dom';
-import { NoSleepContext } from '../../App';
+import { AudioApiContext, NoSleepContext } from '../../App';
+import { LocaleContext } from '../LocaleWrapper';
+import { FormattedMessage } from 'react-intl';
+import { clearTTSAudioSrc, sendTextToAudio } from '../../store/audioData/slice';
 
 export default function StepsPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [delay, setDelay] = useState(5000);
   const noSleep = React.useContext(NoSleepContext);
+  const localeContext = React.useContext(LocaleContext);
+  const audioContext = React.useContext(AudioApiContext);
   const { drawings, justGenDrawId } = useSelector((state) => state.userData);
+  const { audioFromTextSrc } = useSelector((state) => state.audioData);
 
   const activeDrawing = drawings.find((el) => el.f_id === justGenDrawId) || {};
   const { steps, currentIndex } = activeDrawing;
@@ -33,12 +38,31 @@ export default function StepsPlayer() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const voice = new Voice();
-  voice.initialize({ lang: 'ru-RU', debug: false });
-
   function onSliderChange(event, newValue) {
     setDelay(newValue);
   }
+
+  useEffect(() => {
+    if (audioFromTextSrc) {
+      function _base64ToArrayBuffer(base64) {
+        const binary_string = window.atob(base64);
+        const len = binary_string.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binary_string.charCodeAt(i);
+        }
+        return bytes.buffer;
+      }
+
+      const audioToDecode = _base64ToArrayBuffer(audioFromTextSrc);
+      audioContext.decodeAudioData(audioToDecode).then(function (buffer) {
+        const source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        source.connect(audioContext.destination);
+        source.start();
+      });
+    }
+  }, [audioContext, audioFromTextSrc]);
 
   function showNextStep() {
     let i = currentIndex;
@@ -46,12 +70,11 @@ export default function StepsPlayer() {
     if (i < steps.length - 1) {
       const nextPointNumber = Number(stepsToShow[i + 1]);
 
-      // const textToShow = `Шаг ${i + 1}. Следующая точка: ${nextPointNumber}`;
       const textToSpeak = `${nextPointNumber}`;
 
-      // setCurrentStepText(textToShow);
-
-      voice.say(textToSpeak);
+      dispatch(
+        sendTextToAudio({ text: textToSpeak, lang: localeContext.locale })
+      );
 
       // dispatch(
       //   changeDrawingStep({ ...activeDrawing, currentIndex: currentIndex + 1 })
@@ -62,9 +85,6 @@ export default function StepsPlayer() {
         })
       );
     } else {
-      voice.say('Конец!');
-      // setCurrentStepText('Конец!');
-
       setIsPlaying(false);
     }
   }
@@ -77,9 +97,11 @@ export default function StepsPlayer() {
   );
 
   function onPlayOrPauseClick() {
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
     if (isPlaying) {
       noSleep.disable();
-      // voice.shutUp()
     } else {
       noSleep.enable();
       showNextStep();
@@ -89,6 +111,8 @@ export default function StepsPlayer() {
 
   useEffect(() => {
     return () => {
+      dispatch(clearTTSAudioSrc());
+
       if (noSleep.isEnabled) {
         noSleep.disable();
       }
@@ -108,16 +132,6 @@ export default function StepsPlayer() {
     // showNextStep();
     // setIsPlaying(true);
   }
-
-  // console.log('activeDrawing:', activeDrawing)
-  // useEffect(() => {
-  //   return function () {
-  //     console.log('useEffect UNMOUNT TRIGGERED!!!')
-  //     console.log('activeDrawing:', activeDrawing)
-  //     console.log('currentIndex:', currentIndex)
-  //     dispatch(postDrawings({ drawings: [activeDrawing] }));
-  //   };
-  // }, []);
 
   return (
     <>
@@ -171,7 +185,12 @@ export default function StepsPlayer() {
             xl={2}
             className={'interval-settings'}
           >
-            <p>Паузы между цифрами</p>
+            <p>
+              <FormattedMessage
+                id="steps.player.delay.slider"
+                defaultMessage="Pauses between numbers"
+              />
+            </p>
             <DelaySlider delay={delay} onChange={onSliderChange} />
           </Grid>
         </Grid>

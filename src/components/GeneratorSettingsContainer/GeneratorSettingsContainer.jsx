@@ -12,6 +12,7 @@ import lowContrastSVG from '../../assets/low_contrast.svg';
 import highContrastSVG from '../../assets/high_contrast.svg';
 import { applyBrightness, applyContrast } from '../../helpers';
 import { NoSleepContext } from '../../App';
+import { FormattedMessage } from 'react-intl';
 
 const GeneratorSettingsContainer = ({
   imageSrc,
@@ -19,7 +20,6 @@ const GeneratorSettingsContainer = ({
   onGenerate,
   baseImgRef
 }) => {
-  // const [imgForm, setImgForm] = useState('circle');
   const [imgScale, setImgScale] = useState(1.1);
   // const [imgRotate, setImgRotate] = useState(0);
   const [brightness, setBrightness] = useState(0);
@@ -113,22 +113,12 @@ const GeneratorSettingsContainer = ({
         />
       </div>
       <div className="settings-block">
-        <h3>Настройки</h3>
-        {/*<div className="form-picker-wrap">*/}
-        {/*  <p>Форма</p>*/}
-        {/*  <div className="form-buttons-wrap">*/}
-        {/*    <button*/}
-        {/*      className={cn('square-form', { disabled: imgForm !== 'square' })}*/}
-        {/*      onClick={() => setImgForm('square')}*/}
-        {/*      disabled={true}*/}
-        {/*    />*/}
-        {/*    <button*/}
-        {/*      className={cn('circle-form', { disabled: imgForm !== 'circle' })}*/}
-        {/*      onClick={() => setImgForm('circle')}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-
+        <h3>
+          <FormattedMessage
+            id="app.settings.header"
+            defaultMessage="Settings"
+          />
+        </h3>
         {/*<div className="rotate-wrap">*/}
         {/*  <p>Вращение</p>*/}
         {/*  <SliderWrapper>*/}
@@ -147,7 +137,12 @@ const GeneratorSettingsContainer = ({
         {/*  </SliderWrapper>*/}
         {/*</div>*/}
         <div className="slider-wrapper">
-          <p>Яркость</p>
+          <p>
+            <FormattedMessage
+              id="app.settings.bright"
+              defaultMessage="Brightness"
+            />
+          </p>
           <SliderWrapper>
             <Box sx={{ width: '100%' }}>
               <Stack spacing={2} direction="row" alignItems="center">
@@ -167,7 +162,12 @@ const GeneratorSettingsContainer = ({
           </SliderWrapper>
         </div>
         <div className="slider-wrapper">
-          <p>Контрастность</p>
+          <p>
+            <FormattedMessage
+              id="app.settings.contrast"
+              defaultMessage="Contrast"
+            />
+          </p>
           <SliderWrapper>
             <Box sx={{ width: '100%' }}>
               <Stack spacing={2} direction="row" alignItems="center">
@@ -187,7 +187,12 @@ const GeneratorSettingsContainer = ({
           </SliderWrapper>
         </div>
         <ButtonWithBorder onClick={generateHandler}>
-          <span>Генерировать</span>
+          <span>
+            <FormattedMessage
+              id="app.settings.gen.btn"
+              defaultMessage="Generate"
+            />
+          </span>
         </ButtonWithBorder>
       </div>
     </GenSettingContainerWrapper>

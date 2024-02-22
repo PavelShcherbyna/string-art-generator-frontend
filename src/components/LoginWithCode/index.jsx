@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { AuthWithCodePageWrap } from './styles';
 import { ButtonWithBorder } from '../reusableStyles';
@@ -26,11 +27,16 @@ const EnterBlock = ({ setStep }) => {
         className={'font18 hover-black'}
         onClick={() => setStep(1)}
       >
-        Войти
+        <FormattedMessage id="login.page.enter.btn" defaultMessage="Enter" />
       </ButtonWithBorder>
       <NavLink to="/instruction" className={'instruction'}>
         <img src={HelpIconSVG} alt="question mark" />
-        <span>ИНСТРУКЦИЯ</span>
+        <span>
+          <FormattedMessage
+            id="login.page.instruction"
+            defaultMessage="Instruction"
+          />
+        </span>
       </NavLink>
     </div>
   );
@@ -45,6 +51,8 @@ const LoginWithCode = () => {
   const navigate = useNavigate();
   const { loginLoading } = useSelector((state) => state.userData);
   const isLoggedIn = useIsLoggedIn();
+
+  const intl = useIntl();
 
   useEffect(() => {
     if (paramsCode && paramsCode.replace(/\D/g, '').length === 6) {
@@ -90,7 +98,10 @@ const LoginWithCode = () => {
                 id="password"
                 name="password"
                 type="text"
-                placeholder="Внести код"
+                placeholder={intl.formatMessage({
+                  id: 'login.page.placeholder',
+                  defaultMessage: 'Enter the code'
+                })}
                 onChange={(e) =>
                   formik.setFieldValue(
                     'password',
@@ -103,7 +114,7 @@ const LoginWithCode = () => {
             </div>
 
             <ButtonWithBorder type="submit" className={'font18 hover-black'}>
-              Далее
+              <FormattedMessage id="login.page.further" defaultMessage="Next" />
             </ButtonWithBorder>
           </form>
         )}

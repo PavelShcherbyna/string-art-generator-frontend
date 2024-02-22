@@ -1,6 +1,5 @@
 import * as React from 'react';
 import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 import { ButtonWithBorder } from '../reusableStyles';
 import { PickStepText, StepsModalContainer, PickStepInputWrap } from './styles';
 import { useEffect, useState } from 'react';
@@ -8,6 +7,7 @@ import { TextField } from '@mui/material';
 import BootstrapDialog from './CommonComponents/BootstrapDialog';
 import BootstrapDialogTitle from './CommonComponents/BootstrapDialogTitle';
 import { useLocation } from 'react-router-dom';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 export default function PickStepModal({
   open,
@@ -20,6 +20,7 @@ export default function PickStepModal({
   const [inputError, setInputError] = useState(false);
 
   const location = useLocation();
+  const intl = useIntl();
 
   useEffect(() => {
     if (selectedRes?.currentIndex) {
@@ -48,7 +49,15 @@ export default function PickStepModal({
       stepInputValue > selectedRes.steps.length - 1
     ) {
       setInputError(true);
-      setInputErrorText(`Укажите значение 1 - ${selectedRes.steps.length - 1}`);
+      setInputErrorText(
+        intl.formatMessage(
+          {
+            id: 'select.step.modal.error',
+            defaultMessage: 'Specify a value 1 - {maxSteps}'
+          },
+          { maxSteps: selectedRes.steps.length - 1 }
+        )
+      );
     } else {
       setInputError(false);
       setInputErrorText('');
@@ -73,14 +82,22 @@ export default function PickStepModal({
             {location?.state?.from === 'saved' &&
             selectedRes?.currentIndex > 0 ? (
               <PickStepText>
-                Вы остановились на {selectedRes?.currentIndex + 1} шаге.
-                <br />
-                <span>Продолжить с {selectedRes?.currentIndex + 1} шага</span>,
-                или укажите шаг, с которого следует начать:
+                <FormattedMessage
+                  id="select.step.modal.text.continue"
+                  defaultMessage="You stopped at step {step}.{br}<code>Continue from step {step}</code>, or specify the step to start from:"
+                  values={{
+                    code: (text) => <span>{text}</span>,
+                    step: selectedRes?.currentIndex + 1,
+                    br: <br />
+                  }}
+                />
               </PickStepText>
             ) : (
               <PickStepText>
-                Укажите шаг, с которого следует начать:
+                <FormattedMessage
+                  id="select.step.modal.text"
+                  defaultMessage="Specify the step to start from:"
+                />
               </PickStepText>
             )}
 
@@ -95,13 +112,15 @@ export default function PickStepModal({
                 fullWidth
               />
               <ButtonWithBorder onClick={onStart}>
-                <span>Применить</span>
+                <span>
+                  <FormattedMessage
+                    id="select.step.modal.btn"
+                    defaultMessage="Apply"
+                  />
+                </span>
               </ButtonWithBorder>
             </PickStepInputWrap>
           </DialogContent>
-          {/*<DialogActions>*/}
-          {/*  */}
-          {/*</DialogActions>*/}
         </StepsModalContainer>
       </BootstrapDialog>
     </div>

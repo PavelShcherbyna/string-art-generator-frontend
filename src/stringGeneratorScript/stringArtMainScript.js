@@ -9,7 +9,7 @@ function linspace(a, b, n) {
   if (n < 2) {
     return n === 1 ? [a] : [];
   }
-  var i,
+  let i,
     ret = Array(n);
   n--;
   for (i = n; i >= 0; i--) {
@@ -57,9 +57,6 @@ export async function createStringArt(
   baseCanvasElement,
   lines = 1000,
   setLineCalcProgress
-  // canvasId = 'canvasOutput1',
-  // prevResult,
-  // prevLineSequence = [],
 ) {
   let lengthX; // instead of 'length' variable in old script
   let img_result;
@@ -83,6 +80,9 @@ export async function createStringArt(
   const OUTPUT_CANVAS_SIZE = 131;
   let R;
   const lineThickness = 1.4; // 2
+  const MIN_DISTANCE = 20;
+  const LINE_WEIGHT = 20;
+  let HOOP_DIAMETER = 0.625;
 
   // let outputCanvasId = canvasId;
 
@@ -258,23 +258,6 @@ export async function createStringArt(
       .subtract(nj.uint8(R.selection.data).reshape(IMG_SIZE, IMG_SIZE));
     img_result = nj.ones([IMG_SIZE, IMG_SIZE]).multiply(0xff);
 
-    // if (!result) {
-    //   // result = nj.ones([IMG_SIZE * SCALE, IMG_SIZE * SCALE]).multiply(0xff);
-    //
-    //   const starterArr = [];
-    //
-    //   for (let i = 0; i < IMG_SIZE * SCALE * (IMG_SIZE * SCALE); i++) {
-    //     starterArr.push(255);
-    //   }
-    //
-    //   result = new cv.matFromArray(
-    //     IMG_SIZE * SCALE,
-    //     IMG_SIZE * SCALE,
-    //     cv.CV_8UC1,
-    //     starterArr
-    //   ); //result.selection.data
-    // }
-
     line_mask = nj.zeros([IMG_SIZE, IMG_SIZE], 'float64');
 
     let pin;
@@ -344,24 +327,6 @@ export async function createStringArt(
           line_mask = nj.zeros([IMG_SIZE, IMG_SIZE], 'float64');
           line_mask = setLine(line_mask, ys, xs, weight);
           error = subtractArrays(error, line_mask);
-
-          // let p = new cv.Point(
-          //   pin_coords[pin][0] * SCALE,
-          //   pin_coords[pin][1] * SCALE
-          // );
-          // let p2 = new cv.Point(
-          //   pin_coords[best_pin][0] * SCALE,
-          //   pin_coords[best_pin][1] * SCALE
-          // );
-          // cv.line(
-          //   result,
-          //   p,
-          //   p2,
-          //   new cv.Scalar(0, 0, 0),
-          //   lineThickness,
-          //   cv.LINE_AA,
-          //   0
-          // );
 
           let x0 = pin_coords[pin][0];
           let y0 = pin_coords[pin][1];

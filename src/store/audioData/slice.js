@@ -5,7 +5,8 @@ export const audioDataSlice = createSlice({
   initialState: {
     showMusicPlayer: false,
     songs: [],
-    songsLoading: false
+    songsLoading: false,
+    audioFromTextSrc: ''
   },
   reducers: {
     openMusicPlayer: (state, action) => {
@@ -20,11 +21,28 @@ export const audioDataSlice = createSlice({
     },
     clearSongs: (state, action) => {
       return { ...state, songs: [] };
+    },
+    sendTextToAudio: (state, action) => {
+      return { ...state, audioFromTextSrc: '' };
+    },
+    saveTTSAudioSrc: (state, action) => {
+      const { src } = action.payload;
+      return { ...state, audioFromTextSrc: src };
+    },
+    clearTTSAudioSrc: (state, action) => {
+      return { ...state, audioFromTextSrc: '' };
     }
   }
 });
 
-export const { openMusicPlayer, getSongs, saveSongs, clearSongs } =
-  audioDataSlice.actions;
+export const {
+  openMusicPlayer,
+  getSongs,
+  saveSongs,
+  clearSongs,
+  sendTextToAudio,
+  saveTTSAudioSrc,
+  clearTTSAudioSrc
+} = audioDataSlice.actions;
 
 export default audioDataSlice.reducer;
