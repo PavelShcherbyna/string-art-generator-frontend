@@ -66,7 +66,7 @@ export const GenSettingContainerWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: clamp(20px, 3vw, 48px);
+    gap: clamp(12px, 3vw, 48px);
     //align-items: flex-start;
 
     min-width: 315px;
@@ -95,7 +95,7 @@ export const GenSettingContainerWrapper = styled.div`
     .slider-wrapper {
       display: flex;
       flex-direction: column;
-      gap: clamp(14px, 2vw, 25px);
+      gap: clamp(10px, 2vw, 25px);
     }
   }
 `;

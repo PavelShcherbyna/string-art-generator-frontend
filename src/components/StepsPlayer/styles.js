@@ -10,7 +10,7 @@ export const StepsPlayerWrapper = styled.div`
 
     display: flex;
     flex-direction: column;
-    row-gap: 80px;
+    row-gap: 70px;
 
     max-width: 90vw;
     margin-bottom: 70px;
@@ -162,6 +162,11 @@ export const StepsPlayerWrapper = styled.div`
       font-weight: 500;
       line-height: normal;
       text-align: center;
+
+      margin-top: -45px;
+      @media (min-width: 900px) {
+        margin-top: 0;
+      }
     }
   }
 `;
