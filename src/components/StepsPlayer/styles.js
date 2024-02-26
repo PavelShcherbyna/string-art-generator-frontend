@@ -31,7 +31,7 @@ export const StepsPlayerWrapper = styled.div`
 
           color: #c7c7c7;
           font-family: Inter;
-          font-size: clamp(13px, 2vw, 20px);
+          font-size: clamp(10px, 1.6vw, 16px);
           font-style: normal;
           font-weight: 600;
           //line-height: 250%;
@@ -45,7 +45,7 @@ export const StepsPlayerWrapper = styled.div`
 
           color: #aeaeae;
           font-family: Inter;
-          font-size: clamp(25px, 4vw, 40px);
+          font-size: clamp(20px, 3.2vw, 32px);
           font-style: normal;
           font-weight: 600;
           //line-height: normal;
@@ -62,7 +62,7 @@ export const StepsPlayerWrapper = styled.div`
 
           color: #a8a8a8;
           font-family: Inter;
-          font-size: clamp(13px, 2vw, 20px);
+          font-size: clamp(10px, 1.6vw, 16px);
           font-style: normal;
           font-weight: 600;
           //line-height: 250%;
@@ -76,7 +76,7 @@ export const StepsPlayerWrapper = styled.div`
 
           color: #777;
           font-family: Inter;
-          font-size: clamp(25px, 4vw, 40px);
+          font-size: clamp(20px, 3.2vw, 32px);
           font-style: normal;
           font-weight: 600;
           //line-height: normal;
@@ -94,7 +94,7 @@ export const StepsPlayerWrapper = styled.div`
 
           color: #484848;
           font-family: Inter;
-          font-size: clamp(22px, 4vw, 35px);
+          font-size: clamp(17.6px, 3.2vw, 28px);
           font-style: normal;
           font-weight: 600;
           //line-height: 280%;
@@ -108,7 +108,7 @@ export const StepsPlayerWrapper = styled.div`
 
           color: #484848;
           font-family: Inter;
-          font-size: clamp(50px, 9vw, 80px);
+          font-size: clamp(40px, 7.2vw, 64px);
           font-style: normal;
           font-weight: 800;
           //line-height: normal;
@@ -142,6 +142,10 @@ export const StepsPlayerWrapper = styled.div`
             height: 25px;
             width: 32px;
           }
+        }
+
+        span {
+          font-size: clamp(12.8px, 1.6vw, 19.2px);
         }
 
         &.play-btn {
