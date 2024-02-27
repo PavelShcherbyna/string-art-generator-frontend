@@ -18,6 +18,7 @@ export const HeaderContainer = styled.header`
   .lang-block {
     display: flex;
     flex-direction: row;
+    align-items: center;
 
     select {
       border: none;
