@@ -13,14 +13,18 @@ import { openMusicPlayer } from '../../store/audioData/slice';
 import shadedNoteSVG from '../../assets/Shaded_note.svg';
 import noteSVG from '../../assets/note.svg';
 import { availableLanguages, LocaleContext } from '../LocaleWrapper';
-import flag_UK from '../../assets/flag_UK.svg';
+import flag_UK from '../../assets/flag_UK.png';
+import flag_DE from '../../assets/flag_DE.png';
+import flag_IT from '../../assets/flag_IT.png';
+import flag_RO from '../../assets/flag_RO.png';
+import flag_RU from '../../assets/flag_RU.png';
 
 const languages = {
-  'ru-RU': { flagSVG: RomanFlagSVG, code: 'RO' },
-  'de-DE': { flagSVG: RomanFlagSVG, code: 'RO' },
-  'it-IT': { flagSVG: RomanFlagSVG, code: 'RO' },
-  'ro-RO': { flagSVG: RomanFlagSVG, code: 'RO' },
-  'en-US': { flagSVG: flag_UK, code: 'RO' }
+  'ru-RU': { iconSrc: flag_RU },
+  'de-DE': { iconSrc: flag_DE },
+  'it-IT': { iconSrc: flag_IT },
+  'ro-RO': { iconSrc: flag_RO },
+  'en-US': { iconSrc: flag_UK }
 };
 
 const Header = () => {
@@ -37,7 +41,7 @@ const Header = () => {
     <HeaderContainer>
       <div className="lang-block header-block">
         <img
-          src={languages[localeContext.locale].flagSVG}
+          src={languages[localeContext.locale].iconSrc}
           alt="Language flag"
         />
         {/*<span>{languages[language].code}</span>*/}
