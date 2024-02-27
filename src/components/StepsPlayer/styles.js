@@ -10,10 +10,10 @@ export const StepsPlayerWrapper = styled.div`
 
     display: flex;
     flex-direction: column;
-    row-gap: 70px;
+    row-gap: 40px;
 
     max-width: 90vw;
-    margin-bottom: 70px;
+    margin-bottom: 40px;
 
     .steps-display-wrap {
       display: flex;
@@ -167,7 +167,7 @@ export const StepsPlayerWrapper = styled.div`
       line-height: normal;
       text-align: center;
 
-      margin-top: -45px;
+      //margin-top: -45px;
       @media (min-width: 900px) {
         margin-top: 0;
       }
