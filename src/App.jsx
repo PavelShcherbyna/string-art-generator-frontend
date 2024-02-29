@@ -24,7 +24,7 @@ const AppWrap = styled.div`
   padding: 0 clamp(20px, 10vw, 160px);
 
   @media (max-width: 480px) {
-    padding: 0 20px 60px;
+    padding: 0 20px 72px;
   }
 `;
 

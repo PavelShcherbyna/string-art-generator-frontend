@@ -113,12 +113,12 @@ const GeneratorSettingsContainer = ({
         />
       </div>
       <div className="settings-block">
-        <h3>
-          <FormattedMessage
-            id="app.settings.header"
-            defaultMessage="Settings"
-          />
-        </h3>
+        {/*<h3>*/}
+        {/*  <FormattedMessage*/}
+        {/*    id="app.settings.header"*/}
+        {/*    defaultMessage="Settings"*/}
+        {/*  />*/}
+        {/*</h3>*/}
         {/*<div className="rotate-wrap">*/}
         {/*  <p>Вращение</p>*/}
         {/*  <SliderWrapper>*/}

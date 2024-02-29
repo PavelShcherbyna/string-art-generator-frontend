@@ -16,6 +16,10 @@ export const HeaderContainer = styled.header`
   }
 
   .lang-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
     select {
       border: none;
       background: transparent;
@@ -28,8 +32,8 @@ export const HeaderContainer = styled.header`
     img {
       margin-right: 8px;
       cursor: pointer;
-      width: 29px;
-      height: 20px;
+      //width: 29px;
+      height: 22px;
     }
   }
 
