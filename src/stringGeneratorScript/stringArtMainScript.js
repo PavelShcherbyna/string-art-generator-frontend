@@ -388,7 +388,7 @@ export function drawLinesSVG(svgId, stepsArr, deviceOSDependent = false) {
   // const pixelRatio = window.devicePixelRatio || 1;
   let pixelRatio = 1;
   if (deviceOSDependent) {
-    pixelRatio = isIOS ? 4 : 1; // Increase Pixel Ratio for iOS
+    pixelRatio = isIOS ? 6 : 1; // Increase Pixel Ratio for iOS
   }
   const baseLineWidth = 0.1;
   const baseWidth = 455;
