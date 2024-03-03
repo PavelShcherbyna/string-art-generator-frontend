@@ -353,33 +353,7 @@ export async function createStringArt(
     }
 
     await codeBlock();
-
-    // Finalize();
   }
-
-  // Draw and final draw helpers:
-  // function draw() {
-  //   let dsize = new cv.Size(OUTPUT_CANVAS_SIZE, OUTPUT_CANVAS_SIZE);
-  //   let dst = new cv.Mat();
-  //   cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
-  //   cv.imshow(outputCanvasId, dst);
-  //   dst.delete();
-  // }
-
-  // function Finalize() {
-  //   let dsize = new cv.Size(OUTPUT_CANVAS_SIZE, OUTPUT_CANVAS_SIZE);
-  //   let dst = new cv.Mat();
-  //
-  //   cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
-  //
-  //   console.log('complete');
-  //
-  //   cv.imshow(outputCanvasId, dst);
-  //   console.log(line_sequence);
-  //
-  //   dst.delete();
-  //   // result.delete();
-  // }
 
   // Execution:
   canvasInit();
@@ -390,180 +364,15 @@ export async function createStringArt(
   return line_sequence;
 }
 
-// export function DrawResIntoCanvas(result, size, id) {
-//   let dsize = new cv.Size(size, size);
-//   let dst = new cv.Mat();
-//
-//   cv.resize(result, dst, dsize, 0, 0, cv.INTER_AREA);
-//
-//   cv.imshow(id, dst);
-//
-//   dst.delete();
-// }
-
-// export async function drawLines(
-//   canvasId,
-//   stepsArr,
-//   // lineWidth = 0.1,
-//   immediatelyFinished = true
-// ) {
-//   const canvas = document.getElementById(canvasId);
-//   const { width } = canvas.getBoundingClientRect();
-//
-//   const context = canvas.getContext('2d');
-//   // context.reset(); // not supported on iOS, we are using 'canvas.width = canvas.width' instead
-//   // eslint-disable-next-line no-self-assign
-//   if (context.reset) {
-//     context.reset();
-//   } else {
-//     canvas.width = canvas.width;
-//   }
-//
-//   const centerX = canvas.width / 2;
-//   const centerY = canvas.height / 2;
-//   const radius = Math.min(centerX, centerY);
-//
-//   const pixelRatio = window.devicePixelRatio || 1;
-//   const actualDeviceWidth = window.innerWidth;
-//   const deviceWidthStandard = 1920;
-//
-//   const baseWidth = 455;
-//   // const baseLineWidth = actualDeviceWidth / deviceWidthStandard / 10;
-//   const baseLineWidth = 0.1;
-//
-//   const actualLineWidth =
-//     (baseLineWidth * (canvas.width / baseWidth)) / pixelRatio;
-//
-//   function definePoints(numPoints) {
-//     const angleIncrement = (2 * Math.PI) / numPoints;
-//     const points = [];
-//
-//     for (let i = 0; i < numPoints; i++) {
-//       const x = centerX + radius * Math.cos(i * angleIncrement);
-//       const y = centerY + radius * Math.sin(i * angleIncrement);
-//       points.push({ x, y });
-//     }
-//
-//     return points;
-//   }
-//
-//   function drawLinesImmediately(points, indexes) {
-//     context.beginPath();
-//     context.strokeStyle = 'black';
-//     context.lineWidth = actualLineWidth;
-//     context.moveTo(points[indexes[0]].x, points[indexes[0]].y);
-//     for (let i = 1; i < indexes.length; i++) {
-//       context.lineTo(points[indexes[i]].x, points[indexes[i]].y);
-//     }
-//     context.stroke();
-//   }
-//
-//   let j = 0;
-//
-//   async function drawLineSequentially(points, indexes) {
-//     return new Promise((resolve) => {
-//       if (j < indexes.length - 1) {
-//         const currentPointIndex = indexes[j];
-//         const nextPointIndex = indexes[j + 1];
-//
-//         context.strokeStyle = 'black';
-//         context.lineWidth = actualLineWidth;
-//         context.beginPath();
-//         context.moveTo(
-//           points[currentPointIndex].x,
-//           points[currentPointIndex].y
-//         );
-//         context.lineTo(points[nextPointIndex].x, points[nextPointIndex].y);
-//         context.stroke();
-//
-//         j++;
-//
-//         setTimeout(() => resolve(drawLineSequentially(points, indexes)), 0);
-//       } else {
-//         resolve();
-//       }
-//     });
-//   }
-//
-//   const points = definePoints(numberOfPins);
-//
-//   immediatelyFinished
-//     ? drawLinesImmediately(points, stepsArr)
-//     : await drawLineSequentially(points, stepsArr);
-// }
-//
-// export function drawLinesSync(
-//   canvasId,
-//   stepsArr
-//   // lineWidth = 0.1,
-// ) {
-//   if (!stepsArr || stepsArr.length < 1) {
-//     return;
-//   }
-//   const canvas = document.getElementById(canvasId);
-//
-//   const { width } = canvas.getBoundingClientRect();
-//
-//   const context = canvas.getContext('2d');
-//   // context.reset(); // not supported on iOS, we are using 'canvas.width = canvas.width' instead
-//   // eslint-disable-next-line no-self-assign
-//   if (context.reset) {
-//     context.reset();
-//   } else {
-//     canvas.width = canvas.width;
-//   }
-//
-//   const centerX = canvas.width / 2;
-//   const centerY = canvas.height / 2;
-//   const radius = Math.min(centerX, centerY);
-//
-//   const pixelRatio = window.devicePixelRatio || 1;
-//   const actualDeviceWidth = window.innerWidth;
-//   const deviceWidthStandard = 1920;
-//
-//   const baseWidth = 455;
-//   // const baseLineWidth = actualDeviceWidth / deviceWidthStandard / 10;
-//   const baseLineWidth = 0.1;
-//
-//   const actualLineWidth =
-//     (baseLineWidth * (canvas.width / baseWidth)) / pixelRatio;
-//
-//   function definePoints(numPoints) {
-//     const angleIncrement = (2 * Math.PI) / numPoints;
-//     const points = [];
-//
-//     for (let i = 0; i < numPoints; i++) {
-//       const x = centerX + radius * Math.cos(i * angleIncrement);
-//       const y = centerY + radius * Math.sin(i * angleIncrement);
-//       points.push({ x, y });
-//     }
-//
-//     return points;
-//   }
-//
-//   function drawLinesImmediately(points, indexes) {
-//     context.beginPath();
-//     context.strokeStyle = 'black';
-//     context.lineWidth = actualLineWidth;
-//     context.moveTo(points[indexes[0]].x, points[indexes[0]].y);
-//     for (let i = 1; i < indexes.length; i++) {
-//       context.lineTo(points[indexes[i]].x, points[indexes[i]].y);
-//     }
-//     context.stroke();
-//   }
-//
-//   const points = definePoints(numberOfPins);
-//
-//   drawLinesImmediately(points, stepsArr);
-// }
-
-export function drawLinesSVG(svgId, stepsArr, immediatelyFinished = true) {
+export function drawLinesSVG(svgId, stepsArr, deviceOSDependent = false) {
   if (!stepsArr || stepsArr.length < 1) {
     return;
   }
 
   const svg = document.getElementById(svgId);
   const svgNS = 'http://www.w3.org/2000/svg';
+  const isIOS =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
   const { width, height } = svg.getBoundingClientRect();
 
@@ -577,7 +386,10 @@ export function drawLinesSVG(svgId, stepsArr, immediatelyFinished = true) {
   const radius = Math.min(centerX, centerY);
 
   // const pixelRatio = window.devicePixelRatio || 1;
-  const pixelRatio = 1;
+  let pixelRatio = 1;
+  if (deviceOSDependent) {
+    pixelRatio = isIOS ? 2 : 1; // Double Pixel Ratio for iOS
+  }
   const baseLineWidth = 0.1;
   const baseWidth = 455;
   const actualLineWidth = (baseLineWidth * (width / baseWidth)) / pixelRatio;
@@ -595,7 +407,7 @@ export function drawLinesSVG(svgId, stepsArr, immediatelyFinished = true) {
     return points;
   }
 
-  function drawLinesImmediately(points, indexes) {
+  function drawLines(points, indexes) {
     const path = document.createElementNS(svgNS, 'path');
     const d = indexes
       .map((index, i) => {
@@ -610,35 +422,10 @@ export function drawLinesSVG(svgId, stepsArr, immediatelyFinished = true) {
     svg.appendChild(path);
   }
 
-  // let j = 0;
-  //
-  // async function drawLineSequentially(points, indexes) {
-  //   return new Promise((resolve) => {
-  //     if (j < indexes.length - 1) {
-  //       const currentPointIndex = indexes[j];
-  //       const nextPointIndex = indexes[j + 1];
-  //
-  //       const path = document.createElementNS(svgNS, "path");
-  //       const d = `${j === 0 ? 'M' : 'L'} ${points[currentPointIndex].x} ${points[currentPointIndex].y} L ${points[nextPointIndex].x} ${points[nextPointIndex].y}`;
-  //
-  //       path.setAttribute("d", d);
-  //       path.setAttribute("stroke", "black");
-  //       path.setAttribute("stroke-width", baseLineWidth);
-  //       path.setAttribute("fill", "none");
-  //       svg.appendChild(path);
-  //
-  //       j++;
-  //
-  //       setTimeout(() => resolve(drawLineSequentially(points, indexes)), 0);
-  //     } else {
-  //       resolve();
-  //     }
-  //   });
-  // }
-
   const points = definePoints(numberOfPins);
-  drawLinesImmediately(points, stepsArr);
-  // immediatelyFinished
-  //   ? drawLinesImmediately(points, stepsArr)
-  //   : await drawLineSequentially(points, stepsArr);
+  drawLines(points, stepsArr);
+}
+
+export function drawLinesSmallSVG(svgId, stepsArr) {
+  return drawLinesSVG(svgId, stepsArr, true);
 }
