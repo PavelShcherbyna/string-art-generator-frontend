@@ -372,7 +372,7 @@ export function drawLinesSVG(svgId, stepsArr, isDeviceOSDep = false) {
   const svg = document.getElementById(svgId);
   const svgNS = 'http://www.w3.org/2000/svg';
   const isIOS =
-    /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    /iPad|iPhone|iPod|Safari/.test(navigator.userAgent) && !window.MSStream;
 
   const { width, height } = svg.getBoundingClientRect();
 
