@@ -372,7 +372,14 @@ export function drawLinesSVG(svgId, stepsArr, isDeviceOSDep = false) {
   const svg = document.getElementById(svgId);
   const svgNS = 'http://www.w3.org/2000/svg';
   const isIOS =
-    /iPad|iPhone|iPod|Safari/.test(navigator.userAgent) && !window.MSStream;
+    /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  const isSafari =
+    navigator.vendor &&
+    navigator.vendor.indexOf('Apple') > -1 &&
+    navigator.userAgent &&
+    navigator.userAgent.indexOf('CriOS') === -1 &&
+    navigator.userAgent.indexOf('FxiOS') === -1;
 
   const { width, height } = svg.getBoundingClientRect();
 
@@ -386,12 +393,13 @@ export function drawLinesSVG(svgId, stepsArr, isDeviceOSDep = false) {
   const radius = Math.min(centerX, centerY);
 
   // const pixelRatio = window.devicePixelRatio || 1;
-  const pixelRatio = isDeviceOSDep && isIOS ? 10 : 1;
+  const pixelRatio = isDeviceOSDep && (isIOS || isSafari) ? 10 : 1;
   const baseLineWidth = 0.1;
   const baseWidth = 455;
   const actualLineWidth = (baseLineWidth * (width / baseWidth)) / pixelRatio;
 
-  const strokeColor = isDeviceOSDep && isIOS ? '#333333' : '#010101';
+  const strokeColor =
+    isDeviceOSDep && (isIOS || isSafari) ? '#333333' : '#010101';
 
   function definePoints(numPoints) {
     const angleIncrement = (2 * Math.PI) / numPoints;
