@@ -391,6 +391,8 @@ export function drawLinesSVG(svgId, stepsArr, isDeviceOSDep = false) {
   const baseWidth = 455;
   const actualLineWidth = (baseLineWidth * (width / baseWidth)) / pixelRatio;
 
+  const strokeColor = isDeviceOSDep && isIOS ? '#333333' : '#010101';
+
   function definePoints(numPoints) {
     const angleIncrement = (2 * Math.PI) / numPoints;
     const points = [];
@@ -413,7 +415,7 @@ export function drawLinesSVG(svgId, stepsArr, isDeviceOSDep = false) {
       .join(' ');
 
     path.setAttribute('d', d);
-    path.setAttribute('stroke', 'black');
+    path.setAttribute('stroke', strokeColor);
     path.setAttribute('stroke-width', actualLineWidth.toString());
     path.setAttribute('fill', 'none');
     svg.appendChild(path);
