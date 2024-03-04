@@ -364,7 +364,7 @@ export async function createStringArt(
   return line_sequence;
 }
 
-export function drawLinesSVG(svgId, stepsArr, deviceOSDependent = false) {
+export function drawLinesSVG(svgId, stepsArr, isDeviceOSDep = false) {
   if (!stepsArr || stepsArr.length < 1) {
     return;
   }
@@ -386,10 +386,7 @@ export function drawLinesSVG(svgId, stepsArr, deviceOSDependent = false) {
   const radius = Math.min(centerX, centerY);
 
   // const pixelRatio = window.devicePixelRatio || 1;
-  let pixelRatio = 1;
-  if (deviceOSDependent) {
-    pixelRatio = isIOS ? 20 : 1; // Increase Pixel Ratio for iOS
-  }
+  const pixelRatio = isDeviceOSDep && isIOS ? 10 : 1;
   const baseLineWidth = 0.1;
   const baseWidth = 455;
   const actualLineWidth = (baseLineWidth * (width / baseWidth)) / pixelRatio;

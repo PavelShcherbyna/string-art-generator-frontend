@@ -61,6 +61,11 @@ export default function SavedProjectsContainer() {
           );
         })}
       </div>
+      <div>{navigator.userAgent}</div>
+      <div>
+        isIOS -{' '}
+        {`${/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream}`}
+      </div>
     </SavedProjectsWrapper>
   );
 }
