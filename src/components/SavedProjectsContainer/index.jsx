@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { SavedProjectsWrapper } from './styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { drawLinesSVG } from '../../stringGeneratorScript/stringArtMainScript';
+import { drawLinesSmallSVG } from '../../stringGeneratorScript/stringArtMainScript';
 import { setActiveDrawing } from '../../store/userData/slice';
 import { useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
@@ -19,7 +19,7 @@ export default function SavedProjectsContainer() {
 
   useEffect(() => {
     drawings.forEach((obj, index) => {
-      drawLinesSVG(`saved-project-${index}`, obj.steps);
+      drawLinesSmallSVG(`saved-project-${index}`, obj.steps);
     });
   }, [drawings]);
 
